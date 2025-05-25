@@ -1,0 +1,77 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Capture Idea to Notion",
+            "type": "shell",
+            "command": "python",
+            "args": ["notion_agent.py", "capture", "${input:ideaText}"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Search Notion",
+            "type": "shell",
+            "command": "python", 
+            "args": ["notion_agent.py", "search", "${input:searchQuery}"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Weekly Notion Review",
+            "type": "shell",
+            "command": "python",
+            "args": ["notion_agent.py", "review"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Get AI Suggestion",
+            "type": "shell",
+            "command": "python",
+            "args": ["notion_agent.py", "suggest", "${input:taskText}"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always", 
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "ideaText",
+            "description": "What idea do you want to capture?",
+            "default": "",
+            "type": "promptString"
+        },
+        {
+            "id": "searchQuery", 
+            "description": "What do you want to search for?",
+            "default": "",
+            "type": "promptString"
+        },
+        {
+            "id": "taskText",
+            "description": "What task do you need help with?",
+            "default": "",
+            "type": "promptString"
+        }
+    ]
+} 
