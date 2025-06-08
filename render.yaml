@@ -8,6 +8,7 @@ services:
       cd frontend && npm install && npm run build
       mkdir -p /opt/render/project/src/static
       cp -a frontend/dist/. /opt/render/project/src/static/
+      ls -l /opt/render/project/src/static/
       mkdir -p /opt/render/project/src/data
     startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
     envVars:
