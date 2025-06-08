@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 from notion_client import Client
 import requests
-import openai
+from openai import OpenAI
 import sqlite3
 import traceback
 import json
@@ -43,7 +43,8 @@ if os.path.exists(static_dir):
         # Fallback to index.html for SPA routing
         return FileResponse(os.path.join(static_dir, "index.html"))
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Initialize OpenAI client
+openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class ChatRequest(BaseModel):
     message: str
@@ -357,7 +358,7 @@ async def chat(req: ChatRequest):
         {"role": "system", "content": system_prompt},
         *context,
     ]
-    response = openai.ChatCompletion.create(
+    response = openai_client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=messages,
         max_tokens=300
