@@ -45,20 +45,3 @@ settings.local.json
 # Notion API credentials
 notion_token.txt
 notion_credentials.json
-
-# Database files
-*.db
-agent_memory.db
-
-# Sensitive credentials  
-client_secret_*.json
-tokens_new.json
-*.json
-!package.json
-!package-lock.json
-!railway.json
-!render.yaml
-
-# API keys and tokens
-.env.local
-config.env

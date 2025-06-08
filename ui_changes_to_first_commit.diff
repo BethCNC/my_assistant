@@ -1,0 +1,1155 @@
+diff --git a/frontend/src/App.css b/frontend/src/App.css
+new file mode 100644
+index 0000000..74b5e05
+--- /dev/null
++++ b/frontend/src/App.css
+@@ -0,0 +1,38 @@
++.App {
++  text-align: center;
++}
++
++.App-logo {
++  height: 40vmin;
++  pointer-events: none;
++}
++
++@media (prefers-reduced-motion: no-preference) {
++  .App-logo {
++    animation: App-logo-spin infinite 20s linear;
++  }
++}
++
++.App-header {
++  background-color: #282c34;
++  min-height: 100vh;
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  justify-content: center;
++  font-size: calc(10px + 2vmin);
++  color: white;
++}
++
++.App-link {
++  color: #61dafb;
++}
++
++@keyframes App-logo-spin {
++  from {
++    transform: rotate(0deg);
++  }
++  to {
++    transform: rotate(360deg);
++  }
++}
+diff --git a/frontend/src/App.jsx b/frontend/src/App.jsx
+new file mode 100644
+index 0000000..d093fa8
+--- /dev/null
++++ b/frontend/src/App.jsx
+@@ -0,0 +1,77 @@
++import React from 'react'
++import Sidebar from './Sidebar'
++import ToolButton from './ToolButton'
++import Suggestion from './Suggestion'
++import ChatInput from './ChatInput'
++
++const chatList = Array(8).fill('How can I better update...')
++const suggestions = [
++  {shape: 'asterisk.svg', text: 'I would like to know about design tokens'},
++  {shape: 'asterisk.svg', text: 'How can I be most productive today?'},
++  {shape: 'heart.svg', text: 'What are the most important tasks I should...'},
++  {shape: 'star.svg', text: 'Can you help me convert this design file int...'},
++  {shape: 'asterisk.svg', text: 'What is coming up in my medical calendar?'},
++  {shape: 'clover.svg', text: 'Can you remember the business plan we we...'},
++]
++const tools = [
++  {icon: 'icon-paperclip.svg', label: 'Notion'},
++  {icon: 'icon-camera.svg', label: 'Figma'},
++  {icon: 'icon-send.svg', label: 'Github'},
++  {icon: 'icon-plus.svg', label: 'Email'},
++  {icon: 'icon-arrow.svg', label: 'Calendar'},
++]
++
++const App = () => (
++  <div
++    style={{
++      width: '100vw',
++      height: '100vh',
++      minHeight: 1024,
++      minWidth: 1440,
++      background: 'url(/assets/gradient.png) center/cover',
++      display: 'flex',
++      flexDirection: 'row',
++      fontFamily: 'Mabry Pro, sans-serif',
++    }}
++  >
++    {/* Sidebar */}
++    <Sidebar chatList={chatList} onNewChat={() => {}} />
++    {/* Main content */}
++    <div style={{flex: 1, display: 'flex', flexDirection: 'column', padding: 40, gap: 32}}>
++      {/* Header bar */}
++      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32}}>
++        <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
++          <img src='/assets/smiley.svg' alt='' style={{width: 40, height: 40}} />
++          <span style={{fontWeight: 700, fontSize: 28, color: '#fff', letterSpacing: 1}}>BETH'S ASSISTANT</span>
++        </div>
++        <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
++          <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>FRIDAY</span>
++          <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>JUNE 6, 2025</span>
++          <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>11:25 AM</span>
++        </div>
++      </div>
++      {/* Tool buttons row */}
++      <div style={{display: 'flex', gap: 24, marginBottom: 32}}>
++        {tools.map(t => (
++          <ToolButton key={t.label} icon={t.icon} label={t.label} />
++        ))}
++      </div>
++      {/* Greeting */}
++      <div style={{fontWeight: 700, fontSize: 32, color: '#171717', marginBottom: 24}}>
++        Good Morning Beth!  What can I help you with today?
++      </div>
++      {/* Suggestions grid */}
++      <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 32}}>
++        {suggestions.map((s, i) => (
++          <Suggestion key={i} shape={s.shape} text={s.text} />
++        ))}
++      </div>
++      {/* Chat input at bottom */}
++      <div style={{marginTop: 'auto'}}>
++        <ChatInput value='' onChange={() => {}} onSend={() => {}} />
++      </div>
++    </div>
++  </div>
++)
++
++export default App 
+\ No newline at end of file
+diff --git a/frontend/src/App.test.js b/frontend/src/App.test.js
+new file mode 100644
+index 0000000..2a68616
+--- /dev/null
++++ b/frontend/src/App.test.js
+@@ -0,0 +1,9 @@
++import React from 'react';
++import { render, screen } from '@testing-library/react';
++import App from './App';
++
++test('renders learn react link', () => {
++  render(<App />);
++  const linkElement = screen.getByText(/learn react/i);
++  expect(linkElement).toBeInTheDocument();
++});
+diff --git a/frontend/src/ChatInput.jsx b/frontend/src/ChatInput.jsx
+new file mode 100644
+index 0000000..2de45d4
+--- /dev/null
++++ b/frontend/src/ChatInput.jsx
+@@ -0,0 +1,114 @@
++import React, {useState, useRef} from 'react'
++import IconButton from './IconButton'
++
++const COLORS = {
++  border: '#171717',
++  focus: '#2180EC',
++  bg: '#fff',
++  text: '#171717',
++  subtext: '#5A5A5A',
++  attachBar: '#fff',
++  attachBorder: '#2180EC',
++}
++const MAX_LEN = 1000
++const DEFAULT_THUMBS = [
++  {type: 'image', name: 'thumbnail_image01.png', src: '/assets/thumbnails/thumbnail_image01.png'},
++  {type: 'image', name: 'thumbnail_image02.png', src: '/assets/thumbnails/thumbnail_image02.png'},
++  {type: 'image', name: 'thumbnail_image03.png', src: '/assets/thumbnails/thumbnail_image03.png'},
++]
++
++const ChatInput = ({value, onChange, onSend, attachments = DEFAULT_THUMBS, onRemoveAttachment}) => {
++  const [focus, setFocus] = useState(false)
++  const textareaRef = useRef(null)
++  return (
++    <div
++      style={{
++        width: '100%',
++        background: COLORS.bg,
++        borderRadius: 12,
++        padding: '16px 20px',
++        boxSizing: 'border-box',
++        display: 'flex',
++        flexDirection: 'column',
++        gap: 12,
++      }}
++    >
++      {/* Attachments Bar */}
++      {attachments && attachments.length > 0 && (
++        <div
++          style={{
++            display: 'flex',
++            alignItems: 'center',
++            gap: 8,
++            background: COLORS.attachBar,
++            border: `2px solid ${COLORS.attachBorder}`,
++            borderRadius: 8,
++            padding: 8,
++            marginBottom: 8,
++          }}
++        >
++          {attachments.map((a, i) => (
++            <div key={i} style={{display: 'flex', alignItems: 'center', gap: 4}}>
++              {a.type === 'image' ? (
++                <img src={a.src} alt='' style={{width: 32, height: 32, borderRadius: 4, objectFit: 'cover'}} />
++              ) : (
++                <span style={{fontSize: 16, color: COLORS.text, fontFamily: 'Mabry Pro, sans-serif'}}>{a.name}</span>
++              )}
++              {a.progress != null && (
++                <span style={{fontSize: 12, color: COLORS.subtext}}>{a.progress}%</span>
++              )}
++              {onRemoveAttachment && (
++                <button onClick={() => onRemoveAttachment(i)} style={{background: 'none', border: 'none', color: COLORS.text, cursor: 'pointer', fontSize: 16, marginLeft: 2}}>×</button>
++              )}
++            </div>
++          ))}
++        </div>
++      )}
++      {/* Input Row */}
++      <div style={{display: 'flex', alignItems: 'flex-end', gap: 8}}>
++        {/* Left icon buttons */}
++        <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
++          <IconButton icon='icon-paperclip.svg' ariaLabel='Attach file' />
++          <IconButton icon='icon-camera.svg' ariaLabel='Attach image' />
++        </div>
++        {/* Textarea */}
++        <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 4}}>
++          <textarea
++            ref={textareaRef}
++            value={value}
++            onChange={e => onChange && onChange(e.target.value)}
++            onFocus={() => setFocus(true)}
++            onBlur={() => setFocus(false)}
++            maxLength={MAX_LEN}
++            placeholder='Ask me a question...'
++            style={{
++              width: '100%',
++              minHeight: 64,
++              border: `2px solid ${focus ? COLORS.focus : COLORS.border}`,
++              borderRadius: 8,
++              fontFamily: 'Mabry Pro, sans-serif',
++              fontWeight: 400,
++              fontSize: 20,
++              color: COLORS.text,
++              padding: 12,
++              resize: 'vertical',
++              outline: 'none',
++              boxSizing: 'border-box',
++              background: COLORS.bg,
++              transition: 'border 0.15s',
++            }}
++          />
++          <div style={{display: 'flex', justifyContent: 'flex-end', color: COLORS.subtext, fontSize: 16, fontFamily: 'Mabry Pro, sans-serif'}}>
++            {value?.length || 0}/{MAX_LEN}
++          </div>
++        </div>
++        {/* Send button */}
++        <div style={{alignSelf: 'flex-end'}}>
++          <IconButton icon='icon-send.svg' ariaLabel='Send' />
++        </div>
++      </div>
++    </div>
++  )
++}
++
++export default ChatInput 
+\ No newline at end of file
+diff --git a/frontend/src/ChatPreview.jsx b/frontend/src/ChatPreview.jsx
+new file mode 100644
+index 0000000..5cf32a9
+--- /dev/null
++++ b/frontend/src/ChatPreview.jsx
+@@ -0,0 +1,33 @@
++import React, {useState} from 'react'
++
++const ChatPreview = ({text}) => {
++  const [hover, setHover] = useState(false)
++  return (
++    <div
++      style={{
++        width: 270,
++        height: 52,
++        padding: 4,
++        background: hover ? 'rgba(115,115,115,0.08)' : 'transparent',
++        display: 'flex',
++        alignItems: 'center',
++        fontFamily: 'Mabry Pro, sans-serif',
++        fontWeight: 400,
++        fontSize: 16,
++        color: '#737373',
++        whiteSpace: 'nowrap',
++        overflow: 'hidden',
++        textOverflow: 'ellipsis',
++        boxSizing: 'border-box',
++        borderRadius: 6,
++        transition: 'background 0.15s',
++      }}
++      onMouseEnter={() => setHover(true)}
++      onMouseLeave={() => setHover(false)}
++    >
++      {text}
++    </div>
++  )
++}
++
++export default ChatPreview 
+\ No newline at end of file
+diff --git a/frontend/src/IconButton.jsx b/frontend/src/IconButton.jsx
+new file mode 100644
+index 0000000..57ee13a
+--- /dev/null
++++ b/frontend/src/IconButton.jsx
+@@ -0,0 +1,67 @@
++import React, {useState} from 'react'
++
++const COLORS = {
++  default: '#2180EC',
++  hover: '#42A5F5',
++  active: '#1565C0',
++  focusBorder: '#019CFE',
++}
++
++const IconButton = ({icon, ariaLabel = ''}) => {
++  const [state, setState] = useState('default')
++  const [isFocused, setIsFocused] = useState(false)
++
++  let bg = COLORS.default
++  let border = 'none'
++  if (state === 'hover') bg = COLORS.hover
++  if (state === 'active') bg = COLORS.active
++  if (isFocused) border = `2px solid ${COLORS.focusBorder}`
++
++  return (
++    <button
++      aria-label={ariaLabel}
++      style={{
++        position: 'relative',
++        width: 40,
++        height: 40,
++        borderRadius: 8,
++        background: bg,
++        border,
++        overflow: 'hidden',
++        display: 'flex',
++        alignItems: 'center',
++        justifyContent: 'center',
++        padding: 0,
++        outline: 'none',
++        cursor: 'pointer',
++        transition: 'background 0.15s, border 0.15s',
++      }}
++      onMouseEnter={() => setState('hover')}
++      onMouseLeave={() => setState('default')}
++      onMouseDown={() => setState('active')}
++      onMouseUp={() => setState('hover')}
++      onFocus={() => setIsFocused(true)}
++      onBlur={() => setIsFocused(false)}
++      tabIndex={0}
++    >
++      <img
++        src={`/assets/${icon}`}
++        alt=""
++        style={{width: 24, height: 24, zIndex: 1, position: 'relative', filter: 'brightness(0) invert(1)'}}
++      />
++      <span
++        style={{
++          position: 'absolute',
++          inset: 0,
++          background: 'url(/assets/texture/noise.png) center/cover',
++          opacity: 0.2,
++          mixBlendMode: 'hard-light',
++          pointerEvents: 'none',
++          zIndex: 2,
++        }}
++      />
++    </button>
++  )
++}
++
++export default IconButton 
+\ No newline at end of file
+diff --git a/frontend/src/IconSet.jsx b/frontend/src/IconSet.jsx
+new file mode 100644
+index 0000000..c8951f8
+--- /dev/null
++++ b/frontend/src/IconSet.jsx
+@@ -0,0 +1,12 @@
++const iconList = [
++  'icon-paperclip.svg', 'icon-camera.svg', 'icon-send.svg', 'icon-plus.svg', 'icon-arrow.svg', 'icon-minus.svg', 'icon-trash.svg'
++]
++const IconSet = () => (
++  <div style={{display: 'flex', gap: 24}}>
++    {iconList.map(icon => (
++      <img key={icon} src={`/assets/${icon}`} alt='' style={{width: 32, height: 32}} />
++    ))}
++  </div>
++)
++
++export default IconSet 
+\ No newline at end of file
+diff --git a/frontend/src/NewChatButton.jsx b/frontend/src/NewChatButton.jsx
+new file mode 100644
+index 0000000..4a7bdf0
+--- /dev/null
++++ b/frontend/src/NewChatButton.jsx
+@@ -0,0 +1,87 @@
++import React, {useState} from 'react'
++
++const COLORS = {
++  black: '#171717',
++  blue: '#2180EC',
++  white: '#FAFAFA',
++}
++const GRADIENT = 'linear-gradient(90deg, #69DEF2 0%, #126FD8 100%)'
++const FOCUS_BORDER = '2px solid #fff'
++const SHADOW = '0px 0px 1px 4px rgba(255,255,255,0.1), inset 0px 2px 1px 0px rgba(255,255,255,0.25), inset 0px -4px 2px 0px rgba(0,0,0,0.25)'
++
++const NewChatButton = ({onClick}) => {
++  const [state, setState] = useState('default')
++  const [isFocused, setIsFocused] = useState(false)
++
++  let bg = COLORS.black
++  let color = COLORS.white
++  let border = 'none'
++  let showNoise = false
++
++  if (state === 'hover' || (isFocused && state !== 'active')) {
++    bg = COLORS.blue
++    color = COLORS.black
++    showNoise = true
++    if (isFocused) border = FOCUS_BORDER
++  }
++  if (state === 'active') {
++    bg = GRADIENT
++    color = COLORS.black
++    showNoise = true
++  }
++
++  return (
++    <button
++      type='button'
++      onClick={onClick}
++      onMouseEnter={() => setState('hover')}
++      onMouseLeave={() => setState('default')}
++      onMouseDown={() => setState('active')}
++      onMouseUp={() => setState('hover')}
++      onFocus={() => setIsFocused(true)}
++      onBlur={() => setIsFocused(false)}
++      style={{
++        position: 'relative',
++        display: 'flex',
++        alignItems: 'center',
++        justifyContent: 'center',
++        gap: 12,
++        padding: '12px 24px',
++        borderRadius: 6,
++        border,
++        boxShadow: SHADOW,
++        background: bg,
++        outline: 'none',
++        cursor: 'pointer',
++        fontFamily: 'Mabry Pro, sans-serif',
++        fontWeight: 700,
++        fontSize: 28,
++        color,
++        lineHeight: 1.14,
++        minWidth: 0,
++        minHeight: 0,
++        userSelect: 'none',
++        overflow: 'hidden',
++        transition: 'background 0.15s, color 0.15s, border 0.15s',
++      }}
++    >
++      <img src='/assets/plus.svg' alt='' style={{width: 34, height: 34, zIndex: 1, filter: color === COLORS.white ? 'invert(1)' : 'none'}} />
++      <span style={{zIndex: 1}}>{'New Chat'}</span>
++      {showNoise && (
++        <span
++          style={{
++            position: 'absolute',
++            inset: 0,
++            background: 'url(/assets/texture/noise.png) center/cover',
++            opacity: 0.2,
++            mixBlendMode: 'hard-light',
++            pointerEvents: 'none',
++            borderRadius: 6,
++          }}
++        />
++      )}
++    </button>
++  )
++}
++
++export default NewChatButton 
+\ No newline at end of file
+diff --git a/frontend/src/Sidebar.jsx b/frontend/src/Sidebar.jsx
+new file mode 100644
+index 0000000..ae861c9
+--- /dev/null
++++ b/frontend/src/Sidebar.jsx
+@@ -0,0 +1,66 @@
++import React, {useState} from 'react'
++import NewChatButton from './NewChatButton'
++import ChatPreview from './ChatPreview'
++
++const Sidebar = ({chatList = [], onNewChat}) => {
++  const [expanded, setExpanded] = useState(true)
++  return (
++    <aside
++      style={{
++        width: expanded ? 300 : 80,
++        height: '100vh',
++        background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.05) 100%)',
++        borderRadius: 4,
++        border: '2px solid',
++        borderImage: 'linear-gradient(180deg, rgba(255,255,255,0.3), rgba(255,255,255,0.7)) 1',
++        boxShadow: '0px 2px 2px -1px rgba(0,0,0,0.16), 0px 2px 4px -2px rgba(0,0,0,0.16)',
++        backdropFilter: 'blur(32px)',
++        padding: 24,
++        display: 'flex',
++        flexDirection: 'column',
++        gap: 24,
++        transition: 'width 0.2s',
++        boxSizing: 'border-box',
++        alignItems: expanded ? 'flex-start' : 'center',
++      }}
++    >
++      {/* Header */}
++      <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: expanded ? 'space-between' : 'center'}}>
++        {expanded && (
++          <span style={{fontFamily: 'Mabry Pro, sans-serif', fontWeight: 700, fontSize: 20, color: '#171717'}}>Recent Chats</span>
++        )}
++        <button
++          onClick={() => setExpanded(e => !e)}
++          style={{
++            width: 40,
++            height: 40,
++            borderRadius: 8,
++            background: '#171717',
++            border: 'none',
++            display: 'flex',
++            alignItems: 'center',
++            justifyContent: 'center',
++            cursor: 'pointer',
++            marginLeft: expanded ? 0 : 0,
++            transform: expanded ? 'rotate(0deg)' : 'rotate(180deg)',
++            transition: 'transform 0.2s',
++          }}
++        >
++          <img src='/assets/icon-arrow.svg' alt='' style={{width: 24, height: 24, filter: 'invert(1)'}} />
++        </button>
++      </div>
++      {/* New Chat Button */}
++      <div style={{width: '100%', display: 'flex', justifyContent: expanded ? 'flex-start' : 'center'}}>
++        <NewChatButton onClick={onNewChat} />
++      </div>
++      {/* Chat List */}
++      <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 12}}>
++        {chatList.map((text, i) => (
++          <ChatPreview key={i} text={text} />
++        ))}
++      </div>
++    </aside>
++  )
++}
++
++export default Sidebar 
+\ No newline at end of file
+diff --git a/frontend/src/Suggestion.jsx b/frontend/src/Suggestion.jsx
+new file mode 100644
+index 0000000..4a4ed20
+--- /dev/null
++++ b/frontend/src/Suggestion.jsx
+@@ -0,0 +1,94 @@
++import React, {useState} from 'react'
++import Shape from './SuggestionShapes'
++import IconSet from './IconSet'
++
++const COLORS = {
++  border: '#171717',
++  bg: '#fff',
++  hoverBorder: '#FFB36A',
++  hoverBg: '#FFF4E7',
++  focusBorder: '#2180EC',
++  focusBg: '#EAF6FF',
++  text: '#171717',
++  iconBg: '#171717',
++}
++
++const Suggestion = ({shape, text, onClick}) => {
++  const [state, setState] = useState('default')
++  let border = COLORS.border
++  let bg = COLORS.bg
++  if (state === 'hover') {
++    border = COLORS.hoverBorder
++    bg = COLORS.hoverBg
++  }
++  if (state === 'focus') {
++    border = COLORS.focusBorder
++    bg = COLORS.focusBg
++  }
++  return (
++    <button
++      type='button'
++      onClick={onClick}
++      onMouseEnter={() => setState('hover')}
++      onMouseLeave={() => setState('default')}
++      onFocus={() => setState('focus')}
++      onBlur={() => setState('default')}
++      style={{
++        display: 'flex',
++        alignItems: 'center',
++        width: 600,
++        minHeight: 64,
++        borderRadius: 5,
++        border: `2px solid ${border}`,
++        background: bg,
++        padding: 20,
++        gap: 16,
++        cursor: 'pointer',
++        transition: 'border 0.15s, background 0.15s',
++        overflow: 'hidden',
++      }}
++    >
++      <span style={{
++        width: 56,
++        height: 56,
++        borderRadius: 8,
++        background: COLORS.iconBg,
++        display: 'flex',
++        alignItems: 'center',
++        justifyContent: 'center',
++        flexShrink: 0,
++      }}>
++        <Shape shape={shape} />
++      </span>
++      <span style={{
++        flex: 1,
++        fontFamily: 'Mabry Pro, sans-serif',
++        fontWeight: 700,
++        fontSize: 20,
++        color: COLORS.text,
++        marginLeft: 24,
++        marginRight: 24,
++        whiteSpace: 'nowrap',
++        overflow: 'hidden',
++        textOverflow: 'ellipsis',
++        textAlign: 'left',
++      }}>{text}</span>
++      <span style={{
++        width: 40,
++        height: 40,
++        borderRadius: 8,
++        background: '#fff',
++        border: `2px solid ${COLORS.border}`,
++        display: 'flex',
++        alignItems: 'center',
++        justifyContent: 'center',
++        marginRight: 0,
++        flexShrink: 0,
++      }}>
++        <IconSet icon='icon-arrow.svg' />
++      </span>
++    </button>
++  )
++}
++
++export default Suggestion 
+\ No newline at end of file
+diff --git a/frontend/src/SuggestionShapes.jsx b/frontend/src/SuggestionShapes.jsx
+new file mode 100644
+index 0000000..13b4d01
+--- /dev/null
++++ b/frontend/src/SuggestionShapes.jsx
+@@ -0,0 +1,12 @@
++const shapeList = [
++  'shapes/svg/shape=1.svg', 'shapes/svg/shape=2.svg', 'shapes/svg/shape=3.svg', 'shapes/svg/shape=4.svg', 'shapes/svg/shape=5.svg', 'shapes/svg/shape=6.svg'
++]
++const SuggestionShapes = () => (
++  <div style={{display: 'flex', gap: 24}}>
++    {shapeList.map(shape => (
++      <img key={shape} src={`/assets/${shape}`} alt='' style={{width: 48, height: 48}} />
++    ))}
++  </div>
++)
++
++export default SuggestionShapes 
+\ No newline at end of file
+diff --git a/frontend/src/ThumbnailImages.jsx b/frontend/src/ThumbnailImages.jsx
+new file mode 100644
+index 0000000..c82309e
+--- /dev/null
++++ b/frontend/src/ThumbnailImages.jsx
+@@ -0,0 +1,12 @@
++const thumbList = [
++  'thumb-1.jpg', 'thumb-2.jpg', 'thumb-3.jpg', 'thumb-4.jpg'
++]
++const ThumbnailImages = () => (
++  <div style={{display: 'flex', gap: 16}}>
++    {thumbList.map(thumb => (
++      <img key={thumb} src={`/assets/${thumb}`} alt='' style={{width: 48, height: 48, borderRadius: 8}} />
++    ))}
++  </div>
++)
++
++export default ThumbnailImages 
+\ No newline at end of file
+diff --git a/frontend/src/ToolButton.jsx b/frontend/src/ToolButton.jsx
+new file mode 100644
+index 0000000..406c82a
+--- /dev/null
++++ b/frontend/src/ToolButton.jsx
+@@ -0,0 +1,85 @@
++import React, {useState} from 'react'
++
++const COLORS = {
++  black: '#171717',
++  blue: '#2180EC',
++  white: '#FAFAFA',
++}
++const GRADIENT = 'linear-gradient(90deg, #69DEF2 0%, #126FD8 100%)'
++const FOCUS_BORDER = '2px solid #fff'
++const SHADOW = '0px 0px 1px 4px rgba(255,255,255,0.1), inset 0px 2px 1px 0px rgba(255,255,255,0.25), inset 0px -4px 2px 0px rgba(0,0,0,0.25)'
++
++const ToolButton = ({icon, label, onClick}) => {
++  const [state, setState] = useState('default')
++  const [isFocused, setIsFocused] = useState(false)
++
++  let bg = COLORS.black
++  let color = COLORS.white
++  let border = 'none'
++  let showNoise = false
++
++  if (state === 'hover' || (isFocused && state !== 'active')) {
++    bg = COLORS.blue
++    color = COLORS.white
++    showNoise = true
++    if (isFocused) border = FOCUS_BORDER
++  }
++  if (state === 'active') {
++    bg = GRADIENT
++    color = COLORS.white
++    showNoise = true
++  }
++
++  return (
++    <button
++      type='button'
++      onClick={onClick}
++      onMouseEnter={() => setState('hover')}
++      onMouseLeave={() => setState('default')}
++      onMouseDown={() => setState('active')}
++      onMouseUp={() => setState('hover')}
++      onFocus={() => setIsFocused(true)}
++      onBlur={() => setIsFocused(false)}
++      style={{
++        position: 'relative',
++        display: 'flex',
++        alignItems: 'center',
++        justifyContent: 'center',
++        width: 182,
++        height: 48,
++        padding: '12px 24px',
++        borderRadius: 6,
++        border,
++        boxShadow: SHADOW,
++        background: bg,
++        outline: 'none',
++        cursor: 'pointer',
++        fontFamily: 'Mabry Pro, sans-serif',
++        fontWeight: 700,
++        fontSize: 20,
++        color,
++        lineHeight: 1.2,
++        userSelect: 'none',
++        overflow: 'hidden',
++        transition: 'background 0.15s, color 0.15s, border 0.15s',
++      }}
++    >
++      {label && <span style={{zIndex: 1}}>{label}</span>}
++      {showNoise && (
++        <span
++          style={{
++            position: 'absolute',
++            inset: 0,
++            background: 'url(/assets/texture/noise.png) center/cover',
++            opacity: 0.2,
++            mixBlendMode: 'hard-light',
++            pointerEvents: 'none',
++            borderRadius: 6,
++          }}
++        />
++      )}
++    </button>
++  )
++}
++
++export default ToolButton 
+\ No newline at end of file
+diff --git a/frontend/src/index.css b/frontend/src/index.css
+new file mode 100644
+index 0000000..6b5eae3
+--- /dev/null
++++ b/frontend/src/index.css
+@@ -0,0 +1,52 @@
++@font-face {
++  font-family: 'Mabry Pro';
++  src: url('/assets/font/MabryPro-Regular.woff') format('woff'),
++       url('/assets/font/MabryPro-Regular.ttf') format('truetype');
++  font-weight: 400;
++  font-style: normal;
++  font-display: swap;
++}
++@font-face {
++  font-family: 'Mabry Pro';
++  src: url('/assets/font/MabryPro-Medium.woff') format('woff'),
++       url('/assets/font/MabryPro-Medium.ttf') format('truetype');
++  font-weight: 500;
++  font-style: normal;
++  font-display: swap;
++}
++@font-face {
++  font-family: 'Mabry Pro';
++  src: url('/assets/font/MabryPro-Bold.woff') format('woff'),
++       url('/assets/font/MabryPro-Bold.ttf') format('truetype');
++  font-weight: 700;
++  font-style: normal;
++  font-display: swap;
++}
++@font-face {
++  font-family: 'Mabry Pro';
++  src: url('/assets/font/MabryPro-Black.woff') format('woff'),
++       url('/assets/font/MabryPro-Black.ttf') format('truetype');
++  font-weight: 900;
++  font-style: normal;
++  font-display: swap;
++}
++@font-face {
++  font-family: 'Mabry Pro';
++  src: url('/assets/font/MabryPro-Light.woff') format('woff'),
++       url('/assets/font/MabryPro-Light.ttf') format('truetype');
++  font-weight: 300;
++  font-style: normal;
++  font-display: swap;
++}
++
++body, html {
++  margin: 0;
++  font-family: 'Mabry Pro', sans-serif;
++  -webkit-font-smoothing: antialiased;
++  -moz-osx-font-smoothing: grayscale;
++}
++
++code {
++  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
++    monospace;
++}
+diff --git a/frontend/src/logo.svg b/frontend/src/logo.svg
+new file mode 100644
+index 0000000..6b60c10
+--- /dev/null
++++ b/frontend/src/logo.svg
+@@ -0,0 +1,7 @@
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3">
++    <g fill="#61DAFB">
++        <path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/>
++        <circle cx="420.9" cy="296.5" r="45.7"/>
++        <path d="M520.5 78.1z"/>
++    </g>
++</svg>
+diff --git a/frontend/src/main.jsx b/frontend/src/main.jsx
+new file mode 100644
+index 0000000..a2918e6
+--- /dev/null
++++ b/frontend/src/main.jsx
+@@ -0,0 +1,10 @@
++import React from 'react'
++import ReactDOM from 'react-dom/client'
++import App from './App'
++import './index.css'
++
++ReactDOM.createRoot(document.getElementById('root')).render(
++  <React.StrictMode>
++    <App />
++  </React.StrictMode>
++) 
+\ No newline at end of file
+diff --git a/frontend/src/service-worker.js b/frontend/src/service-worker.js
+new file mode 100644
+index 0000000..0f1e0ce
+--- /dev/null
++++ b/frontend/src/service-worker.js
+@@ -0,0 +1,72 @@
++/* eslint-disable no-restricted-globals */
++
++// This service worker can be customized!
++// See https://developers.google.com/web/tools/workbox/modules
++// for the list of available Workbox modules, or add any other
++// code you'd like.
++// You can also remove this file if you'd prefer not to use a
++// service worker, and the Workbox build step will be skipped.
++
++import { clientsClaim } from 'workbox-core';
++import { ExpirationPlugin } from 'workbox-expiration';
++import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
++import { registerRoute } from 'workbox-routing';
++import { StaleWhileRevalidate } from 'workbox-strategies';
++
++clientsClaim();
++
++// Precache all of the assets generated by your build process.
++// Their URLs are injected into the manifest variable below.
++// This variable must be present somewhere in your service worker file,
++// even if you decide not to use precaching. See https://cra.link/PWA
++precacheAndRoute(self.__WB_MANIFEST);
++
++// Set up App Shell-style routing, so that all navigation requests
++// are fulfilled with your index.html shell. Learn more at
++// https://developers.google.com/web/fundamentals/architecture/app-shell
++const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
++registerRoute(
++  // Return false to exempt requests from being fulfilled by index.html.
++  ({ request, url }) => {
++    // If this isn't a navigation, skip.
++    if (request.mode !== 'navigate') {
++      return false;
++    } // If this is a URL that starts with /_, skip.
++
++    if (url.pathname.startsWith('/_')) {
++      return false;
++    } // If this looks like a URL for a resource, because it contains // a file extension, skip.
++
++    if (url.pathname.match(fileExtensionRegexp)) {
++      return false;
++    } // Return true to signal that we want to use the handler.
++
++    return true;
++  },
++  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
++);
++
++// An example runtime caching route for requests that aren't handled by the
++// precache, in this case same-origin .png requests like those from in public/
++registerRoute(
++  // Add in any other file extensions or routing criteria as needed.
++  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'), // Customize this strategy as needed, e.g., by changing to CacheFirst.
++  new StaleWhileRevalidate({
++    cacheName: 'images',
++    plugins: [
++      // Ensure that once this runtime cache reaches a maximum size the
++      // least-recently used images are removed.
++      new ExpirationPlugin({ maxEntries: 50 }),
++    ],
++  })
++);
++
++// This allows the web app to trigger skipWaiting via
++// registration.waiting.postMessage({type: 'SKIP_WAITING'})
++self.addEventListener('message', (event) => {
++  if (event.data && event.data.type === 'SKIP_WAITING') {
++    self.skipWaiting();
++  }
++});
++
++// Any other custom service worker logic can go here.
+diff --git a/frontend/src/serviceWorkerRegistration.js b/frontend/src/serviceWorkerRegistration.js
+new file mode 100644
+index 0000000..2262ecd
+--- /dev/null
++++ b/frontend/src/serviceWorkerRegistration.js
+@@ -0,0 +1,137 @@
++// This optional code is used to register a service worker.
++// register() is not called by default.
++
++// This lets the app load faster on subsequent visits in production, and gives
++// it offline capabilities. However, it also means that developers (and users)
++// will only see deployed updates on subsequent visits to a page, after all the
++// existing tabs open on the page have been closed, since previously cached
++// resources are updated in the background.
++
++// To learn more about the benefits of this model and instructions on how to
++// opt-in, read https://cra.link/PWA
++
++const isLocalhost = Boolean(
++  window.location.hostname === 'localhost' ||
++    // [::1] is the IPv6 localhost address.
++    window.location.hostname === '[::1]' ||
++    // 127.0.0.0/8 are considered localhost for IPv4.
++    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
++);
++
++export function register(config) {
++  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
++    // The URL constructor is available in all browsers that support SW.
++    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
++    if (publicUrl.origin !== window.location.origin) {
++      // Our service worker won't work if PUBLIC_URL is on a different origin
++      // from what our page is served on. This might happen if a CDN is used to
++      // serve assets; see https://github.com/facebook/create-react-app/issues/2374
++      return;
++    }
++
++    window.addEventListener('load', () => {
++      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
++
++      if (isLocalhost) {
++        // This is running on localhost. Let's check if a service worker still exists or not.
++        checkValidServiceWorker(swUrl, config);
++
++        // Add some additional logging to localhost, pointing developers to the
++        // service worker/PWA documentation.
++        navigator.serviceWorker.ready.then(() => {
++          console.log(
++            'This web app is being served cache-first by a service ' +
++              'worker. To learn more, visit https://cra.link/PWA'
++          );
++        });
++      } else {
++        // Is not localhost. Just register service worker
++        registerValidSW(swUrl, config);
++      }
++    });
++  }
++}
++
++function registerValidSW(swUrl, config) {
++  navigator.serviceWorker
++    .register(swUrl)
++    .then((registration) => {
++      registration.onupdatefound = () => {
++        const installingWorker = registration.installing;
++        if (installingWorker == null) {
++          return;
++        }
++        installingWorker.onstatechange = () => {
++          if (installingWorker.state === 'installed') {
++            if (navigator.serviceWorker.controller) {
++              // At this point, the updated precached content has been fetched,
++              // but the previous service worker will still serve the older
++              // content until all client tabs are closed.
++              console.log(
++                'New content is available and will be used when all ' +
++                  'tabs for this page are closed. See https://cra.link/PWA.'
++              );
++
++              // Execute callback
++              if (config && config.onUpdate) {
++                config.onUpdate(registration);
++              }
++            } else {
++              // At this point, everything has been precached.
++              // It's the perfect time to display a
++              // "Content is cached for offline use." message.
++              console.log('Content is cached for offline use.');
++
++              // Execute callback
++              if (config && config.onSuccess) {
++                config.onSuccess(registration);
++              }
++            }
++          }
++        };
++      };
++    })
++    .catch((error) => {
++      console.error('Error during service worker registration:', error);
++    });
++}
++
++function checkValidServiceWorker(swUrl, config) {
++  // Check if the service worker can be found. If it can't reload the page.
++  fetch(swUrl, {
++    headers: { 'Service-Worker': 'script' },
++  })
++    .then((response) => {
++      // Ensure service worker exists, and that we really are getting a JS file.
++      const contentType = response.headers.get('content-type');
++      if (
++        response.status === 404 ||
++        (contentType != null && contentType.indexOf('javascript') === -1)
++      ) {
++        // No service worker found. Probably a different app. Reload the page.
++        navigator.serviceWorker.ready.then((registration) => {
++          registration.unregister().then(() => {
++            window.location.reload();
++          });
++        });
++      } else {
++        // Service worker found. Proceed as normal.
++        registerValidSW(swUrl, config);
++      }
++    })
++    .catch(() => {
++      console.log('No internet connection found. App is running in offline mode.');
++    });
++}
++
++export function unregister() {
++  if ('serviceWorker' in navigator) {
++    navigator.serviceWorker.ready
++      .then((registration) => {
++        registration.unregister();
++      })
++      .catch((error) => {
++        console.error(error.message);
++      });
++  }
++}
+diff --git a/frontend/src/setupTests.js b/frontend/src/setupTests.js
+new file mode 100644
+index 0000000..8f2609b
+--- /dev/null
++++ b/frontend/src/setupTests.js
+@@ -0,0 +1,5 @@
++// jest-dom adds custom jest matchers for asserting on DOM nodes.
++// allows you to do things like:
++// expect(element).toHaveTextContent(/react/i)
++// learn more: https://github.com/testing-library/jest-dom
++import '@testing-library/jest-dom';
+diff --git a/frontend/src/tokens.js b/frontend/src/tokens.js
+new file mode 100644
+index 0000000..1f17e84
+--- /dev/null
++++ b/frontend/src/tokens.js
+@@ -0,0 +1,33 @@
++// Minimal design tokens (imported from tokens_new.json)
++export const colors = {
++  black: '#000',
++  white: '#fff',
++  primary: '#fea2e4', // pink 500
++  secondary: '#fcf261', // yellow 500
++  accent: '#019cfe', // blue 500
++  neutral: '#fafafa', // neutral 50
++  error: '#f76b5a', // red 500
++  success: '#75d46c', // green 500
++}
++
++export const radii = {
++  none: 0,
++  sm: 4,
++  md: 8,
++  lg: 16,
++  xl: 24,
++  full: 9999,
++}
++
++export const fontSizes = {
++  xs: 10,
++  sm: 12,
++  base: 16,
++  md: 20,
++  lg: 24,
++  xl: 28,
++  '2xl': 32,
++  '3xl': 40,
++  '4xl': 48,
++  '5xl': 56,
++} 
+\ No newline at end of file

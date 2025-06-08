@@ -1,13 +1,11 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import os
 from dotenv import load_dotenv
 from notion_client import Client
 import requests
-from openai import OpenAI
+import openai
 import sqlite3
 import traceback
 import json
@@ -26,29 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve static files (React build) - for production deployment
-static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
-if os.path.exists(static_dir):
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
-    
-    @app.get("/")
-    async def serve_frontend():
-        return FileResponse(os.path.join(static_dir, "index.html"))
-    
-    @app.get("/{path:path}")
-    async def serve_spa(path: str):
-        file_path = os.path.join(static_dir, path)
-        if os.path.exists(file_path) and os.path.isfile(file_path):
-            return FileResponse(file_path)
-        # Fallback to index.html for SPA routing
-        return FileResponse(os.path.join(static_dir, "index.html"))
-
-# Initialize OpenAI client with error handling
-try:
-    openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY")) if os.getenv("OPENAI_API_KEY") else None
-except Exception as e:
-    print(f"OpenAI client initialization failed: {e}")
-    openai_client = None
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class ChatRequest(BaseModel):
     message: str
@@ -62,9 +38,7 @@ class SaveChatRequest(BaseModel):
 # Database initialization
 def init_database():
     """Initialize the SQLite database with chat history tables."""
-    db_path = os.getenv("DATABASE_PATH", "../agent_memory.db")
-    # Ensure directory exists
-    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    db_path = "../agent_memory.db"
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
@@ -107,9 +81,7 @@ init_database()
 
 def get_db_connection():
     """Get a database connection."""
-    db_path = os.getenv("DATABASE_PATH", "../agent_memory.db")
-    # Ensure directory exists
-    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    db_path = "../agent_memory.db"
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row  # Enable dict-like access
     return conn
@@ -347,11 +319,6 @@ async def delete_chat_endpoint(chat_id: str):
 async def chat(req: ChatRequest):
     user_msg = req.message
     chat_history.append({"role": "user", "content": user_msg})
-    
-    # Check if OpenAI client is available
-    if not openai_client:
-        return {"reply": "OpenAI API is not configured. Please check your OPENAI_API_KEY environment variable."}
-    
     context = chat_history[-10:]
     system_prompt = (
         "You are Beth's unified digital assistant. "
@@ -367,15 +334,11 @@ async def chat(req: ChatRequest):
         {"role": "system", "content": system_prompt},
         *context,
     ]
-    
-    try:
-        response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=messages,
-            max_tokens=300
-        )
-    except Exception as e:
-        return {"reply": f"OpenAI API error: {str(e)}"}
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=messages,
+        max_tokens=300
+    )
     ai_raw = response.choices[0].message.content
     import json as pyjson
     try:
