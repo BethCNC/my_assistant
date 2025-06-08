@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # Brand Assets Database Properties Reference
 
 ## Database Overview
@@ -78,7 +83,6 @@
 - **High** (red)
 - **Medium** (yellow)
 - **Low** (green)
-
 #### Client Workflow Options:
 - **Brand Design** (red)
 - **Web Design** (green)

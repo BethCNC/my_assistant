@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # 🧠 Beth's Master Notion System Instructions (for AI Agent)
 
 ## 🗂️ 1. General Philosophy & Structure
@@ -61,7 +66,6 @@
 - Routines should be built into **templates and recurring tasks**
 
 ## 🧩 5. Automation & AI Agent Logic
-
 - Do NOT use MCP for local file interactions
 - Only invoke MCP or APIs for remote Notion
 - Always check `GPT Memory` Notion DB for context
@@ -75,3 +79,4 @@
 - Ask Beth for confirmation on assumptions
 - Avoid duplicating data; use relations and views
 - Focus on creating reusable step-by-step routines for each type of task or project
+

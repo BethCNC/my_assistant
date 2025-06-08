@@ -1,0 +1,178 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 🆓 Beth's Assistant - FREE Deployment Guide
+
+## **🏆 Option 1: Render (Recommended Free)**
+
+### **Why Render Free Tier?**
+✅ **Full-stack hosting** (React + FastAPI)  
+✅ **1GB persistent disk** (SQLite survives)  
+✅ **Custom domain** supported  
+✅ **Auto-deploy** from GitHub  
+✅ **HTTPS** included  
+⚠️ **Sleeps after 15min** (wakes in ~30 seconds)
+
+### **Setup Steps:**
+
+1. **Push to GitHub** (if not already)
+```bash
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+```
+
+2. **Deploy on Render**
+- Go to [render.com](https://render.com)
+- Connect GitHub repo
+- Choose "Blueprint" deployment
+- Use the `render.yaml` file I created
+
+3. **Set Environment Variables**
+```
+OPENAI_API_KEY=sk-...
+NOTION_TOKEN=secret_...
+FIGMA_ACCESS_TOKEN=figd_...
+GITHUB_TOKEN=ghp_...
+# Add all your API keys
+```
+
+4. **Custom Domain** (Optional)
+- Render Dashboard → Settings → Custom Domains
+- Add: `assistant.yourdomain.com`
+- Update DNS: `CNAME assistant → your-render-url`
+
+---
+
+## **🔥 Option 2: Railway Free ($5 monthly credit)**
+
+### **Why Railway?**
+✅ **$5/month credit** (covers most personal use)  
+✅ **Better performance** than Render free  
+✅ **No sleep** limitation  
+✅ **Simpler setup**
+
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Deploy
+railway login
+railway init
+railway up
+```
+
+**Note**: $5 credit usually covers 1-2 months of light usage.
+
+---
+
+## **🌟 Option 3: Vercel + PythonAnywhere Split**
+
+### **Frontend (Vercel - Free)**
+```bash
+cd test-vite
+npm run build
+vercel --prod
+```
+
+### **Backend (PythonAnywhere - Free)**
+1. Sign up at [pythonanywhere.com](https://www.pythonanywhere.com)
+2. Upload your `backend/` folder
+3. Create web app with manual config
+4. Set WSGI file to use FastAPI
+
+### **Update Frontend Config**
+```javascript
+// test-vite/src/config.js
+production: {
+  API_BASE: 'https://yourusername.pythonanywhere.com',
+}
+```
+
+---
+
+## **💻 Option 4: Replit (Completely Free)**
+
+### **Setup:**
+1. Import GitHub repo to [replit.com](https://replit.com)
+2. Create `.replit` file:
+```toml
+run = "uvicorn backend.main:app --host 0.0.0.0 --port 3000"
+
+[nix]
+channel = "stable-23.05"
+
+[deployment]
+run = ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port 3000"]
+```
+
+3. Install dependencies in Shell:
+```bash
+pip install -r requirements.txt
+cd test-vite && npm install && npm run build
+```
+
+4. **Always On** (Optional upgrade for $7/month)
+
+---
+
+## **📊 Free Tier Comparison**
+
+| Service | Compute | Storage | Custom Domain | Sleep? |
+|---------|---------|---------|---------------|--------|
+| **Render** | 512MB RAM | 1GB disk | ✅ Yes | 15min |
+| **Railway** | $5 credit | Persistent | ✅ Yes | No |
+| **Vercel** | Serverless | N/A | ✅ Yes | No |
+| **PythonAnywhere** | Limited CPU | 512MB | ✅ Yes | No |
+| **Replit** | Basic | 1GB | ✅ Yes | Sometimes |
+
+---
+
+## **🚀 Quick Start: Render Deployment**
+
+**Just push this button after setting up GitHub:**
+
+1. **Fork/Clone** your repo to GitHub
+2. **Connect to Render** using the `render.yaml` blueprint
+3. **Add environment variables**
+4. **Deploy!**
+
+Your app will be live at: `https://your-app-name.onrender.com`
+
+---
+
+## **💡 Pro Tips for Free Hosting**
+
+### **Keep Render Awake** (Optional)
+```bash
+# Add to cron job or use a service like uptimerobot.com
+curl https://your-app.onrender.com every 14 minutes
+```
+
+### **Optimize for Free Tiers**
+- **Enable SQLite WAL mode** for better performance
+- **Cache static assets** in frontend
+- **Compress images** in public folder
+- **Minimize bundle size** with Vite optimizations
+
+### **Environment Variables**
+```bash
+# For all services, you'll need these:
+OPENAI_API_KEY=sk-...
+NOTION_TOKEN=secret_...
+FIGMA_ACCESS_TOKEN=figd_...
+GITHUB_TOKEN=ghp_...
+DATABASE_PATH=/opt/render/project/src/data/agent_memory.db
+```
+---
+
+## **🎯 Recommended Path**
+
+1. **Start with Render** (easiest, most features)
+2. **Add custom domain** if you have one
+3. **Monitor usage** and upgrade if needed
+4. **Keep Railway as backup** option
+
+Your assistant will be live and free! 🎉 

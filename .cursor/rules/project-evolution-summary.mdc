@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # 🚀 Beth's AI Agent Project Evolution
 
 ## What You Started With
@@ -113,7 +118,6 @@ Beth Unified Agent → SQLite Memory DB
 - `README.md` - Updated to showcase unified capabilities
 
 ---
-
 ## 🚀 Next Steps & Future Possibilities
 
 ### **Immediate (Ready to Use)**

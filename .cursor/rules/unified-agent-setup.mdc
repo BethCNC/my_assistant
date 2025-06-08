@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # 🌟 Beth's Unified AI Agent Setup Guide
 
 Your complete personal AI assistant that integrates Notion, Figma, Git, and maintains conversation memory.
@@ -279,7 +284,6 @@ python /path/to/beth_unified_agent.py ask "$1"
 ## 🚨 Troubleshooting
 
 ### **Common Issues**
-
 **❌ "Database not found"**
 - Check database ID in `.env`
 - Ensure integration has database access

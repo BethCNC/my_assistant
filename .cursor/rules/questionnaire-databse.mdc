@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # Database Properties for Client Questionnaire 2 Form
 
 Based on your `questionnaire2.md` file, here are the exact properties you need to add to your Notion database:
@@ -63,7 +68,6 @@ Based on your `questionnaire2.md` file, here are the exact properties you need t
 - Handmade & organic
 - Modern & edgy
 - Classic & timeless
-
 ### What Do You Need Help With?
 - Logo design
 - Website design

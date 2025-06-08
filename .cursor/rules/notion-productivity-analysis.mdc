@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # 🆓 Beth's Assistant - FREE Deployment Guide
 
 ## **🏆 Option 1: Render (Recommended Free)**
@@ -85,7 +90,6 @@ production: {
   API_BASE: 'https://yourusername.pythonanywhere.com',
 }
 ```
-
 ---
 
 ## **💻 Option 4: Replit (Completely Free)**
