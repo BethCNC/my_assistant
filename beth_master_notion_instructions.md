@@ -1,0 +1,77 @@
+# 🧠 Beth's Master Notion System Instructions (for AI Agent)
+
+## 🗂️ 1. General Philosophy & Structure
+
+- **Workspace follows a modified PARA method**:
+  - **Projects** = active deliverables, either personal or business
+  - **Areas** = ongoing categories of responsibility (Health, Business, Systems, etc.)
+  - **Notes** = one central database combining all **resources, notes, and references**
+  - **Archive** = where inactive or complete items are moved
+- Core principles:
+  - Minimize redundancy with **linked databases**
+  - Use **pre-built filtered views** and **dashboards** to reduce decision fatigue
+  - Prioritize **action clarity** over data density
+
+## 🧑‍💼 2. Business System — Client CRM
+
+- Custom-built CRM to support neurodivergent-friendly workflows
+- Key Databases:
+  - `Clients`
+  - `Projects`
+  - `Assets`
+  - `Meetings`
+  - `Invoices & Payments`
+- Relationships:
+  - Each Client links to Projects, Assets, Meetings
+  - Projects must have **step-by-step routines** defined per project type (branding, web design, etc.)
+- Key Fields:
+  - Status: `Brainstorming`, `In Progress`, `Needs Feedback`, `Delivered`, `Archived`
+  - Routines: pre-defined template checklists for each project type
+
+## 🧬 3. Personal Health System
+
+- `Medical Calendar` is the hub
+- Supporting databases:
+  - `Symptoms`
+  - `Medications`
+  - `Diagnoses`
+  - `Medical Team`
+  - `Notes`
+- All logs go into `Medical Calendar` with linked entries
+- Symptom tracking needs to be **fast**, **mobile-friendly**, and **easy to automate**
+- Visual dashboards to show patterns over time (fatigue, pain, HR, etc.)
+
+## ✅ 4. Task & Time Management
+
+- Single master `Tasks` database
+- Critical filters:
+  - `Inbox`: quick capture
+  - `Do Next`: highest-priority short tasks
+  - `Scheduled`, `Waiting`, `Completed`
+- Properties:
+  - `Type`: (Inbox, Do Next, Admin, Health, Business Ops, etc.)
+  - `Estimated Time`, `Status`, `Due Date`
+  - Related Project or Area
+- Weekly and Daily filtered views are essential
+- Emphasis on **pre-defined routines per task type**:
+  - Morning Routine
+  - Weekly Review
+  - Content Creation Flow
+  - Project Setup Steps
+- Routines should be built into **templates and recurring tasks**
+
+## 🧩 5. Automation & AI Agent Logic
+
+- Do NOT use MCP for local file interactions
+- Only invoke MCP or APIs for remote Notion
+- Always check `GPT Memory` Notion DB for context
+- Default to **confirming** details rather than guessing
+- Always ask for clarification when uncertain
+
+## 💬 10. Agent Behavior Guidelines
+
+- Prioritize clarity, structure, and visual simplicity
+- Always build out action-based templates and workflows
+- Ask Beth for confirmation on assumptions
+- Avoid duplicating data; use relations and views
+- Focus on creating reusable step-by-step routines for each type of task or project

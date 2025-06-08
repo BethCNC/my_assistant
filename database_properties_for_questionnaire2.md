@@ -1,0 +1,95 @@
+# Database Properties for Client Questionnaire 2 Form
+
+Based on your `questionnaire2.md` file, here are the exact properties you need to add to your Notion database:
+
+## Property List (22 Questions)
+
+1. **What's Your Name & Business Called?** → Rich Text
+2. **Tell Me About Your Business Like I'm Your Best Friend** → Rich Text  
+3. **What's Your Origin Story?** → Rich Text
+4. **What Are Your Core Values? (The Non-Negotiables)** → Rich Text
+5. **If Your Brand Went to a Party, How Would It Behave? (Choose 5 Words)** → Multi-select
+6. **Who's Your Dream Client?** → Rich Text
+7. **What Problems Do You Solve for Them?** → Rich Text
+8. **What's Your Secret Sauce? (What Makes You Different)** → Rich Text
+9. **Describe Your Vibe in One Sentence** → Rich Text
+10. **If Your Brand Had a Voice, How Would It Sound?** → Select
+11. **What Colors Make Your Heart Sing?** → Multi-select
+12. **Any Colors That Make You Want to Run Away?** → Rich Text
+13. **What's Your Business Goal This Year?** → Rich Text
+14. **Where Do You Want to Be in 5 Years?** → Rich Text
+15. **What's Not Working in Your Current Brand/Marketing?** → Rich Text
+16. **If Money Wasn't an Object, What Would Your Dream Brand Look Like?** → Rich Text
+17. **Share 3-5 Brands You Admire (And Why)** → Rich Text
+18. **What Style Vibes Are You Feeling?** → Multi-select
+19. **What Do You Need Help With?** → Multi-select
+20. **What's Your Timeline?** → Select
+21. **What's Your Budget Range?** → Select
+22. **Tell Me Something Fun About Yourself!** → Rich Text
+23. **Any Questions for Me?** → Rich Text
+
+## Multi-select Options:
+
+### If Your Brand Went to a Party, How Would It Behave?
+- Energetic
+- Calm  
+- Vibrant
+- Peaceful
+- Dynamic
+- Professional
+- Playful
+- Sophisticated
+
+### If Your Brand Had a Voice, How Would It Sound?
+- Friendly & conversational
+- Professional & authoritative  
+- Quirky & fun
+- Warm & nurturing
+- Bold & confident
+- Calm & wise
+
+### What Colors Make Your Heart Sing?
+- Warm tones (reds, oranges, yellows)
+- Cool tones (blues, greens, purples)
+- Neutrals (grays, beiges, whites)
+- Bold & bright
+- Soft & muted
+- Earth tones (browns, greens)
+
+### What Style Vibes Are You Feeling?
+- Clean & minimal
+- Bold & vibrant
+- Elegant & sophisticated
+- Handmade & organic
+- Modern & edgy
+- Classic & timeless
+
+### What Do You Need Help With?
+- Logo design
+- Website design
+- Brand strategy
+- Marketing materials
+- Social media graphics
+- Complete brand identity
+
+### What's Your Timeline?
+- ASAP (Rush job)
+- Within 2-4 weeks
+- 1-2 months
+- 2-3 months
+- I'm flexible
+
+### What's Your Budget Range?
+- $500-1000
+- $1000-2500
+- $2500-5000
+- $5000+
+- Let's chat about it
+
+## Next Steps:
+
+1. Go to your database: https://www.notion.so/7starsdesign/1fe86edcae2c80f3b4cae7556d24cca4
+2. Add each property manually using the property types listed above
+3. Add the multi-select options for the relevant fields
+4. Share the database with your Notion integration
+5. Run `python notion_agent.py` to start using your new form! 

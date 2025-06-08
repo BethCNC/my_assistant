@@ -1,0 +1,325 @@
+# 🌟 Beth's Unified AI Agent Setup Guide
+
+Your complete personal AI assistant that integrates Notion, Figma, Git, and maintains conversation memory.
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy configuration
+cp config.env.example .env
+
+# Setup the agent
+python beth_unified_agent.py setup
+
+# Test the daily dashboard
+python beth_unified_agent.py daily
+```
+
+## 🧠 What This Agent Does
+
+### **Unified Intelligence**
+- **Memory**: Remembers all your conversations and builds context over time
+- **Multi-tool Integration**: Connects Notion, Figma, Git repos, and your life
+- **Smart Capture**: AI categorizes everything you throw at it
+- **Life Management**: ADHD-friendly daily command center
+
+### **Core Commands**
+```bash
+# Daily life dashboard - your command center
+python beth_unified_agent.py daily
+
+# Smart capture with memory context
+python beth_unified_agent.py capture "Design new client onboarding flow"
+
+# Ask your AI advisor anything
+python beth_unified_agent.py ask "What should I focus on today?"
+
+# Check all git repositories
+python beth_unified_agent.py git-status
+
+# Track Figma design files
+python beth_unified_agent.py figma-track FILE_KEY --project "Client Website"
+
+# View conversation memory
+python beth_unified_agent.py memory
+```
+
+## ⚙️ Configuration Setup
+
+### 1. Copy and Edit Configuration
+```bash
+cp config.env.example .env
+# Edit .env with your actual tokens and database IDs
+```
+
+### 2. API Keys & Tokens
+
+**Notion Integration**: 
+1. Go to https://www.notion.so/my-integrations
+2. Create new integration
+3. Copy the "Internal Integration Token"
+
+**OpenAI API Key**:
+1. Visit https://platform.openai.com/api-keys
+2. Create new key
+3. Copy the key
+
+**Figma Token** (Optional):
+1. Go to Figma → Settings → Account → Personal Access Tokens
+2. Generate new token
+3. Copy the token
+
+### 3. Notion Database IDs
+
+Find database IDs from your Notion URLs:
+```
+https://notion.so/your-workspace/DATABASE_ID?v=view_id
+                                  ^^^^^^^^^^^
+                              Copy this part
+```
+
+**Required Databases**:
+- `TASKS_DATABASE_ID` - Your main tasks database
+- `PROJECTS_DATABASE_ID` - Projects tracking
+- `NOTES_DATABASE_ID` - Notes and reference materials
+
+**Optional Databases**:
+- `CLIENTS_DATABASE_ID` - Business client management
+- `HEALTH_CALENDAR_DATABASE_ID` - Medical appointments
+- `BRAND_ASSETS_DATABASE_ID` - Design assets tracking
+- `CHAT_MEMORY_DATABASE_ID` - Agent conversation history
+
+### 4. Grant Database Access
+
+For each database:
+1. Open database in Notion
+2. Click "..." → "Add connections"
+3. Select your integration
+4. Repeat for all databases
+
+## 🔧 Agent Features Breakdown
+
+### **Memory System**
+- **Conversation History**: Remembers what you've discussed
+- **Context Building**: Connects related topics across time
+- **Importance Scoring**: Prioritizes important conversations
+- **Smart Retrieval**: Surfaces relevant past context
+
+```bash
+# View recent memory
+python beth_unified_agent.py memory
+
+# Ask questions referencing past conversations
+python beth_unified_agent.py ask "What did we discuss about the client project last week?"
+```
+
+### **Notion Integration**
+- **Smart Capture**: AI categorizes tasks, notes, health items automatically
+- **Context-Aware**: Uses conversation history to better categorize
+- **PARA Method**: Organizes everything using your Projects/Areas/Resources/Archive system
+- **Cross-Database**: Links related items across databases
+
+```bash
+# Examples of smart capture
+python beth_unified_agent.py capture "Schedule dentist appointment next month"
+# → Goes to Health Calendar
+
+python beth_unified_agent.py capture "Research React component libraries for client site"
+# → Goes to Tasks, linked to project context
+
+python beth_unified_agent.py capture "Great article about ADHD-friendly design patterns"
+# → Goes to Notes with proper categorization
+```
+
+### **Git Repository Tracking**
+- **Multi-Repo Status**: Tracks all your git repositories
+- **Change Detection**: Shows which repos have uncommitted changes
+- **Branch Awareness**: Displays current branch for each repo
+- **Context Integration**: Stores repo status in agent memory
+
+```bash
+# Check all repositories
+python beth_unified_agent.py git-status
+
+# Automatic tracking during daily check-in
+python beth_unified_agent.py daily
+```
+
+**Default Repository Paths**:
+- `~/REPOS` (your main repos folder)
+- `~/Projects` (additional projects)
+- Current directory
+
+### **Figma Design Tracking**
+- **File Monitoring**: Track specific Figma files
+- **Project Linking**: Connect designs to project context
+- **Change Awareness**: Detect when designs are updated
+- **Memory Integration**: Remember design discussions
+
+```bash
+# Track a specific Figma file
+python beth_unified_agent.py figma-track abc123def456 --project "Client Rebrand"
+
+# The agent remembers this and can reference it later
+python beth_unified_agent.py ask "How's the client rebrand design coming?"
+```
+
+### **AI Life Advisor**
+- **Full Context**: Accesses all your tools and memory
+- **ADHD-Conscious**: Provides clear, actionable advice
+- **Tool Integration**: Suggests actions across Notion, Git, Figma
+- **Learning**: Gets better as it learns your patterns
+
+```bash
+# Ask anything about your work/life
+python beth_unified_agent.py ask "I'm feeling overwhelmed, what should I prioritize?"
+python beth_unified_agent.py ask "What client projects need attention this week?"
+python beth_unified_agent.py ask "Help me plan my development workflow"
+```
+
+## 📊 Daily Workflow Integration
+
+### **Morning Routine** (5 minutes)
+```bash
+# Your unified command center
+python beth_unified_agent.py daily
+```
+Shows:
+- High-priority Notion tasks
+- Git repositories with changes
+- Recent conversation context
+- Figma files being tracked
+
+### **Throughout the Day**
+```bash
+# Instant capture of thoughts/tasks
+python beth_unified_agent.py capture "Client wants to add e-commerce functionality"
+
+# Get advice when stuck
+python beth_unified_agent.py ask "Best way to handle client scope creep?"
+
+# Check development status
+python beth_unified_agent.py git-status
+```
+
+### **Weekly Review**
+```bash
+# Ask for weekly insights
+python beth_unified_agent.py ask "What did I accomplish this week across all my projects?"
+
+# Review conversation history
+python beth_unified_agent.py memory
+```
+
+## 🔗 Advanced Integrations
+
+### **Cursor IDE Integration**
+Add to `.vscode/tasks.json`:
+
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🌟 Daily Dashboard",
+      "type": "shell",
+      "command": "python",
+      "args": ["beth_unified_agent.py", "daily"],
+      "group": "build"
+    },
+    {
+      "label": "💬 Ask AI Advisor",
+      "type": "shell",
+      "command": "python",
+      "args": ["beth_unified_agent.py", "ask", "${input:aiQuery}"],
+      "group": "build"
+    },
+    {
+      "label": "📝 Quick Capture",
+      "type": "shell",
+      "command": "python",
+      "args": ["beth_unified_agent.py", "capture", "${input:captureText}"],
+      "group": "build"
+    },
+    {
+      "label": "🔧 Git Status",
+      "type": "shell",
+      "command": "python",
+      "args": ["beth_unified_agent.py", "git-status"],
+      "group": "build"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "captureText",
+      "description": "What do you want to capture?",
+      "type": "promptString"
+    },
+    {
+      "id": "aiQuery",
+      "description": "What do you want to ask your AI advisor?",
+      "type": "promptString"
+    }
+  ]
+}
+```
+
+**Quick Access**: `Cmd+Shift+P` → "Tasks: Run Task" → Choose command
+
+### **Alfred/Raycast Shortcuts**
+```bash
+# Add to Alfred workflow
+python /path/to/beth_unified_agent.py capture "$1"
+python /path/to/beth_unified_agent.py ask "$1"
+```
+
+## 🚨 Troubleshooting
+
+### **Common Issues**
+
+**❌ "Database not found"**
+- Check database ID in `.env`
+- Ensure integration has database access
+- Database ID should be 32 characters
+
+**❌ "Memory database error"**
+- Delete `agent_memory.db` and run setup again
+- Check write permissions in project directory
+
+**❌ "Git command failed"**
+- Install git if not present
+- Check repository paths in configuration
+- Verify repositories are actual git repos
+
+**❌ "Figma API error"**
+- Check Figma token validity
+- Ensure token has proper permissions
+- Verify file key format
+
+### **Performance Notes**
+
+- Memory database grows over time - agent handles cleanup automatically
+- Git status checking can be slow with many repositories
+- Figma API has rate limits - don't track too many files frequently
+
+## 🌱 Getting Started Tips
+
+1. **Start Simple**: Begin with just `daily` and `capture` commands
+2. **Build Memory**: Use the agent regularly so it learns your patterns
+3. **Ask Questions**: The AI advisor gets better as you interact with it
+4. **Customize**: Adjust configuration paths and settings for your workflow
+5. **Integrate Gradually**: Add Figma tracking and git monitoring as needed
+
+## 🎯 What Makes This Special
+
+Unlike basic automation scripts, this agent:
+- **Learns your patterns** through conversation memory
+- **Connects across tools** instead of working in silos  
+- **Reduces cognitive load** with ADHD-friendly design
+- **Grows with you** as your workflow evolves
+- **Maintains context** so you don't repeat yourself
+
+Your personal AI that actually remembers and grows with your work style. 🧠✨ 

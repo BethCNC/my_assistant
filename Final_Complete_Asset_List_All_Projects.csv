@@ -1,0 +1,39 @@
+Name,Description,Type,Stage,Client Workflow
+Creative Brief,"Summary of goals, vision, and objectives for the brand project",Brand Strategy,Discovery,Brand Design
+Moodboard,Visual inspiration and aesthetic guide for branding,Brand Strategy,Discovery,Brand Design
+Brand Naming Concepts,"Names brainstormed for the brand, product, or service",Brand Strategy,Discovery,Brand Design
+Mission / Vision / Values,Foundational statements about brand purpose and future,Brand Strategy,Discovery,Brand Design
+Target Audience Personas,"User profiles capturing demographics, behaviors, and pain points",Brand Strategy,Discovery,Brand Design
+Brand Positioning Statement,Defines unique value proposition and market position,Brand Strategy,Discovery,Brand Design
+Color Palette,Full color system with accessibility in mind,Brand Guidelines,Design,Brand Design
+Typography System,"Primary and secondary typefaces, sizes, and usage rules",Brand Guidelines,Design,Brand Design
+Logos,"Primary logo, alternates, and responsive formats",Brand Asset/Template,Design,Brand Design
+Social Media Templates,"Designed and editable posts, reels, and stories templates",Brand Asset/Template,Design,Brand Design
+Wireframes,Lo-fi layout showing structure and user flow,UX Research & Design,Discovery,Web Design
+User Journey Maps,Pathways users follow to achieve a goal,UX Research & Design,Discovery,Web Design
+Website Inspiration Board,Collection of UI references and competitor sites,UX Research & Design,Discovery,Web Design
+Sitemap,Hierarchy of website structure,UX Research & Design,Discovery,Web Design
+Hero Section Component,Prominent top section with brand message and CTA,UI Design System Component,Design,"Web Design, Web Development"
+Navigation Bar,Primary site menu including mobile/responsive state,UI Design System Component,Design,"Web Design, Web Development"
+Footer Component,"Bottom section with links, disclaimers, contact",UI Design System Component,Design,"Web Design, Web Development"
+Form Component,"Includes input, textarea, checkbox, radio",UI Design System Component,Design,"Web Design, Web Development"
+Toast/Alert/Badge Components,"Feedback, notification, and status indicators",UI Design System Component,Design,"Web Design, Web Development"
+Color Tokens,Named color values used in theming,UI Design System Token,Design,"Web Design, Web Development"
+Spacing Tokens,Margin/padding variables by step scale,UI Design System Token,Design,"Web Design, Web Development"
+Typography Tokens,"Font families, sizes, weights, responsive rules",UI Design System Token,Design,"Web Design, Web Development"
+HTML/CSS Template,Static site or coded components using HTML/CSS,Web Development,Development,Web Development
+WordPress Theme,Developed theme for WordPress with custom blocks,Web Development,Development,Web Development
+Hosting Details,Credentials and DNS/server configuration,Web Development,Discovery,Web Development
+Tech Stack Docs,"List of tools, plugins, and frameworks used",Web Development,Discovery,Web Development
+Performance Metrics,"Reports from Lighthouse, GTmetrix, or PageSpeed",Web Analytics,Discovery,Web Development
+SEO Insights,"Metadata, page titles, keyword research",Web Analytics,Discovery,Web Development
+A/B Testing Results,Findings from testing design variants,Web Analytics,Discovery,Web Development
+Brand Discovery Questionnaire,A survey or interview document gathering the client’s vision,preferences,and background information,"Brand Strategy, Discovery, Brand Design"
+Brand Audit Report,Evaluation of the client’s existing brand assets and market perception (what’s working and what isn’t),Brand Strategy,Discovery,Brand Design
+Mission,Vision & Values Document,Defines the brand’s core purpose,long-term vision,"and fundamental values, Brand Strategy, Discovery, Brand Design"
+Audience Persona Profiles,Fictional profiles of target customers,detailing demographics,behaviors,"needs, and pain points, Brand Strategy, Discovery, Brand Design, Web Design"
+Competitive Analysis Report,Analysis of competitor brands/products outlining their strengths and weaknesses to identify gaps and opportunities,Brand Strategy,Discovery,"Brand Design, Web Design"
+SEO Keyword Research,Research document identifying high-value search keywords and content recommendations for targeting them,Web Analytics,Discovery,Web Development
+Customer Journey Map,Visualization of the end-to-end customer experience,highlighting key touchpoints and user emotions across stages,UX Research & Design,"Discovery, Web Design"
+Content Audit/Inventory,Catalog of existing website content (pages,media) with assessments (e.g. quality,gaps) to inform content strategy,"UX Research & Design, Discovery, Web Design"
+Website Requirements Document,A list of required website features,functionalities,and content (serving as a functional specification for design & development),"Web Development, Discovery, Web Development"
