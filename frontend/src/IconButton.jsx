@@ -6,6 +6,7 @@ const COLORS = {
   active: '#1565C0',
   focusBorder: '#019CFE',
 }
+const SHADOW = '0 2px 8px 0 rgba(0,0,0,0.08)'
 
 const IconButton = ({icon, ariaLabel = ''}) => {
   const [state, setState] = useState('default')
@@ -35,6 +36,7 @@ const IconButton = ({icon, ariaLabel = ''}) => {
         outline: 'none',
         cursor: 'pointer',
         transition: 'background 0.15s, border 0.15s',
+        boxShadow: SHADOW,
       }}
       onMouseEnter={() => setState('hover')}
       onMouseLeave={() => setState('default')}
