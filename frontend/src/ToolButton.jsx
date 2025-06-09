@@ -43,11 +43,11 @@ const ToolButton = ({icon, label, onClick}) => {
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         width: 182,
         height: 48,
-        padding: '12px 24px',
-        borderRadius: 6,
+        padding: '0 24px',
+        borderRadius: 8,
         border,
         boxShadow: SHADOW,
         background: bg,
@@ -61,17 +61,15 @@ const ToolButton = ({icon, label, onClick}) => {
         userSelect: 'none',
         overflow: 'hidden',
         transition: 'background 0.15s, color 0.15s, border 0.15s',
-        gap: 12,
+        gap: 16,
       }}
     >
-      {icon && (
-        <img
-          src={`/assets/${icon}`}
-          alt='icon'
-          style={{width: 24, height: 24, filter: 'brightness(0) invert(1)'}}
-        />
-      )}
-      {label && <span style={{zIndex: 1}}>{label}</span>}
+      <img
+        src={`/assets/${icon}`}
+        alt='icon'
+        style={{width: 28, height: 28, marginRight: 0, filter: 'brightness(0) invert(1)'}}
+      />
+      <span style={{zIndex: 1, fontWeight: 700, fontSize: 20, color}}>{label}</span>
       {showNoise && (
         <span
           style={{
@@ -81,7 +79,7 @@ const ToolButton = ({icon, label, onClick}) => {
             opacity: 0.2,
             mixBlendMode: 'hard-light',
             pointerEvents: 'none',
-            borderRadius: 6,
+            borderRadius: 8,
           }}
         />
       )}
