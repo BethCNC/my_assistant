@@ -28,14 +28,14 @@ const ChatInput = ({value, onChange, onSend, attachments = [], onRemoveAttachmen
       style={{
         width: '100%',
         background: COLORS.bg,
-        borderRadius: 12,
+        borderRadius: 8,
         boxSizing: 'border-box',
-        boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
         border: `2px solid ${focus ? COLORS.focus : COLORS.border}`,
         padding: 16,
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
+        boxShadow: 'none',
       }}
     >
       {/* Attachments Bar */}
@@ -73,11 +73,11 @@ const ChatInput = ({value, onChange, onSend, attachments = [], onRemoveAttachmen
       <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
         {/* Left icon buttons */}
         <div style={{display: 'flex', flexDirection: 'row', gap: 8}}>
-          <IconButton icon='icon-paperclip.svg' ariaLabel='Attach file' />
-          <IconButton icon='icon-camera.svg' ariaLabel='Attach image' />
+          <IconButton icon='icon-paperclip.svg' ariaLabel='Attach file' size={28} />
+          <IconButton icon='icon-camera.svg' ariaLabel='Attach image' size={28} />
         </div>
         {/* Textarea */}
-        <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 2}}>
+        <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 2, justifyContent: 'center'}}>
           <textarea
             ref={textareaRef}
             value={value}
@@ -101,6 +101,8 @@ const ChatInput = ({value, onChange, onSend, attachments = [], onRemoveAttachmen
               outline: 'none',
               boxSizing: 'border-box',
               background: COLORS.bg,
+              display: 'flex',
+              alignItems: 'center',
             }}
           />
           <div style={{display: 'flex', justifyContent: 'flex-end', color: COLORS.subtext, fontSize: 16, fontFamily: 'Mabry Pro, sans-serif'}}>
