@@ -26,7 +26,7 @@ const messages = [
   {id: 1, sender: 'assistant', text: 'How can I help you today, Beth?', time: '10 Min ago'},
   {id: 2, sender: 'user', text: 'I want to learn about UI design systems and how to build them in FIgms.', time: '12 Min ago'},
   {id: 3, sender: 'assistant', text: 'Sure I can help you learn all about design systems in Figma. Where would you like to start?', time: '10 Min ago'},
-  {id: 4, sender: 'user', text: 'Let's start by learning about figma variable collections and best practices for setting them up in terms of how many collections you should have and what types and what they should contain.', time: '12 Min ago'},
+  {id: 4, sender: 'user', text: 'Let\'s start by learning about figma variable collections and best practices for setting them up in terms of how many collections you should have and what types and what they should contain.', time: '12 Min ago'},
 ]
 
 const App = () => (
