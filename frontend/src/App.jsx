@@ -29,49 +29,60 @@ const messages = [
   {id: 4, sender: 'user', text: 'Let\'s start by learning about figma variable collections and best practices for setting them up in terms of how many collections you should have and what types and what they should contain.', time: '12 Min ago'},
 ]
 
-const App = () => (
-  <div
-    style={{
-      width: '100vw',
-      height: '100vh',
-      minHeight: 1024,
-      minWidth: 1440,
-      background: 'url(/assets/gradient.png) center/cover',
-      display: 'flex',
-      flexDirection: 'row',
-      fontFamily: 'Mabry Pro, sans-serif',
-    }}
-  >
-    {/* Sidebar */}
-    <Sidebar chatList={chatList} onNewChat={() => {}} />
-    {/* Main content */}
-    <div style={{flex: 1, display: 'flex', flexDirection: 'column', padding: 40, gap: 32}}>
-      {/* Header bar */}
-      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
-          <img src='/assets/smiley.svg' alt='' style={{width: 40, height: 40}} />
-          <span className='nav-title' style={{fontWeight: 700, fontSize: 28, color: '#fff', letterSpacing: 1}}>BETH'S ASSISTANT</span>
+const App = () => {
+  const [messages, setMessages] = React.useState([])
+  return (
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        minHeight: 1024,
+        minWidth: 1440,
+        background: 'url(/assets/gradient.png) center/cover',
+        display: 'flex',
+        flexDirection: 'row',
+        fontFamily: 'Mabry Pro, sans-serif',
+      }}
+    >
+      {/* Sidebar */}
+      <Sidebar chatList={chatList} onNewChat={() => {}} />
+      {/* Main content */}
+      <div style={{flex: 1, display: 'flex', flexDirection: 'column', padding: 40, gap: 32}}>
+        {/* Header bar */}
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
+            <img src='/assets/smiley.svg' alt='' style={{width: 40, height: 40}} />
+            <span className='nav-title' style={{fontWeight: 700, fontSize: 28, color: '#fff', letterSpacing: 1}}>BETH'S ASSISTANT</span>
+          </div>
+          <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
+            <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>FRIDAY</span>
+            <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>JUNE 6, 2025</span>
+            <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>11:25 AM</span>
+          </div>
         </div>
-        <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
-          <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>FRIDAY</span>
-          <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>JUNE 6, 2025</span>
-          <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>11:25 AM</span>
+        {/* Tool buttons row */}
+        <div style={{display: 'flex', gap: 24, marginBottom: 32}}>
+          {tools.map(t => (
+            <ToolButton key={t.label} icon={t.icon} label={t.label} />
+          ))}
         </div>
-      </div>
-      {/* Tool buttons row */}
-      <div style={{display: 'flex', gap: 24, marginBottom: 32}}>
-        {tools.map(t => (
-          <ToolButton key={t.label} icon={t.icon} label={t.label} />
-        ))}
-      </div>
-      {/* Chat conversation area */}
-      <ChatConversation messages={messages} />
-      {/* Chat input at bottom */}
-      <div style={{marginTop: 'auto'}}>
-        <ChatInput value='' onChange={() => {}} onSend={() => {}} />
+        {/* Suggestions or Chat area */}
+        {messages.length === 0 ? (
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 32}}>
+            {suggestions.map((s, i) => (
+              <Suggestion key={i} text={s.text} />
+            ))}
+          </div>
+        ) : (
+          <ChatConversation messages={messages} />
+        )}
+        {/* Chat input at bottom */}
+        <div style={{marginTop: 'auto'}}>
+          <ChatInput value='' onChange={() => {}} onSend={() => {}} />
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default App 
