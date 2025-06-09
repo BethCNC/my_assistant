@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 
+// Figma: 270x52px, 6px radius, #737373 text, 16px font, ellipsis, hover bg rgba(115,115,115,0.08), no border, left-aligned, Mabry Pro
 const ChatPreview = ({text}) => {
   const [hover, setHover] = useState(false)
   return (
@@ -21,6 +22,8 @@ const ChatPreview = ({text}) => {
         boxSizing: 'border-box',
         borderRadius: 6,
         transition: 'background 0.15s',
+        cursor: 'pointer',
+        justifyContent: 'flex-start',
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
