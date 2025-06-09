@@ -50,7 +50,7 @@ const App = () => (
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
           <img src='/assets/smiley.svg' alt='' style={{width: 40, height: 40}} />
-          <span style={{fontWeight: 700, fontSize: 28, color: '#fff', letterSpacing: 1}}>BETH'S ASSISTANT</span>
+          <span className='nav-title' style={{fontWeight: 700, fontSize: 28, color: '#fff', letterSpacing: 1}}>BETH'S ASSISTANT</span>
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
           <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>FRIDAY</span>

@@ -50,3 +50,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.nav-title {
+  transition: background 0.2s, color 0.2s;
+  background: none;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: #fff;
+  background-clip: text;
+  text-fill-color: #fff;
+}
+
+.nav-title:hover {
+  background: url('/assets/gradient.png') center/cover;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  text-fill-color: transparent;
+}
