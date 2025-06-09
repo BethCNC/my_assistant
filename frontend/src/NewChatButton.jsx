@@ -9,7 +9,7 @@ const GRADIENT = 'linear-gradient(90deg, #69DEF2 0%, #126FD8 100%)'
 const FOCUS_BORDER = '2px solid #fff'
 const SHADOW = '0px 0px 1px 4px rgba(255,255,255,0.1), inset 0px 2px 1px 0px rgba(255,255,255,0.25), inset 0px -4px 2px 0px rgba(0,0,0,0.25)'
 
-const NewChatButton = ({onClick}) => {
+const NewChatButton = ({onClick, expanded = true}) => {
   const [state, setState] = useState('default')
   const [isFocused, setIsFocused] = useState(false)
 
@@ -45,8 +45,8 @@ const NewChatButton = ({onClick}) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 12,
-        padding: '12px 24px',
+        gap: expanded ? 12 : 0,
+        padding: expanded ? '12px 24px' : 0,
         borderRadius: 6,
         border,
         boxShadow: SHADOW,
@@ -55,18 +55,21 @@ const NewChatButton = ({onClick}) => {
         cursor: 'pointer',
         fontFamily: 'Mabry Pro, sans-serif',
         fontWeight: 700,
-        fontSize: 28,
+        fontSize: expanded ? 28 : 0,
         color,
         lineHeight: 1.14,
         minWidth: 0,
         minHeight: 0,
         userSelect: 'none',
         overflow: 'hidden',
-        transition: 'background 0.15s, color 0.15s, border 0.15s',
+        transition: 'background 0.15s, color 0.15s, border 0.15s, font-size 0.2s, padding 0.2s',
+        width: expanded ? 182 : 52,
+        height: 48,
+        justifyContent: 'center',
       }}
     >
       <img src='/assets/plus.svg' alt='' style={{width: 34, height: 34, zIndex: 1, filter: color === COLORS.white ? 'invert(1)' : 'none'}} />
-      <span style={{zIndex: 1}}>{'New Chat'}</span>
+      {expanded && <span style={{zIndex: 1}}>{'New Chat'}</span>}
       {showNoise && (
         <span
           style={{
