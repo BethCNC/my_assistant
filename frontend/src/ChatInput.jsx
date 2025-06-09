@@ -19,7 +19,7 @@ const DEFAULT_THUMBS = [
   {type: 'image', name: 'thumbnail_image03.png', src: '/assets/thumbnails/thumbnail_image03.png'},
 ]
 
-const ChatInput = ({value, onChange, onSend, attachments = DEFAULT_THUMBS, onRemoveAttachment}) => {
+const ChatInput = ({value, onChange, onSend, attachments = [], onRemoveAttachment}) => {
   const [focus, setFocus] = useState(false)
   const [sendState, setSendState] = useState('default')
   const textareaRef = useRef(null)
@@ -29,8 +29,10 @@ const ChatInput = ({value, onChange, onSend, attachments = DEFAULT_THUMBS, onRem
         width: '100%',
         background: COLORS.bg,
         borderRadius: 12,
-        padding: '0 0 0 0',
         boxSizing: 'border-box',
+        boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
+        border: `2px solid ${focus ? COLORS.focus : COLORS.border}`,
+        padding: 16,
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
@@ -47,7 +49,7 @@ const ChatInput = ({value, onChange, onSend, attachments = DEFAULT_THUMBS, onRem
             border: `2px solid ${COLORS.attachBorder}`,
             borderRadius: 8,
             padding: 8,
-            margin: '0 0 8px 0',
+            marginBottom: 8,
           }}
         >
           {attachments.map((a, i) => (
@@ -68,14 +70,14 @@ const ChatInput = ({value, onChange, onSend, attachments = DEFAULT_THUMBS, onRem
         </div>
       )}
       {/* Input Row */}
-      <div style={{display: 'flex', alignItems: 'flex-end', gap: 8}}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
         {/* Left icon buttons */}
-        <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-          <IconButton icon='icon-paperclip.svg' ariaLabel='Attach file' style={{width: 40, height: 40, borderRadius: 8}} />
-          <IconButton icon='icon-camera.svg' ariaLabel='Attach image' style={{width: 40, height: 40, borderRadius: 8}} />
+        <div style={{display: 'flex', flexDirection: 'row', gap: 8}}>
+          <IconButton icon='icon-paperclip.svg' ariaLabel='Attach file' />
+          <IconButton icon='icon-camera.svg' ariaLabel='Attach image' />
         </div>
         {/* Textarea */}
-        <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 4}}>
+        <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 2}}>
           <textarea
             ref={textareaRef}
             value={value}
@@ -86,19 +88,19 @@ const ChatInput = ({value, onChange, onSend, attachments = DEFAULT_THUMBS, onRem
             placeholder='Ask me a question...'
             style={{
               width: '100%',
-              minHeight: 64,
-              border: `2px solid ${focus ? COLORS.focus : COLORS.border}`,
+              minHeight: 40,
+              maxHeight: 80,
+              border: 'none',
               borderRadius: 8,
               fontFamily: 'Mabry Pro, sans-serif',
               fontWeight: 400,
               fontSize: 20,
               color: COLORS.text,
-              padding: 12,
-              resize: 'vertical',
+              padding: '10px 16px',
+              resize: 'none',
               outline: 'none',
               boxSizing: 'border-box',
               background: COLORS.bg,
-              transition: 'border 0.15s',
             }}
           />
           <div style={{display: 'flex', justifyContent: 'flex-end', color: COLORS.subtext, fontSize: 16, fontFamily: 'Mabry Pro, sans-serif'}}>
@@ -106,32 +108,31 @@ const ChatInput = ({value, onChange, onSend, attachments = DEFAULT_THUMBS, onRem
           </div>
         </div>
         {/* Send button */}
-        <div style={{alignSelf: 'flex-end'}}>
-          <button
-            type='button'
-            onClick={onSend}
-            onMouseEnter={() => setSendState('hover')}
-            onMouseLeave={() => setSendState('default')}
-            onMouseDown={() => setSendState('active')}
-            onMouseUp={() => setSendState('hover')}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 8,
-              background: sendState === 'active' || sendState === 'hover' ? COLORS.sendBgActive : COLORS.sendBg,
-              border: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              transition: 'background 0.15s',
-              outline: 'none',
-              padding: 0,
-            }}
-          >
-            <img src='/assets/icon-send.svg' alt='' style={{width: 24, height: 24, filter: 'invert(1)'}} />
-          </button>
-        </div>
+        <button
+          type='button'
+          onClick={onSend}
+          onMouseEnter={() => setSendState('hover')}
+          onMouseLeave={() => setSendState('default')}
+          onMouseDown={() => setSendState('active')}
+          onMouseUp={() => setSendState('hover')}
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 8,
+            background: sendState === 'active' || sendState === 'hover' ? COLORS.sendBgActive : COLORS.sendBg,
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'background 0.15s',
+            outline: 'none',
+            padding: 0,
+            marginLeft: 8,
+          }}
+        >
+          <img src='/assets/icon-send.svg' alt='' style={{width: 24, height: 24, filter: 'invert(1)'}} />
+        </button>
       </div>
     </div>
   )
