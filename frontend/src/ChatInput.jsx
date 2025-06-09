@@ -69,46 +69,40 @@ const ChatInput = ({value, onChange, onSend, attachments = [], onRemoveAttachmen
           ))}
         </div>
       )}
-      {/* Input Row */}
-      <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
-        {/* Left icon buttons */}
-        <div style={{display: 'flex', flexDirection: 'row', gap: 8}}>
-          <IconButton icon='icon-paperclip.svg' ariaLabel='Attach file' size={28} />
-          <IconButton icon='icon-camera.svg' ariaLabel='Attach image' size={28} />
-        </div>
+      {/* Input Row - all in one row */}
+      <div style={{display: 'flex', alignItems: 'center', gap: 12, width: '100%'}}>
+        {/* Icon buttons */}
+        <IconButton icon='icon-paperclip.svg' ariaLabel='Attach file' size={28} />
+        <IconButton icon='icon-camera.svg' ariaLabel='Attach image' size={28} />
         {/* Textarea */}
-        <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 2, justifyContent: 'center'}}>
-          <textarea
-            ref={textareaRef}
-            value={value}
-            onChange={e => onChange && onChange(e.target.value)}
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
-            maxLength={MAX_LEN}
-            placeholder='Ask me a question...'
-            style={{
-              width: '100%',
-              minHeight: 40,
-              maxHeight: 80,
-              border: 'none',
-              borderRadius: 8,
-              fontFamily: 'Mabry Pro, sans-serif',
-              fontWeight: 400,
-              fontSize: 20,
-              color: COLORS.text,
-              padding: '10px 16px',
-              resize: 'none',
-              outline: 'none',
-              boxSizing: 'border-box',
-              background: COLORS.bg,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          />
-          <div style={{display: 'flex', justifyContent: 'flex-end', color: COLORS.subtext, fontSize: 16, fontFamily: 'Mabry Pro, sans-serif'}}>
-            {value?.length || 0}/{MAX_LEN}
-          </div>
-        </div>
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={e => onChange && onChange(e.target.value)}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          maxLength={MAX_LEN}
+          placeholder='Ask me a question...'
+          style={{
+            flex: 1,
+            minHeight: 40,
+            maxHeight: 80,
+            border: 'none',
+            borderRadius: 8,
+            fontFamily: 'Mabry Pro, sans-serif',
+            fontWeight: 400,
+            fontSize: 20,
+            color: COLORS.text,
+            padding: '10px 16px',
+            resize: 'none',
+            outline: 'none',
+            boxSizing: 'border-box',
+            background: COLORS.bg,
+            margin: '0 8px',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        />
         {/* Send button */}
         <button
           type='button'
@@ -135,6 +129,10 @@ const ChatInput = ({value, onChange, onSend, attachments = [], onRemoveAttachmen
         >
           <img src='/assets/icon-send.svg' alt='' style={{width: 24, height: 24, filter: 'invert(1)'}} />
         </button>
+      </div>
+      {/* Char count */}
+      <div style={{display: 'flex', justifyContent: 'flex-end', color: COLORS.subtext, fontSize: 16, fontFamily: 'Mabry Pro, sans-serif', marginTop: 4}}>
+        {value?.length || 0}/{MAX_LEN}
       </div>
     </div>
   )
