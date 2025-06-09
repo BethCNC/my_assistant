@@ -1,6 +1,14 @@
 import React, {useState} from 'react'
-import Shape from './SuggestionShapes'
-import IconSet from './IconSet'
+
+const SHAPES = [
+  'shapes/svg/shape=1.svg',
+  'shapes/svg/shape=2.svg',
+  'shapes/svg/shape=3.svg',
+  'shapes/svg/shape=4.svg',
+  'shapes/svg/shape=5.svg',
+  'shapes/svg/shape=6.svg',
+  'shapes/svg/shape=7.svg',
+]
 
 const COLORS = {
   border: '#171717',
@@ -13,8 +21,16 @@ const COLORS = {
   iconBg: '#171717',
 }
 
-const Suggestion = ({shape, text, onClick}) => {
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+const Suggestion = ({text, onClick}) => {
   const [state, setState] = useState('default')
+  // Pick a random shape and rotation for each card instance
+  const [shape] = useState(() => SHAPES[getRandomInt(0, SHAPES.length - 1)])
+  const [rotation] = useState(() => getRandomInt(-30, 30))
+
   let border = COLORS.border
   let bg = COLORS.bg
   if (state === 'hover') {
@@ -58,7 +74,7 @@ const Suggestion = ({shape, text, onClick}) => {
         justifyContent: 'center',
         flexShrink: 0,
       }}>
-        <Shape shape={shape} />
+        <img src={`/assets/${shape}`} alt='' style={{width: 32, height: 32, transform: `rotate(${rotation}deg)`}} />
       </span>
       <span style={{
         flex: 1,
@@ -85,7 +101,7 @@ const Suggestion = ({shape, text, onClick}) => {
         marginRight: 0,
         flexShrink: 0,
       }}>
-        <IconSet icon='icon-arrow.svg' />
+        <img src='/assets/icon-arrow.svg' alt='' style={{width: 24, height: 24}} />
       </span>
     </button>
   )
