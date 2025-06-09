@@ -20,22 +20,21 @@ const Sidebar = ({chatList = [], onNewChat}) => {
         flexDirection: 'column',
         gap: 0,
         boxSizing: 'border-box',
-        alignItems: 'stretch',
       }}
     >
       {/* Header */}
       <div style={{height: 64, borderTopLeftRadius: 8, background: '#171717', display: 'flex', alignItems: 'center', padding: '0 24px'}}>
-        <span style={{fontFamily: 'Mabry Pro, sans-serif', fontWeight: 700, fontSize: 28, color: '#fff'}}>Recents Chat</span>
+        <span style={{fontFamily: 'Mabry Pro, sans-serif', fontWeight: 700, fontSize: 20, color: '#fff'}}>Recents Chat</span>
       </div>
       {/* Chat List */}
-      <div style={{flex: 1, width: '100%', display: 'flex', flexDirection: 'column', gap: 0, padding: '12px 0', alignItems: 'center', overflowY: 'auto'}}>
+      <div style={{flex: 1, width: '100%', display: 'flex', flexDirection: 'column', gap: 0, padding: '12px 0', overflowY: 'auto'}}>
         {chatList.map((text, i) => (
-          <ChatPreview key={i} text={text} expanded={true} />
+          <ChatPreview key={i} text={text} />
         ))}
       </div>
       {/* New Chat Button */}
       <div style={{width: '100%', height: 64, borderBottomLeftRadius: 8, background: '#171717', display: 'flex', alignItems: 'center', padding: '0 24px'}}>
-        <NewChatButton expanded={true} onClick={onNewChat} />
+        <NewChatButton onClick={onNewChat} />
       </div>
     </aside>
   )
