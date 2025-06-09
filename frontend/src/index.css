@@ -52,11 +52,15 @@ code {
 }
 
 .nav-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
   transition: background 0.2s, color 0.2s;
   background: none;
-  -webkit-background-clip: text;
+  -webkit-background-clip: initial;
   -webkit-text-fill-color: #fff;
-  background-clip: text;
+  background-clip: initial;
   text-fill-color: #fff;
 }
 
