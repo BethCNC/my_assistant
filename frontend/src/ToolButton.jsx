@@ -3,9 +3,8 @@ import React, {useState} from 'react'
 const COLORS = {
   black: '#171717',
   blue: '#2180EC',
-  white: '#FAFAFA',
+  white: '#FFFFFF',
 }
-const GRADIENT = 'linear-gradient(90deg, #69DEF2 0%, #126FD8 100%)'
 const FOCUS_BORDER = '2px solid #fff'
 const SHADOW = '0px 0px 1px 4px rgba(255,255,255,0.1), inset 0px 2px 1px 0px rgba(255,255,255,0.25), inset 0px -4px 2px 0px rgba(0,0,0,0.25)'
 
@@ -25,7 +24,7 @@ const ToolButton = ({icon, label, onClick}) => {
     if (isFocused) border = FOCUS_BORDER
   }
   if (state === 'active') {
-    bg = GRADIENT
+    bg = COLORS.blue
     color = COLORS.white
     showNoise = true
   }
@@ -62,8 +61,16 @@ const ToolButton = ({icon, label, onClick}) => {
         userSelect: 'none',
         overflow: 'hidden',
         transition: 'background 0.15s, color 0.15s, border 0.15s',
+        gap: 12,
       }}
     >
+      {icon && (
+        <img
+          src={`/assets/${icon}`}
+          alt='icon'
+          style={{width: 24, height: 24, filter: 'brightness(0) invert(1)'}}
+        />
+      )}
       {label && <span style={{zIndex: 1}}>{label}</span>}
       {showNoise && (
         <span
