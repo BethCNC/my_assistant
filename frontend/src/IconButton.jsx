@@ -8,7 +8,7 @@ const COLORS = {
 }
 const SHADOW = '0 2px 8px 0 rgba(0,0,0,0.08)'
 
-const IconButton = ({icon, ariaLabel = ''}) => {
+const IconButton = ({icon, ariaLabel = '', size = 24}) => {
   const [state, setState] = useState('default')
   const [isFocused, setIsFocused] = useState(false)
 
@@ -36,7 +36,7 @@ const IconButton = ({icon, ariaLabel = ''}) => {
         outline: 'none',
         cursor: 'pointer',
         transition: 'background 0.15s, border 0.15s',
-        boxShadow: SHADOW,
+        boxShadow: 'none',
       }}
       onMouseEnter={() => setState('hover')}
       onMouseLeave={() => setState('default')}
@@ -49,7 +49,7 @@ const IconButton = ({icon, ariaLabel = ''}) => {
       <img
         src={`/assets/${icon}`}
         alt=""
-        style={{width: 24, height: 24, zIndex: 1, position: 'relative', filter: 'brightness(0) invert(1)'}}
+        style={{width: size, height: size, zIndex: 1, position: 'relative', filter: 'brightness(0) invert(1)'}}
       />
       <span
         style={{
