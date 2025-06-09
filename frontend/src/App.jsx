@@ -3,6 +3,7 @@ import Sidebar from './Sidebar'
 import ToolButton from './ToolButton'
 import Suggestion from './Suggestion'
 import ChatInput from './ChatInput'
+import ChatConversation from './ChatConversation'
 
 const chatList = Array(8).fill('How can I better update...')
 const suggestions = [
@@ -19,6 +20,13 @@ const tools = [
   {icon: 'icon-send.svg', label: 'Github'},
   {icon: 'icon-plus.svg', label: 'Email'},
   {icon: 'icon-arrow.svg', label: 'Calendar'},
+]
+
+const messages = [
+  {id: 1, sender: 'assistant', text: 'How can I help you today, Beth?', time: '10 Min ago'},
+  {id: 2, sender: 'user', text: 'I want to learn about UI design systems and how to build them in FIgms.', time: '12 Min ago'},
+  {id: 3, sender: 'assistant', text: 'Sure I can help you learn all about design systems in Figma. Where would you like to start?', time: '10 Min ago'},
+  {id: 4, sender: 'user', text: 'Let's start by learning about figma variable collections and best practices for setting them up in terms of how many collections you should have and what types and what they should contain.', time: '12 Min ago'},
 ]
 
 const App = () => (
@@ -56,16 +64,8 @@ const App = () => (
           <ToolButton key={t.label} icon={t.icon} label={t.label} />
         ))}
       </div>
-      {/* Greeting */}
-      <div style={{fontWeight: 700, fontSize: 32, color: '#171717', marginBottom: 24}}>
-        Good Morning Beth!  What can I help you with today?
-      </div>
-      {/* Suggestions grid */}
-      <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 32}}>
-        {suggestions.map((s, i) => (
-          <Suggestion key={i} shape={s.shape} text={s.text} />
-        ))}
-      </div>
+      {/* Chat conversation area */}
+      <ChatConversation messages={messages} />
       {/* Chat input at bottom */}
       <div style={{marginTop: 'auto'}}>
         <ChatInput value='' onChange={() => {}} onSend={() => {}} />
