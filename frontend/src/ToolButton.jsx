@@ -12,6 +12,7 @@ const ToolButton = ({icon, label, onClick}) => {
   const [state, setState] = useState('default')
   const [isFocused, setIsFocused] = useState(false)
 
+  // Figma: default bg #171717, hover/active #2180EC, text #FFF, border radius 8px, padding 0 16px, gap 16px
   let bg = COLORS.black
   let color = COLORS.white
   let border = 'none'
@@ -46,10 +47,9 @@ const ToolButton = ({icon, label, onClick}) => {
         justifyContent: 'flex-start',
         width: 182,
         height: 48,
-        padding: '0 24px',
-        borderRadius: 8,
+        padding: '0 16px', // Figma: 16px horizontal
+        borderRadius: 8, // Figma: 8px
         border,
-        boxShadow: SHADOW,
         background: bg,
         outline: 'none',
         cursor: 'pointer',
@@ -61,7 +61,8 @@ const ToolButton = ({icon, label, onClick}) => {
         userSelect: 'none',
         overflow: 'hidden',
         transition: 'background 0.15s, color 0.15s, border 0.15s',
-        gap: 16,
+        gap: 16, // Figma: 16px
+        boxShadow: 'none', // Remove shadow
       }}
     >
       <img
