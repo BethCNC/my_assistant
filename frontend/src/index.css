@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: 'Mabry Pro';
   src: url('/assets/font/MabryPro-Regular.woff') format('woff'),
@@ -38,10 +42,17 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Behind The Nineties';
+  src: url('/assets/font/BehindTheNineties.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
 body, html {
   margin: 0;
-  font-family: 'Mabry Pro', sans-serif;
+  font-family: 'Mabry Pro', 'Behind The Nineties', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

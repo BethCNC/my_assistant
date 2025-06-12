@@ -4,33 +4,50 @@ import ToolButton from './ToolButton'
 import Suggestion from './Suggestion'
 import ChatInput from './ChatInput'
 import ChatConversation from './ChatConversation'
+import { colors, radii, fontSizes, spacing } from './tokens'
 
 const chatList = Array(8).fill('How can I better update...')
+
 const suggestions = [
-  {shape: 'asterisk.svg', text: 'I would like to know about design tokens'},
-  {shape: 'asterisk.svg', text: 'How can I be most productive today?'},
-  {shape: 'heart.svg', text: 'What are the most important tasks I should...'},
-  {shape: 'star.svg', text: 'Can you help me convert this design file int...'},
-  {shape: 'asterisk.svg', text: 'What is coming up in my medical calendar?'},
-  {shape: 'clover.svg', text: 'Can you remember the business plan we we...'},
-]
-const tools = [
-  {icon: 'icon-paperclip.svg', label: 'Notion'},
-  {icon: 'icon-camera.svg', label: 'Figma'},
-  {icon: 'icon-send.svg', label: 'Github'},
-  {icon: 'icon-plus.svg', label: 'Email'},
-  {icon: 'icon-arrow.svg', label: 'Calendar'},
+  {shape: 'asterisk', text: 'I would like to know about design tokens'},
+  {shape: 'asterisk', text: 'I would like to know about design tokens'},
+  {shape: 'heart', text: 'I would like to know about design tokens'},
+  {shape: 'star', text: 'I would like to know about design tokens'},
+  {shape: 'asterisk', text: 'I would like to know about design tokens'},
+  {shape: 'clover', text: 'I would like to know about design tokens'},
 ]
 
-const messages = [
-  {id: 1, sender: 'assistant', text: 'How can I help you today, Beth?', time: '10 Min ago'},
-  {id: 2, sender: 'user', text: 'I want to learn about UI design systems and how to build them in FIgms.', time: '12 Min ago'},
-  {id: 3, sender: 'assistant', text: 'Sure I can help you learn all about design systems in Figma. Where would you like to start?', time: '10 Min ago'},
-  {id: 4, sender: 'user', text: 'Let\'s start by learning about figma variable collections and best practices for setting them up in terms of how many collections you should have and what types and what they should contain.', time: '12 Min ago'},
+const tools = [
+  {icon: 'icon-paperclip.svg', label: 'Notion', active: true},
+  {icon: 'icon-camera.svg', label: 'Figma', active: false},
+  {icon: 'icon-send.svg', label: 'Github', active: false},
+  {icon: 'icon-plus.svg', label: 'Email', active: false},
+  {icon: 'icon-arrow.svg', label: 'Calendar', active: false},
 ]
 
 const App = () => {
+  const [inputValue, setInputValue] = React.useState('')
+  const [currentView, setCurrentView] = React.useState('suggestions') // 'suggestions' or 'conversation'
   const [messages, setMessages] = React.useState([])
+  
+  const handleSuggestionClick = (text) => {
+    setInputValue(text)
+    setCurrentView('conversation')
+    setMessages([
+      {id: 1, sender: 'user', text, time: 'now'},
+      {id: 2, sender: 'assistant', text: 'How can I help you with that?', time: 'now'}
+    ])
+  }
+
+  const handleSend = () => {
+    if (inputValue.trim()) {
+      const newMessage = {id: messages.length + 1, sender: 'user', text: inputValue, time: 'now'}
+      setMessages(prev => [...prev, newMessage])
+      setCurrentView('conversation')
+      setInputValue('')
+    }
+  }
+
   return (
     <div
       style={{
@@ -45,44 +62,148 @@ const App = () => {
       }}
     >
       {/* Sidebar */}
-      <Sidebar chatList={chatList} onNewChat={() => {}} />
+      <Sidebar 
+        chatList={chatList} 
+        onNewChat={() => {
+          setCurrentView('suggestions')
+          setMessages([])
+          setInputValue('')
+        }} 
+      />
+      
       {/* Main content */}
-      <div style={{flex: 1, display: 'flex', flexDirection: 'column', padding: 40, gap: 32}}>
+      <div style={{
+        flex: 1, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        padding: spacing['2xl'], 
+        gap: spacing.xl
+      }}>
+        
         {/* Header bar */}
-        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
-            <img src='/assets/smiley.svg' alt='' style={{width: 40, height: 40}} />
-            <span className='nav-title' style={{fontWeight: 700, fontSize: 28, color: '#fff', letterSpacing: 1}}>BETH'S ASSISTANT</span>
+        <div style={{
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          background: colors.black,
+          borderRadius: radii.lg,
+          padding: `${spacing.md}px ${spacing.lg}px`,
+        }}>
+          <div style={{
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: spacing.md
+          }}>
+            <img 
+              src='/assets/smiley.svg' 
+              alt='' 
+              style={{
+                width: 32,
+                height: 32,
+                filter: 'brightness(0) invert(1)',
+              }}
+            />
+            <span 
+              style={{
+                fontWeight: 700, 
+                fontSize: fontSizes['2xl'], 
+                color: colors.white, 
+                letterSpacing: '0.05em'
+              }}
+            >
+              BETH'S ASSISTANT
+            </span>
           </div>
-          <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
-            <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>FRIDAY</span>
-            <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>JUNE 6, 2025</span>
-            <span style={{fontWeight: 700, fontSize: 20, color: '#fff'}}>11:25 AM</span>
+          <div style={{
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: spacing.lg,
+            color: colors.white,
+            fontSize: fontSizes.lg,
+            fontWeight: 700
+          }}>
+            <span>FRIDAY</span>
+            <span>JUNE 6, 2025</span>
+            <span>11:25 AM</span>
           </div>
         </div>
+        
         {/* Tool buttons row */}
-        <div style={{display: 'flex', gap: 24, marginBottom: 32}}>
+        <div style={{
+          display: 'flex', 
+          gap: spacing.lg
+        }}>
           {tools.map(t => (
-            <ToolButton key={t.label} icon={t.icon} label={t.label} />
+            <ToolButton 
+              key={t.label} 
+              icon={t.icon} 
+              label={t.label} 
+              active={t.active}
+            />
           ))}
         </div>
-        {/* Suggestions or Chat area */}
-        {messages.length === 0 ? (
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 32}}>
-            {suggestions.map((s, i) => (
-              <Suggestion key={i} text={s.text} />
-            ))}
+        
+        {/* Main content area */}
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: spacing.xl,
+        }}>
+          {currentView === 'suggestions' ? (
+            <>
+              {/* Greeting */}
+              <h2 style={{
+                color: colors.white,
+                fontSize: fontSizes['4xl'], // Much larger text
+                fontWeight: 400,
+                margin: 0,
+                textAlign: 'center',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              }}>
+                Good Morning Beth! What can I help you with today?
+              </h2>
+              
+              {/* Suggestions Grid */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: spacing.lg,
+                maxWidth: 800,
+                margin: '0 auto',
+                width: '100%',
+              }}>
+                {suggestions.map((suggestion, index) => (
+                  <Suggestion
+                    key={index}
+                    shape={suggestion.shape}
+                    text={suggestion.text}
+                    onClick={() => handleSuggestionClick(suggestion.text)}
+                    index={index}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            /* Chat conversation area */
+            <ChatConversation 
+              messages={messages} 
+              onBack={() => setCurrentView('suggestions')}
+            />
+          )}
+          
+          {/* Chat input at bottom */}
+          <div style={{ marginTop: 'auto' }}>
+            <ChatInput 
+              value={inputValue} 
+              onChange={(e) => setInputValue(e.target.value)} 
+              onSend={handleSend} 
+            />
           </div>
-        ) : (
-          <ChatConversation messages={messages} />
-        )}
-        {/* Chat input at bottom */}
-        <div style={{marginTop: 'auto'}}>
-          <ChatInput value='' onChange={() => {}} onSend={() => {}} />
         </div>
       </div>
     </div>
   )
 }
 
-export default App 
+export default App

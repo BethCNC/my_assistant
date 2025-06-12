@@ -7,6 +7,7 @@ const COLORS = {
   focusBorder: '#019CFE',
 }
 const SHADOW = '0 2px 8px 0 rgba(0,0,0,0.08)'
+const NOISE_OVERLAY = '/assets/texture/noise.png'
 
 const IconButton = ({icon, ariaLabel = '', size = 24}) => {
   const [state, setState] = useState('default')
@@ -37,6 +38,7 @@ const IconButton = ({icon, ariaLabel = '', size = 24}) => {
         cursor: 'pointer',
         transition: 'background 0.15s, border 0.15s',
         boxShadow: 'none',
+        fontFamily: 'Mabry Pro, sans-serif',
       }}
       onMouseEnter={() => setState('hover')}
       onMouseLeave={() => setState('default')}
@@ -55,11 +57,12 @@ const IconButton = ({icon, ariaLabel = '', size = 24}) => {
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'url(/assets/texture/noise.png) center/cover',
+          background: `url(${NOISE_OVERLAY}) center/cover`,
           opacity: 0.2,
           mixBlendMode: 'hard-light',
           pointerEvents: 'none',
           zIndex: 2,
+          borderRadius: 8,
         }}
       />
     </button>

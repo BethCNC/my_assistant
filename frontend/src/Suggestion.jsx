@@ -1,110 +1,77 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
+import { colors, radii, fontSizes, spacing, glassmorphism } from './tokens'
 
-const SHAPES = [
-  'shapes/svg/shape=1.svg',
-  'shapes/svg/shape=2.svg',
-  'shapes/svg/shape=3.svg',
-  'shapes/svg/shape=4.svg',
-  'shapes/svg/shape=5.svg',
-  'shapes/svg/shape=6.svg',
-  'shapes/svg/shape=7.svg',
-]
-
-const COLORS = {
-  border: '#171717',
-  bg: '#fff',
-  hoverBorder: '#FFB36A',
-  hoverBg: '#FFF4E7',
-  focusBorder: '#2180EC',
-  focusBg: '#EAF6FF',
-  text: '#171717',
-  iconBg: '#171717',
-}
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
-const Suggestion = ({text, onClick}) => {
-  const [state, setState] = useState('default')
-  // Pick a random shape and rotation for each card instance
-  const [shape] = useState(() => SHAPES[getRandomInt(0, SHAPES.length - 1)])
-  const [rotation] = useState(() => getRandomInt(-30, 30))
-
-  let border = COLORS.border
-  let bg = COLORS.bg
-  if (state === 'hover') {
-    border = COLORS.hoverBorder
-    bg = COLORS.hoverBg
-  }
-  if (state === 'focus') {
-    border = COLORS.focusBorder
-    bg = COLORS.focusBg
-  }
+const Suggestion = ({ shape = 'asterisk', text, onClick, index = 0 }) => {
+  const [isHovered, setIsHovered] = useState(false)
+  
   return (
     <button
-      type='button'
       onClick={onClick}
-      onMouseEnter={() => setState('hover')}
-      onMouseLeave={() => setState('default')}
-      onFocus={() => setState('focus')}
-      onBlur={() => setState('default')}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
+        ...glassmorphism.light,
+        border: 'none',
+        borderRadius: radii.lg,
+        padding: spacing.lg,
+        color: colors.white,
+        fontSize: fontSizes.base,
+        cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
-        width: 600,
-        minHeight: 64,
-        borderRadius: 5,
-        border: `2px solid ${border}`,
-        background: bg,
-        padding: 20,
-        gap: 16,
-        cursor: 'pointer',
-        transition: 'border 0.15s, background 0.15s',
-        overflow: 'hidden',
+        gap: spacing.md,
+        transition: 'all 0.2s ease',
+        textAlign: 'left',
+        width: '100%',
+        minHeight: 80,
+        transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+        background: isHovered 
+          ? 'rgba(255, 255, 255, 0.15)' 
+          : 'rgba(255, 255, 255, 0.1)',
+        boxShadow: isHovered
+          ? '0 8px 32px rgba(0, 0, 0, 0.1)'
+          : '0 4px 16px rgba(0, 0, 0, 0.05)',
       }}
     >
-      <span style={{
-        width: 56,
-        height: 56,
-        borderRadius: 8,
-        background: COLORS.iconBg,
+      <div style={{
+        background: colors.black,
+        borderRadius: radii.md,
+        padding: spacing.sm,
+        minWidth: 32,
+        minHeight: 32,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        flexShrink: 0,
       }}>
-        <img src={`/assets/${shape}`} alt='' style={{width: 32, height: 32, transform: `rotate(${rotation}deg)`}} />
-      </span>
-      <span style={{
+        <img 
+          src={`/assets/${shape}.svg`} 
+          alt="" 
+          style={{
+            width: 16,
+            height: 16,
+            filter: 'brightness(0) invert(1)', // Makes SVG white
+          }}
+        />
+      </div>
+      
+      <span style={{ 
         flex: 1,
-        fontFamily: 'Mabry Pro, sans-serif',
-        fontWeight: 700,
-        fontSize: 20,
-        color: COLORS.text,
-        marginLeft: 24,
-        marginRight: 24,
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        textAlign: 'left',
-      }}>{text}</span>
-      <span style={{
-        width: 40,
-        height: 40,
-        borderRadius: 8,
-        background: '#fff',
-        border: `2px solid ${COLORS.border}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: 0,
-        flexShrink: 0,
+        fontWeight: 400,
+        lineHeight: 1.4,
       }}>
-        <img src='/assets/icon-arrow.svg' alt='' style={{width: 24, height: 24}} />
+        {text}
+      </span>
+      
+      <span style={{ 
+        fontSize: fontSizes.lg,
+        opacity: 0.8,
+        transition: 'transform 0.2s ease',
+        transform: isHovered ? 'translateX(2px)' : 'translateX(0)',
+      }}>
+        →
       </span>
     </button>
   )
 }
 
-export default Suggestion 
+export default Suggestion

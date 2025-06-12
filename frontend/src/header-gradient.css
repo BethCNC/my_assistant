@@ -1,0 +1,41 @@
+.gradient-hover {
+  color: #F7F7F7;
+  display: inline-block;
+  transition: color 0.2s, background 0.2s;
+}
+
+.gradient-hover:hover, .gradient-hover:focus {
+  background: url('/assets/texture/gradient.png') center/cover no-repeat;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+}
+
+.header-smiley.gradient-hover {
+  background: #F7F7F7;
+  transition: background 0.2s;
+}
+
+.header-smiley.gradient-hover:hover, .header-smiley.gradient-hover:focus {
+  background: url('/assets/texture/gradient.png') center/cover no-repeat;
+  -webkit-mask-image: url('/assets/smiley.svg');
+  mask-image: url('/assets/smiley.svg');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-size: cover;
+  background-position: center;
+}
+
+.smiley-svg .smiley-path {
+  transition: fill 0.2s;
+  fill: #F7F7F7;
+}
+
+.smiley-svg.gradient-hover:hover .smiley-path,
+.smiley-svg.gradient-hover:focus .smiley-path {
+  fill: url(#smiley-gradient);
+} 

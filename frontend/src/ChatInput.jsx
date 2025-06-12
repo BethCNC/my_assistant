@@ -1,141 +1,179 @@
-import React, {useState, useRef} from 'react'
-import IconButton from './IconButton'
+import React, { useState } from 'react'
+import { colors, radii, fontSizes, spacing, glassmorphism } from './tokens'
 
-const COLORS = {
-  border: '#171717',
-  focus: '#2180EC',
-  bg: '#fff',
-  text: '#171717',
-  subtext: '#5A5A5A',
-  attachBar: '#fff',
-  attachBorder: '#2180EC',
-  sendBg: '#171717',
-  sendBgActive: '#2180EC',
-}
-const MAX_LEN = 1000
-const DEFAULT_THUMBS = [
-  {type: 'image', name: 'thumbnail_image01.png', src: '/assets/thumbnails/thumbnail_image01.png'},
-  {type: 'image', name: 'thumbnail_image02.png', src: '/assets/thumbnails/thumbnail_image02.png'},
-  {type: 'image', name: 'thumbnail_image03.png', src: '/assets/thumbnails/thumbnail_image03.png'},
-]
+const ChatInput = ({ value, onChange, onSend, disabled = false }) => {
+  const [isFocused, setIsFocused] = useState(false)
 
-const ChatInput = ({value, onChange, onSend, attachments = [], onRemoveAttachment}) => {
-  const [focus, setFocus] = useState(false)
-  const [sendState, setSendState] = useState('default')
-  const textareaRef = useRef(null)
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      onSend()
+    }
+  }
+
+  const canSend = value && value.trim().length > 0 && !disabled
+
   return (
-    <div
-      style={{
-        width: '100%',
-        background: COLORS.bg,
-        borderRadius: 8,
-        boxSizing: 'border-box',
-        border: `2px solid ${focus ? COLORS.focus : COLORS.border}`,
-        padding: 16,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8,
-        boxShadow: 'none',
-      }}
-    >
-      {/* Attachments Bar */}
-      {attachments && attachments.length > 0 && (
-        <div
+    <div style={{
+      ...glassmorphism.light,
+      borderRadius: radii.lg,
+      padding: spacing.md,
+      display: 'flex',
+      alignItems: 'center',
+      gap: spacing.md,
+      border: isFocused ? '1px solid rgba(255, 255, 255, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
+      transition: 'border 0.2s ease',
+    }}>
+      {/* Attachment button */}
+      <button 
+        style={{
+          background: 'none',
+          border: 'none',
+          color: colors.white,
+          fontSize: fontSizes.lg,
+          cursor: 'pointer',
+          padding: spacing.xs,
+          borderRadius: radii.sm,
+          transition: 'background 0.2s ease',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: 0.8,
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.background = 'rgba(255, 255, 255, 0.1)'
+          e.target.style.opacity = '1'
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.background = 'transparent'
+          e.target.style.opacity = '0.8'
+        }}
+      >
+        <img 
+          src='/assets/icon-paperclip.svg' 
+          alt='Attach' 
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            background: COLORS.attachBar,
-            border: `2px solid ${COLORS.attachBorder}`,
-            borderRadius: 8,
-            padding: 8,
-            marginBottom: 8,
-          }}
-        >
-          {attachments.map((a, i) => (
-            <div key={i} style={{display: 'flex', alignItems: 'center', gap: 4}}>
-              {a.type === 'image' ? (
-                <img src={a.src} alt='' style={{width: 32, height: 32, borderRadius: 4, objectFit: 'cover'}} />
-              ) : (
-                <span style={{fontSize: 16, color: COLORS.text, fontFamily: 'Mabry Pro, sans-serif'}}>{a.name}</span>
-              )}
-              {a.progress != null && (
-                <span style={{fontSize: 12, color: COLORS.subtext}}>{a.progress}%</span>
-              )}
-              {onRemoveAttachment && (
-                <button onClick={() => onRemoveAttachment(i)} style={{background: 'none', border: 'none', color: COLORS.text, cursor: 'pointer', fontSize: 16, marginLeft: 2}}>×</button>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-      {/* Input Row - all in one row */}
-      <div style={{display: 'flex', alignItems: 'center', gap: 12, width: '100%'}}>
-        {/* Icon buttons */}
-        <IconButton icon='icon-paperclip.svg' ariaLabel='Attach file' size={28} />
-        <IconButton icon='icon-camera.svg' ariaLabel='Attach image' size={28} />
-        {/* Textarea */}
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={e => onChange && onChange(e.target.value)}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-          maxLength={MAX_LEN}
-          placeholder='Ask me a question...'
-          style={{
-            flex: 1,
-            minHeight: 40,
-            maxHeight: 80,
-            border: 'none',
-            borderRadius: 8,
-            fontFamily: 'Mabry Pro, sans-serif',
-            fontWeight: 400,
-            fontSize: 20,
-            color: COLORS.text,
-            padding: '10px 16px',
-            resize: 'none',
-            outline: 'none',
-            boxSizing: 'border-box',
-            background: COLORS.bg,
-            margin: '0 8px',
-            display: 'flex',
-            alignItems: 'center',
+            width: 20,
+            height: 20,
+            filter: 'brightness(0) invert(1)',
           }}
         />
-        {/* Send button */}
-        <button
-          type='button'
-          onClick={onSend}
-          onMouseEnter={() => setSendState('hover')}
-          onMouseLeave={() => setSendState('default')}
-          onMouseDown={() => setSendState('active')}
-          onMouseUp={() => setSendState('hover')}
+      </button>
+      
+      {/* Text input */}
+      <input
+        type="text"
+        value={value || ''}
+        onChange={onChange}
+        onKeyPress={handleKeyPress}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        placeholder="Ask me a question..."
+        disabled={disabled}
+        style={{
+          flex: 1,
+          background: 'none',
+          border: 'none',
+          color: colors.white,
+          fontSize: fontSizes.base,
+          outline: 'none',
+          fontFamily: 'inherit',
+          '::placeholder': {
+            color: 'rgba(255, 255, 255, 0.6)',
+          }
+        }}
+      />
+      
+      {/* Camera button */}
+      <button 
+        style={{
+          background: 'none',
+          border: 'none',
+          color: colors.white,
+          fontSize: fontSizes.lg,
+          cursor: 'pointer',
+          padding: spacing.xs,
+          borderRadius: radii.sm,
+          transition: 'background 0.2s ease',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: 0.8,
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.background = 'rgba(255, 255, 255, 0.1)'
+          e.target.style.opacity = '1'
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.background = 'transparent'
+          e.target.style.opacity = '0.8'
+        }}
+      >
+        <img 
+          src='/assets/icon-camera.svg' 
+          alt='Camera' 
           style={{
-            width: 48,
-            height: 48,
-            borderRadius: 8,
-            background: sendState === 'active' || sendState === 'hover' ? COLORS.sendBgActive : COLORS.sendBg,
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'background 0.15s',
-            outline: 'none',
-            padding: 0,
-            marginLeft: 8,
+            width: 20,
+            height: 20,
+            filter: 'brightness(0) invert(1)',
           }}
-        >
-          <img src='/assets/icon-send.svg' alt='' style={{width: 24, height: 24, filter: 'invert(1)'}} />
-        </button>
+        />
+      </button>
+
+      {/* Character counter */}
+      <div style={{
+        color: 'rgba(255, 255, 255, 0.6)',
+        fontSize: fontSizes.sm,
+        minWidth: 'fit-content',
+      }}>
+        {(value || '').length}/1000
       </div>
-      {/* Char count */}
-      <div style={{display: 'flex', justifyContent: 'flex-end', color: COLORS.subtext, fontSize: 16, fontFamily: 'Mabry Pro, sans-serif', marginTop: 4}}>
-        {value?.length || 0}/{MAX_LEN}
-      </div>
+      
+      {/* Send button */}
+      <button
+        onClick={canSend ? onSend : undefined}
+        disabled={!canSend}
+        style={{
+          background: canSend ? colors.black : 'rgba(0, 0, 0, 0.3)',
+          color: canSend ? colors.white : 'rgba(255, 255, 255, 0.5)',
+          border: 'none',
+          borderRadius: radii.md,
+          padding: spacing.sm,
+          cursor: canSend ? 'pointer' : 'not-allowed',
+          fontSize: fontSizes.lg,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minWidth: 40,
+          minHeight: 40,
+          transition: 'all 0.2s ease',
+          transform: canSend ? 'scale(1)' : 'scale(0.95)',
+        }}
+        onMouseEnter={(e) => {
+          if (canSend) {
+            e.target.style.transform = 'scale(1.05)'
+            e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)'
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (canSend) {
+            e.target.style.transform = 'scale(1)'
+            e.target.style.boxShadow = 'none'
+          }
+        }}
+      >
+        <img 
+          src='/assets/icon-send.svg' 
+          alt='Send' 
+          style={{
+            width: 20,
+            height: 20,
+            filter: 'brightness(0) invert(1)',
+          }}
+        />
+      </button>
     </div>
   )
 }
 
-export default ChatInput 
+export default ChatInput

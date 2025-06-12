@@ -1,91 +1,48 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
+import { colors, radii, fontSizes, spacing } from './tokens'
 
-const COLORS = {
-  black: '#171717',
-  blue: '#2180EC',
-  white: '#FFFFFF',
-}
-const FOCUS_BORDER = '2px solid #fff'
-const SHADOW = '0px 0px 1px 4px rgba(255,255,255,0.1), inset 0px 2px 1px 0px rgba(255,255,255,0.25), inset 0px -4px 2px 0px rgba(0,0,0,0.25)'
-
-const ToolButton = ({icon, label, onClick}) => {
-  const [state, setState] = useState('default')
-  const [isFocused, setIsFocused] = useState(false)
-
-  // Figma: default bg #171717, hover/active #2180EC, text #FFF, border radius 8px, padding 0 16px, gap 16px
-  let bg = COLORS.black
-  let color = COLORS.white
-  let border = 'none'
-  let showNoise = false
-
-  if (state === 'hover' || (isFocused && state !== 'active')) {
-    bg = COLORS.blue
-    color = COLORS.white
-    showNoise = true
-    if (isFocused) border = FOCUS_BORDER
-  }
-  if (state === 'active') {
-    bg = COLORS.blue
-    color = COLORS.white
-    showNoise = true
-  }
-
+const ToolButton = ({ icon, label, active = false, onClick }) => {
+  const [isHovered, setIsHovered] = useState(false)
+  
   return (
     <button
-      type='button'
       onClick={onClick}
-      onMouseEnter={() => setState('hover')}
-      onMouseLeave={() => setState('default')}
-      onMouseDown={() => setState('active')}
-      onMouseUp={() => setState('hover')}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        position: 'relative',
+        background: active ? colors.white : colors.black,
+        color: active ? colors.black : colors.white,
+        border: 'none',
+        borderRadius: radii.lg,
+        padding: `${spacing.sm}px ${spacing.lg}px`,
+        fontSize: fontSizes.base,
+        fontWeight: 500,
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        minWidth: 100,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-start',
-        width: 182,
-        height: 48,
-        padding: '0 16px', // Figma: 16px horizontal
-        borderRadius: 8, // Figma: 8px
-        border,
-        background: bg,
-        outline: 'none',
-        cursor: 'pointer',
-        fontFamily: 'Mabry Pro, sans-serif',
-        fontWeight: 700,
-        fontSize: 20,
-        color,
-        lineHeight: 1.2,
-        userSelect: 'none',
-        overflow: 'hidden',
-        transition: 'background 0.15s, color 0.15s, border 0.15s',
-        gap: 16, // Figma: 16px
-        boxShadow: 'none', // Remove shadow
+        gap: spacing.sm,
+        transform: isHovered ? 'scale(1.02)' : 'scale(1)',
+        boxShadow: active 
+          ? '0 4px 12px rgba(0, 0, 0, 0.15)' 
+          : '0 2px 8px rgba(0, 0, 0, 0.1)',
       }}
     >
-      <img
-        src={`/assets/${icon}`}
-        alt='icon'
-        style={{width: 28, height: 28, marginRight: 0, filter: 'brightness(0) invert(1)'}}
-      />
-      <span style={{zIndex: 1, fontWeight: 700, fontSize: 20, color}}>{label}</span>
-      {showNoise && (
-        <span
+      {icon && (
+        <img 
+          src={`/assets/${icon}`} 
+          alt="" 
           style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'url(/assets/texture/noise.png) center/cover',
-            opacity: 0.2,
-            mixBlendMode: 'hard-light',
-            pointerEvents: 'none',
-            borderRadius: 8,
+            width: 16,
+            height: 16,
+            filter: active ? 'none' : 'brightness(0) invert(1)',
           }}
         />
       )}
+      {label}
     </button>
   )
 }
 
-export default ToolButton 
+export default ToolButton

@@ -8,6 +8,8 @@ const COLORS = {
 const GRADIENT = 'linear-gradient(90deg, #69DEF2 0%, #126FD8 100%)'
 const FOCUS_BORDER = '2px solid #fff'
 const SHADOW = '0px 0px 1px 4px rgba(255,255,255,0.1), inset 0px 2px 1px 0px rgba(255,255,255,0.25), inset 0px -4px 2px 0px rgba(0,0,0,0.25)'
+const NOISE_OVERLAY = '/assets/texture/noise.png'
+const PLUS_ICON = '/assets/icons/plus.svg'
 
 const NewChatButton = ({onClick, expanded = true}) => {
   const [state, setState] = useState('default')
@@ -45,37 +47,35 @@ const NewChatButton = ({onClick, expanded = true}) => {
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-start', // Figma: left-aligned
-        gap: expanded ? 12 : 0,
-        padding: expanded ? '0 16px' : 0, // Figma: 16px horizontal
-        borderRadius: 8, // Figma: 8px
+        justifyContent: 'center',
+        width: 182,
+        height: 48,
+        padding: '0 16px',
+        borderRadius: 8,
         border,
         background: bg,
         outline: 'none',
         cursor: 'pointer',
         fontFamily: 'Mabry Pro, sans-serif',
         fontWeight: 700,
-        fontSize: expanded ? 20 : 0, // Figma: 20px
+        fontSize: 20,
         color,
         lineHeight: 1.2,
-        minWidth: 0,
-        minHeight: 0,
         userSelect: 'none',
         overflow: 'hidden',
-        transition: 'background 0.15s, color 0.15s, border 0.15s, font-size 0.2s, padding 0.2s',
-        width: expanded ? 182 : 52,
-        height: 48,
-        boxShadow: 'none', // Remove shadow
+        transition: 'background 0.15s, color 0.15s, border 0.15s',
+        gap: 16,
+        boxShadow: 'none',
       }}
     >
-      <img src='/assets/plus.svg' alt='' style={{width: 34, height: 34, zIndex: 1, filter: color === COLORS.white ? 'invert(1)' : 'none', marginRight: expanded ? 12 : 0}} />
-      {expanded && <span style={{zIndex: 1, fontWeight: 700, fontSize: 20, color}}>{'New Chat'}</span>}
+      <span style={{zIndex: 1, fontWeight: 700, fontSize: 20, color}}>New Chat</span>
+      <img src={PLUS_ICON} alt='plus' style={{width: 28, height: 28, marginLeft: 12, filter: 'brightness(0) invert(1)'}} />
       {showNoise && (
         <span
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'url(/assets/texture/noise.png) center/cover',
+            background: `url(${NOISE_OVERLAY}) center/cover`,
             opacity: 0.2,
             mixBlendMode: 'hard-light',
             pointerEvents: 'none',
