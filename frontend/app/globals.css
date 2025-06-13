@@ -10,6 +10,15 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  
+  /* Figma Blue Gradient - Exact from design system */
+  .bg-gradient-blue {
+    background: linear-gradient(92.75deg, #69DEF2 0%, #126FD8 100%);
+  }
+  
+  .bg-gradient-blue-hover {
+    background: linear-gradient(92.75deg, #69DEF2 0%, #126FD8 100%);
+  }
 }
 
 @layer base {

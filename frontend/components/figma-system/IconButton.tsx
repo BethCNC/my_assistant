@@ -1,174 +1,162 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { designTokens } from '@/lib/design-tokens'
 import { Icons, IconVariant } from './Icons'
-import { ThumbnailImages, getRandomThumbnail } from './ThumbnailImages'
+import { ThumbnailImages } from './ThumbnailImages'
 
 // Icon button variants from Figma documentation
-export type IconButtonVariant = 'files' | 'images' | 'send'
 export type IconButtonState = 'default' | 'hover' | 'active' | 'focus' | 'attached'
 
 interface IconButtonProps {
-  variant: IconButtonVariant
+  icon: IconVariant
   state?: IconButtonState
-  attachmentCount?: number
   onClick?: () => void
   disabled?: boolean
   className?: string
+  count?: string | null
+  thumbnails?: string[]
 }
 
 /**
- * Icon Buttons Component - Based on Figma design system
- * Uses actual SVG files from /assets/icons/
+ * Icon Button Component - Updated to match exact Figma specifications
  * 
- * Measurements from Figma:
- * - Default: 44px × 44px
- * - With attachment count: 66px × 44px (files) or 100px × 44px (images)
- * 
- * Variants and Properties:
- * - variant: files, images, send  
- * - state: default, hover, active, focus, attached
- * - Nested instances of Icons: 24px × 24px
- * - Attachment count text: Mabry Pro Bold 18px (files) or 12px (images)
+ * Key improvements:
+ * - Support for attachment thumbnails
+ * - Proper count display for files
+ * - Dynamic sizing based on content
+ * - Exact measurements from Figma PDFs
  */
 export function IconButton({ 
-  variant, 
+  icon,
   state = 'default',
-  attachmentCount,
   onClick,
   disabled = false,
-  className 
+  className,
+  count = null,
+  thumbnails = [],
+  ...props
 }: IconButtonProps) {
-  const hasAttachment = state === 'attached' && attachmentCount && attachmentCount > 0
-  
-  // Get icon based on variant - using actual icon names from assets
-  const getIcon = (): IconVariant => {
-    switch (variant) {
-      case 'files':
-        return 'files'  // maps to /assets/icons/files.svg
-      case 'images':
-        return 'images' // maps to /assets/icons/images.svg
-      case 'send':
-        return 'send'   // maps to /assets/icons/send.svg
-      default:
-        return 'files'
-    }
-  }
+  const [isHovered, setIsHovered] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
 
-  // Get styles based on state from Figma documentation
-  const getStateStyles = () => {
-    switch (state) {
-      case 'hover':
-        return {
-          backgroundColor: designTokens.colors.blue,
-          color: designTokens.colors.white,
-          iconColor: designTokens.colors.white,
-        }
-      case 'active':
-        return {
-          border: `1px solid ${designTokens.colors.blue}`,
-          backgroundColor: 'transparent',
-          color: designTokens.colors.neutral[10],
-          iconColor: designTokens.colors.neutral[10],
-        }
-      case 'focus':
-        return {
-          backgroundColor: designTokens.colors.blue,
-          color: designTokens.colors.white,
-          iconColor: designTokens.colors.white,
-          outline: `2px solid ${designTokens.colors.blue}`,
-          outlineOffset: '2px',
-        }
-      case 'attached':
-        return {
-          border: `1px solid ${designTokens.colors.blue}`,
-          backgroundColor: 'transparent',
-          color: designTokens.colors.neutral[10],
-          iconColor: designTokens.colors.neutral[10],
-        }
-      default:
-        return {
-          backgroundColor: 'transparent',
-          color: designTokens.colors.black,
-          iconColor: designTokens.colors.black,
-        }
+  const getButtonStyle = () => {
+    const baseStyle = {
+      width: count ? (thumbnails.length > 0 ? '100px' : '66px') : '44px',
+      height: '44px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '8px',
+      border: 'none',
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      position: 'relative' as const,
+      padding: count ? '10px' : '10px',
+      gap: thumbnails.length > 0 ? '5px' : '2px'
     }
-  }
 
-  // Get dimensions based on variant and attachment
-  const getDimensions = () => {
-    if (hasAttachment) {
-      if (variant === 'images') {
-        return { width: 100, height: 44 } // From Figma: 100px × 44px
-      } else if (variant === 'files') {
-        return { width: 66, height: 44 } // From Figma: 66px × 44px
+    // Handle different states
+    if (state === "focus" || isFocused) {
+      return {
+        ...baseStyle,
+        backgroundColor: 'transparent',
+        border: '2px solid #2180EC'
       }
     }
-    return { width: 44, height: 44 } // Default: 44px × 44px
+    
+    if (state === "hover" || isHovered) {
+      return {
+        ...baseStyle,
+        backgroundColor: 'transparent'
+      }
+    }
+    
+    if (state === "active") {
+      return {
+        ...baseStyle,
+        backgroundColor: 'transparent',
+        border: '1px solid #2180EC'
+      }
+    }
+
+    if (state === "attached" && count) {
+      return {
+        ...baseStyle,
+        backgroundColor: 'transparent',
+        border: '1px solid #2180EC'
+      }
+    }
+
+    return {
+      ...baseStyle,
+      backgroundColor: 'transparent'
+    }
   }
 
-  const dimensions = getDimensions()
-  const stateStyles = getStateStyles()
+  const getIconColor = () => {
+    if (state === "hover" || isHovered || state === "focus" || isFocused) {
+      return '#2180EC'
+    }
+    return '#000000'
+  }
 
   return (
     <button
+      style={getButtonStyle()}
       onClick={onClick}
       disabled={disabled}
-      className={cn(
-        // Base styles
-        'inline-flex items-center justify-center gap-1 rounded-lg transition-all',
-        'hover:scale-105 active:scale-95',
-        'disabled:opacity-50 disabled:cursor-not-allowed',
-        className
-      )}
-      style={{
-        width: dimensions.width,
-        height: dimensions.height,
-        padding: hasAttachment ? '10px' : '10px', // 10px padding from Figma
-        backgroundColor: stateStyles.backgroundColor,
-        color: stateStyles.color,
-        border: stateStyles.border || 'none',
-        outline: stateStyles.outline || 'none',
-        outlineOffset: stateStyles.outlineOffset || '0',
-      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
+      className={className}
+      {...props}
     >
-      {/* Icon using actual SVG files */}
-      <Icons 
-        icon={getIcon()} 
-        size={24} 
-        color={stateStyles.iconColor}
-      />
+      {/* Show thumbnails for image attachments */}
+      {thumbnails.length > 0 && (
+        <div className="flex items-center space-x-1">
+          {thumbnails.slice(0, 2).map((variant, index) => (
+            <ThumbnailImages 
+              key={index}
+              variant={variant as '01' | '02' | '03' | '04'} 
+              size={21} 
+            />
+          ))}
+        </div>
+      )}
       
-      {/* Attachment count for files variant */}
-      {hasAttachment && variant === 'files' && (
-        <span
-          className="font-primary font-bold leading-none"
+      {/* Show count for attachments */}
+      {count && !thumbnails.length && (
+        <span 
           style={{
-            fontSize: 18, // Mabry Pro Bold 18px from Figma
-            color: designTokens.colors.neutral[10],
+            fontFamily: 'Mabry Pro',
+            fontWeight: '700',
+            fontSize: '18px',
+            color: '#F7F7F7',
+            marginRight: '2px'
           }}
         >
-          {attachmentCount}
+          {count}
         </span>
       )}
       
-      {/* Thumbnail images for image attachments */}
-      {hasAttachment && variant === 'images' && (
-        <div className="flex items-center gap-1">
-          <ThumbnailImages variant="01" size={22} />
-          <ThumbnailImages variant="02" size={22} />
-          {attachmentCount && attachmentCount > 2 && (
-            <span
-              className="font-primary font-bold leading-none ml-1"
-              style={{
-                fontSize: 12, // Mabry Pro Bold 12px from Figma
-                color: designTokens.colors.neutral[10],
-              }}
-            >
-              {attachmentCount > 2 ? `${attachmentCount - 2}+` : ''}
-            </span>
-          )}
-        </div>
+      {/* Show icon */}
+      <div style={{ color: getIconColor() }}>
+        <Icons icon={icon} />
+      </div>
+      
+      {/* Show additional count for thumbnails */}
+      {thumbnails.length > 2 && (
+        <span 
+          style={{
+            fontFamily: 'Mabry Pro',
+            fontWeight: '700',
+            fontSize: '12px',
+            color: '#F7F7F7',
+            marginLeft: '4px'
+          }}
+        >
+          +{thumbnails.length - 2}
+        </span>
       )}
     </button>
   )

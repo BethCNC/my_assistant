@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { designTokens } from '@/lib/design-tokens'
 
 // Import all our components
-import { Icons } from '@/components/ui/Icons'
 import { IconButton } from '@/components/ui/IconButton'
 import { NavigationText } from '@/components/ui/NavigationText'
 import { ToolButton } from '@/components/ui/ToolButton'

@@ -1,7 +1,7 @@
 // Export all Figma design system components
 
 export { ChatInput } from './ChatInput'
-export type { ChatInputVariant } from './ChatInput'
+export type { ChatInputState } from './ChatInput'
 
 export { ChatPreview } from './ChatPreview'
 

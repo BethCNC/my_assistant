@@ -6,6 +6,7 @@ interface ChatPreviewProps {
   message: string
   onClick?: () => void
   className?: string
+  isCollapsed?: boolean
 }
 
 /**
@@ -24,7 +25,8 @@ interface ChatPreviewProps {
 export function ChatPreview({ 
   message, 
   onClick,
-  className 
+  className,
+  isCollapsed = false
 }: ChatPreviewProps) {
   return (
     <button
@@ -37,7 +39,7 @@ export function ChatPreview({
         className
       )}
       style={{
-        width: 270, // 270px width from Figma
+        width: isCollapsed ? 90 : 270, // Responsive width
         height: 50, // 50px height from Figma
         padding: '4px 8px 12px', // Padding from Figma measurements
         fontSize: '20px', // Mabry Pro Regular 20px from Figma

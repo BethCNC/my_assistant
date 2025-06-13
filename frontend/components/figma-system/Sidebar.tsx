@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { designTokens } from '@/lib/design-tokens'
 import { ChatPreview } from './ChatPreview'
@@ -12,112 +12,130 @@ interface SidebarProps {
   variant?: SidebarVariant
   recentChats?: string[]
   onNewChat?: () => void
-  onChatSelect?: (chatId: string, index: number) => void
+  onChatSelect?: (chat: string, index: number) => void
+  onToggleCollapse?: () => void
   className?: string
 }
 
 /**
- * Sidebar Component - Based on Figma design system
+ * Sidebar Component - Rewritten to match Figma exactly
  * 
- * Measurements from Figma:
- * - default: 270px × 792px
- * - collapsed: 90px × 792px
- * - Background: neutral/10 with 20% opacity (#F7F7F7)
- * - "recent chats" text: neutral/50 (#171717)
- * - New Chat Button text: Mabry Pro Regular 24px, color: neutral/10 (#F7F7F7)
- * 
- * Nested Instances:
- * - lead icon: 32px × 32px
- * - Chat Preview: 270px × 50px (default) or 90px × 50px (collapsed)
- * - new chat button: 270px × 64px (default) or 90px × 64px (collapsed)
+ * From Figma design:
+ * - Simple vertical list layout
+ * - Semi-transparent background
+ * - Chat items with hover states
+ * - New Chat button at bottom
+ * - Toggle arrow in header
  */
 export function Sidebar({ 
   variant = 'default', 
   recentChats = [],
   onNewChat,
   onChatSelect,
+  onToggleCollapse,
   className 
 }: SidebarProps) {
   const isCollapsed = variant === 'collapsed'
   
-  // Get dimensions based on variant from Figma
-  const getDimensions = () => {
-    if (isCollapsed) {
-      return { width: 90, height: 792 }
-    }
-    return { width: 270, height: 792 }
-  }
-
-  const dimensions = getDimensions()
+  // Default chat data for demo (matching Figma)
+  const defaultChats = recentChats.length > 0 ? recentChats : [
+    'How can I better update my design tokens',
+    'What are design tokens?', 
+    'How do I implement glassmorphism?',
+    'Best practices for component libraries',
+    'Figma to code workflow tips',
+    'Component testing strategies',
+    'Design system documentation',
+    'Figma auto-layout best practices',
+    'Creating scalable design systems',
+  ]
 
   return (
     <div
-      className={cn(
-        // Base styles
-        'flex flex-col gap-1 overflow-hidden',
-        className
-      )}
+      className={cn('flex flex-col', className)}
       style={{
-        width: dimensions.width,
-        height: dimensions.height,
-        backgroundColor: `${designTokens.colors.neutral[10]}33`, // 20% opacity (#F7F7F733)
-        padding: isCollapsed ? '4px' : '4px 8px', // Different padding for collapsed vs default
+        width: isCollapsed ? '90px' : '270px',
+        height: '100%',
+        backgroundColor: 'rgba(247, 247, 247, 0.2)', // Semi-transparent from Figma
+        borderRadius: '4px',
+        padding: '4px', // Small padding around content
+        gap: '4px', // Gap between items
       }}
     >
-      {/* Header with lead icon and "recent chats" text */}
-      <div 
-        className="flex items-center justify-between mb-4"
+      {/* Header - Recents Chat with toggle arrow */}
+      <div
         style={{
-          padding: isCollapsed ? '12px 4px' : '12px',
+          backgroundColor: '#171717', // Dark header background
+          borderRadius: '4px',
+          padding: '12px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: isCollapsed ? 'center' : 'space-between',
+          minHeight: '50px',
         }}
       >
-        {/* Lead icon - 32px × 32px from Figma */}
-        <Icons 
-          icon="plus" 
-          size={32} 
-          color={designTokens.colors.neutral[50]}
-        />
-        
-        {/* Show "recent chats" text only in default variant */}
         {!isCollapsed && (
           <span
             style={{
-              fontSize: '16px',
-              fontFamily: designTokens.fonts.primary,
-              color: designTokens.colors.neutral[50], // #171717 from Figma
-              fontWeight: 400,
+              fontFamily: 'Mabry Pro',
+              fontSize: '24px',
+              fontWeight: '400',
+              color: '#F7F7F7',
             }}
           >
-            recent chats
+            Recents Chat
           </span>
         )}
+        
+        <button
+          onClick={onToggleCollapse}
+          style={{
+            width: '32px',
+            height: '32px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            transform: isCollapsed ? 'rotate(180deg)' : 'none',
+            transition: 'transform 0.3s ease',
+          }}
+        >
+          <Icons 
+            icon="arrow" 
+            size={24}
+            color="#F7F7F7"
+          />
+        </button>
       </div>
 
-      {/* Chat Preview List */}
-      <div 
-        className="flex-1 flex flex-col gap-1 overflow-y-auto"
+      {/* Chat List - Scrollable */}
+      <div
         style={{
-          padding: isCollapsed ? '0' : '0 4px',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4px',
+          overflowY: 'auto',
         }}
       >
-        {recentChats.map((chat, index) => (
+        {defaultChats.map((chat, index) => (
           <ChatPreview
-            key={index}
-            message={chat}
+            key={`chat-${index}`}
+            message={isCollapsed ? 'How...' : chat}
             onClick={() => onChatSelect?.(chat, index)}
-            className={cn(
-              // Adjust width for collapsed state
-              isCollapsed && 'w-[90px]'
-            )}
+            isCollapsed={isCollapsed}
           />
         ))}
       </div>
 
-      {/* New Chat Button */}
-      <div 
-        className="mt-auto"
+      {/* New Chat Button at Bottom */}
+      <div
         style={{
-          padding: isCollapsed ? '8px 4px' : '8px',
+          padding: '4px',
+          display: 'flex',
+          justifyContent: 'center',
         }}
       >
         <NewChatButton

@@ -70,11 +70,12 @@ export function ToolButton({
           backgroundColor: designTokens.colors.blue, // #2180EC from Figma
           color: designTokens.colors.black,
           border: 'none',
-          boxShadow: `0 0 0 2px ${designTokens.colors.blue}`, // Blue border ring
+          outline: `2px solid ${designTokens.colors.blue}`, // Focus ring
+          outlineOffset: '2px',
         }
       case 'active':
         return {
-          backgroundColor: 'transparent',
+          background: designTokens.gradients.blue, // Exact blue gradient: #69DEF2 to #126FD8
           color: designTokens.colors.black,
           border: 'none',
         }
@@ -113,6 +114,7 @@ export function ToolButton({
         fontFamily: designTokens.fonts.primary,
         whiteSpace: 'nowrap',
         height: '48px', // 48px height from Figma
+        flex: 1, // Make buttons stretch to fill container
         minWidth: 'auto',
         ...stateStyles,
       }}

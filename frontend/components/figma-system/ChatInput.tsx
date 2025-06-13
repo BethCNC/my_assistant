@@ -1,66 +1,83 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { designTokens } from '@/lib/design-tokens'
-import { IconButton } from './IconButton'
-
-// Chat input variants from Figma documentation
-export type ChatInputVariant = 'default' | 'hover' | 'focused' | 'attaching_images' | 'attaching_files' | 'images_attached' | 'files_attached'
+import { ThumbnailImages } from './ThumbnailImages'
 
 interface AttachedFile {
+  id: string
   name: string
   type: 'image' | 'file'
   progress?: number
+  thumbnailVariant?: '01' | '02' | '03' | '04'
 }
 
+// Chat input states from Figma documentation
+export type ChatInputState = 
+  | 'default' 
+  | 'hover' 
+  | 'focused' 
+  | 'attaching-images' 
+  | 'attaching-files' 
+  | 'images-attached' 
+  | 'files-attached'
+
 interface ChatInputProps {
-  variant?: ChatInputVariant
   placeholder?: string
   value?: string
   onChange?: (value: string) => void
-  onSend?: (message: string) => void
-  onAttachFiles?: () => void
-  onAttachImages?: () => void
-  attachedFiles?: AttachedFile[]
-  onRemoveAttachment?: (index: number) => void
+  onSend?: (message: string, attachments: { images: AttachedFile[], files: AttachedFile[] }) => void
   maxLength?: number
   disabled?: boolean
   className?: string
+  initialState?: ChatInputState
 }
 
 /**
- * Chat Input Component - Based on Figma design system
- * Uses actual SVG icons from /assets/icons/
+ * Chat Input Component - Corrected based on Figma documentation
  * 
- * Measurements from Figma:
- * - Default height: 64px (calculated from design)
- * - Text: Mabry Pro Medium 16px (input text)
- * - Char count: Mabry Pro Regular 16px, color: neutral/40 (#404040)
- * - Background: neutral/10 (#F7F7F7) with border
- * - Input background: neutral/White (#FFFFFF)
+ * STRUCTURE (from Figma PDFs):
+ * - Outer container: Gray background (#F7F7F7), black border, 8px radius, 16px padding
+ * - Inner input: White background (#FFFFFF), state-dependent border, 4px radius, 12px 16px padding
+ * - Layout: attachment icons → text input → character count → send button
  * 
- * States from Figma:
- * - default: Standard appearance
- * - hover: Subtle hover effect
- * - focused: Blue border (#2180EC)
- * - attaching_images/files: Shows attachment interface
- * - images_attached/files_attached: Shows attachment count
+ * STATES (from documentation):
+ * - default: Black border (#000000) on outer, black border on inner
+ * - hover: No visual change (hover state doesn't affect container)
+ * - focused: Blue border (#2180EC) on inner input field only
+ * - attaching: Gray border (#808080) on inner when panels open
+ * 
+ * MEASUREMENTS (from Figma PDFs):
+ * - Outer container: 16px padding, 8px border radius, #F7F7F7 background
+ * - Inner input: 12px 16px padding, 4px border radius, white background
+ * - Icons: 20px size, 24px clickable area
+ * - Text: Mabry Pro Medium 16px (#000000)
+ * - Character count: Mabry Pro Regular 16px (#404040)
  */
 export function ChatInput({ 
-  variant = 'default',
   placeholder = 'Ask me a question...',
   value = '',
   onChange,
   onSend,
-  onAttachFiles,
-  onAttachImages,
-  attachedFiles = [],
-  onRemoveAttachment,
   maxLength = 1000,
   disabled = false,
-  className 
+  className,
+  initialState = 'default'
 }: ChatInputProps) {
-  const [currentVariant, setCurrentVariant] = useState(variant)
   const [inputValue, setInputValue] = useState(value)
+  const [attachedImages, setAttachedImages] = useState<AttachedFile[]>([])
+  const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([])
+  const [isAttachingImages, setIsAttachingImages] = useState(false)
+  const [isAttachingFiles, setIsAttachingFiles] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, [inputValue])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value
@@ -71,9 +88,13 @@ export function ChatInput({
   }
 
   const handleSend = () => {
-    if (inputValue.trim() && onSend) {
-      onSend(inputValue.trim())
+    if (inputValue.trim() || attachedImages.length > 0 || attachedFiles.length > 0) {
+      onSend?.(inputValue.trim(), { images: attachedImages, files: attachedFiles })
       setInputValue('')
+      setAttachedImages([])
+      setAttachedFiles([])
+      setIsAttachingImages(false)
+      setIsAttachingFiles(false)
       onChange?.('')
     }
   }
@@ -85,275 +106,231 @@ export function ChatInput({
     }
   }
 
-  // Get styles based on variant from Figma documentation
-  const getVariantStyles = () => {
-    switch (currentVariant) {
-      case 'focused':
-        return {
-          containerBorder: `1px solid ${designTokens.colors.blue}`, // Blue border when focused
-          inputBackground: designTokens.colors.white,
-          inputBorder: `1px solid ${designTokens.colors.blue}`,
-        }
-      case 'hover':
-        return {
-          containerBorder: `1px solid ${designTokens.colors.black}`,
-          inputBackground: designTokens.colors.white,
-          inputBorder: `1px solid ${designTokens.colors.black}`,
-        }
-      case 'attaching_images':
-      case 'attaching_files':
-        return {
-          containerBorder: `1px solid ${designTokens.colors.black}`,
-          inputBackground: designTokens.colors.white,
-          inputBorder: `1px solid ${designTokens.colors.neutral[30]}`, // #808080
-        }
-      default:
-        return {
-          containerBorder: `1px solid ${designTokens.colors.black}`,
-          inputBackground: designTokens.colors.white,
-          inputBorder: `1px solid ${designTokens.colors.black}`,
-        }
+  const addImage = () => {
+    const variants = ['01', '02', '03', '04'] as const
+    const newImage: AttachedFile = {
+      id: `img_${Date.now()}`,
+      name: `image${String(attachedImages.length + 1).padStart(3, '0')}.jpg`,
+      type: 'image',
+      thumbnailVariant: variants[Math.floor(Math.random() * variants.length)]
     }
+    setAttachedImages([...attachedImages, newImage])
   }
 
-  const styles = getVariantStyles()
-  const imageAttachments = attachedFiles.filter(f => f.type === 'image')
-  const fileAttachments = attachedFiles.filter(f => f.type === 'file')
+  const addFile = () => {
+    const newFile: AttachedFile = {
+      id: `file_${Date.now()}`,
+      name: 'document.docx',
+      type: 'file'
+    }
+    setAttachedFiles([...attachedFiles, newFile])
+  }
+
+  const removeImage = (id: string) => {
+    setAttachedImages(attachedImages.filter(img => img.id !== id))
+  }
+
+  const removeFile = (id: string) => {
+    setAttachedFiles(attachedFiles.filter(file => file.id !== id))
+  }
+
+  // Get inner input border color based on state (from Figma)
+  const getInputBorderColor = () => {
+    if (isFocused) return '#2180EC' // Blue when focused
+    if (isAttachingImages || isAttachingFiles) return '#808080' // Gray when attaching
+    return '#000000' // Black by default
+  }
 
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-2 transition-all duration-300',
-        className
-      )}
-      style={{
-        backgroundColor: designTokens.colors.neutral[10], // #F7F7F7 background
-        border: styles.containerBorder,
-        borderRadius: `${designTokens.radii.md}px`,
-        padding: '12px',
-      }}
-    >
-      {/* Image Attachment Area */}
-      {(currentVariant === 'attaching_images' || imageAttachments.length > 0) && (
+    <div className={cn('relative', className)}>
+      {/* Attaching Images Panel */}
+      {isAttachingImages && (
         <div
-          className="border rounded-lg p-3"
+          className="absolute bottom-full left-0 mb-2 z-10"
           style={{
-            backgroundColor: designTokens.colors.white,
-            border: `1px solid ${designTokens.colors.neutral[20]}`, // #BFBFBF
+            width: '275px',
+            backgroundColor: '#FFF',
+            border: '1px solid #BFBFBF',
+            borderRadius: '8px',
+            padding: '16px',
+            boxShadow: '0px 4px 6px -1px rgba(0,0,0,0.1)'
           }}
         >
-          {/* Header */}
-          <div
-            className="flex items-center justify-between pb-2 mb-2"
-            style={{
-              borderBottom: `1px solid ${designTokens.colors.neutral[20]}`,
-            }}
-          >
-            <span
-              style={{
-                fontSize: '14px',
-                fontFamily: designTokens.fonts.primary,
-                fontWeight: 500,
-                color: designTokens.colors.black,
-              }}
-            >
-              Attached Images
-            </span>
+          <div className="flex items-center justify-between pb-2 mb-3" style={{ borderBottom: '1px solid #BFBFBF' }}>
+            <span style={{ fontFamily: 'DM Sans', fontWeight: 500, fontSize: '14px', color: '#000' }}>Attached Images</span>
             <button
-              onClick={() => onAttachImages?.()}
-              className="text-sm text-neutral-30 hover:text-black"
+              onClick={addImage}
               style={{
-                fontSize: '14px',
-                fontFamily: designTokens.fonts.primary,
-                fontWeight: 500,
-                color: designTokens.colors.neutral[30],
+                display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'DM Sans', fontWeight: 500, fontSize: '14px', color: '#808080', backgroundColor: '#F7F7F7', padding: '4px 8px', borderRadius: '4px', border: 'none', cursor: 'pointer'
               }}
             >
-              Add
+              Add <img src="/assets/icons/plus.svg" width={14} height={14} alt="Add" />
             </button>
           </div>
-          
-          {/* Image list */}
-          <div className="space-y-1">
-            {imageAttachments.map((file, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <span
-                  style={{
-                    fontSize: '14px',
-                    fontFamily: designTokens.fonts.primary,
-                    color: designTokens.colors.black,
-                  }}
-                >
-                  {file.name}
-                </span>
-                {file.progress !== undefined ? (
-                  <span
-                    style={{
-                      fontSize: '14px',
-                      fontFamily: designTokens.fonts.primary,
-                      color: designTokens.colors.blue,
-                    }}
-                  >
-                    {file.progress}%
-                  </span>
-                ) : (
-                  <button
-                    onClick={() => onRemoveAttachment?.(index)}
-                    className="hover:scale-110 transition-transform"
-                  >
-                    <IconButton variant="files" state="default" />
+          <div className="space-y-2">
+            {attachedImages.map((image, index) => (
+              <div key={image.id} className="flex items-center justify-between" style={{padding: '8px 4px', borderRadius: '4px'}}>
+                <div className="flex items-center gap-2">
+                  <ThumbnailImages variant={image.thumbnailVariant || '01'} size={21} />
+                  <span style={{ fontFamily: 'DM Sans', fontSize: '14px', color: '#000' }}>{image.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {index === attachedImages.length - 1 && (
+                    <span style={{ fontFamily: 'DM Sans', fontSize: '14px', color: '#2180EC' }}>12%</span>
+                  )}
+                  <button onClick={() => removeImage(image.id)} style={{display: 'flex', alignItems: 'center', border: 'none', background: 'none', cursor: 'pointer'}}>
+                    <img src="/assets/icons/minus.svg" width={16} height={16} alt="Remove" />
                   </button>
-                )}
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* File Attachment Area */}
-      {(currentVariant === 'attaching_files' || fileAttachments.length > 0) && (
+      {/* Attaching Files Panel */}
+      {isAttachingFiles && (
         <div
-          className="border rounded-lg p-3"
+          className="absolute bottom-full left-0 mb-2 z-10"
           style={{
-            backgroundColor: designTokens.colors.white,
-            border: `1px solid ${designTokens.colors.neutral[20]}`, // #BFBFBF
+            width: '275px',
+            backgroundColor: '#FFF',
+            border: '1px solid #BFBFBF',
+            borderRadius: '8px',
+            padding: '16px',
+            boxShadow: '0px 4px 6px -1px rgba(0,0,0,0.1)'
           }}
         >
-          {/* Header */}
-          <div
-            className="flex items-center justify-between pb-2 mb-2"
-            style={{
-              borderBottom: `1px solid ${designTokens.colors.neutral[20]}`,
-            }}
-          >
-            <span
-              style={{
-                fontSize: '14px',
-                fontFamily: designTokens.fonts.primary,
-                fontWeight: 500,
-                color: designTokens.colors.black,
-              }}
-            >
-              Attached Files
-            </span>
+          <div className="flex items-center justify-between pb-2 mb-3" style={{ borderBottom: '1px solid #BFBFBF' }}>
+            <span style={{ fontFamily: 'DM Sans', fontWeight: 500, fontSize: '14px', color: '#000' }}>Attached Files</span>
             <button
-              onClick={() => onAttachFiles?.()}
-              className="text-sm text-neutral-30 hover:text-black"
+              onClick={addFile}
               style={{
-                fontSize: '14px',
-                fontFamily: designTokens.fonts.primary,
-                fontWeight: 500,
-                color: designTokens.colors.neutral[30],
+                display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'DM Sans', fontWeight: 500, fontSize: '14px', color: '#808080', backgroundColor: '#F7F7F7', padding: '4px 8px', borderRadius: '4px', border: 'none', cursor: 'pointer'
               }}
             >
-              Add
+              Add <img src="/assets/icons/plus.svg" width={14} height={14} alt="Add" />
             </button>
           </div>
-          
-          {/* File list */}
-          <div className="space-y-1">
-            {fileAttachments.map((file, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <span
-                  style={{
-                    fontSize: '14px',
-                    fontFamily: designTokens.fonts.primary,
-                    color: designTokens.colors.black,
-                  }}
-                >
-                  {file.name}
-                </span>
-                {file.progress !== undefined ? (
-                  <span
-                    style={{
-                      fontSize: '14px',
-                      fontFamily: designTokens.fonts.primary,
-                      color: designTokens.colors.blue,
-                    }}
-                  >
-                    {file.progress}%
-                  </span>
-                ) : (
-                  <button
-                    onClick={() => onRemoveAttachment?.(index)}
-                    className="hover:scale-110 transition-transform"
-                  >
-                    <IconButton variant="files" state="default" />
+          <div className="space-y-2">
+            {attachedFiles.map((file, index) => (
+              <div key={file.id} className="flex items-center justify-between" style={{padding: '8px 4px', borderRadius: '4px'}}>
+                <div className="flex items-center gap-2">
+                  <img src="/assets/icons/files.svg" width={16} height={16} alt="File" />
+                  <span style={{ fontFamily: 'DM Sans', fontSize: '14px', color: '#000' }}>{file.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {index === attachedFiles.length - 1 && (
+                    <span style={{ fontFamily: 'DM Sans', fontSize: '14px', color: '#2180EC' }}>12%</span>
+                  )}
+                  <button onClick={() => removeFile(file.id)} style={{display: 'flex', alignItems: 'center', border: 'none', background: 'none', cursor: 'pointer'}}>
+                    <img src="/assets/icons/minus.svg" width={16} height={16} alt="Remove" />
                   </button>
-                )}
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Main Input Area */}
+      {/* Main Container - Gray outer container (from Figma) */}
       <div
-        className="flex items-end gap-3"
         style={{
-          backgroundColor: styles.inputBackground,
-          border: styles.inputBorder,
-          borderRadius: `${designTokens.radii.md}px`,
-          padding: '12px',
-          minHeight: '64px',
+          backgroundColor: '#F7F7F7',
+          border: '2px solid #000',
+          borderRadius: '8px',
+          padding: '16px 12px',
+          width: '740px',
+          boxShadow: '0px 1px 2px 0px rgba(10,13,18,0.06), 0px 1px 1px 0px rgba(10,13,18,0.14)'
         }}
       >
-        {/* File attachment button using actual SVG */}
-        <IconButton
-          variant="files"
-          state={fileAttachments.length > 0 ? 'attached' : 'default'}
-          attachmentCount={fileAttachments.length}
-          onClick={onAttachFiles}
-        />
-
-        {/* Image attachment button using actual SVG */}
-        <IconButton
-          variant="images"
-          state={imageAttachments.length > 0 ? 'attached' : 'default'}
-          attachmentCount={imageAttachments.length}
-          onClick={onAttachImages}
-        />
-
-        {/* Text input */}
-        <textarea
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setCurrentVariant('focused')}
-          onBlur={() => setCurrentVariant(variant)}
-          placeholder={placeholder}
-          disabled={disabled}
-          rows={1}
-          className="flex-1 resize-none border-none outline-none bg-transparent"
-          style={{
-            fontSize: '16px', // Mabry Pro Medium 16px from Figma
-            fontFamily: designTokens.fonts.primary,
-            fontWeight: 500,
-            color: designTokens.colors.black,
-            minHeight: '24px',
-            maxHeight: '120px',
-          }}
-        />
-
-        {/* Character count */}
+        {/* Inner Input Field - White container with all elements (from Figma) */}
         <div
-          className="flex items-center gap-3"
           style={{
-            fontSize: '16px', // Mabry Pro Regular 16px from Figma
-            fontFamily: designTokens.fonts.primary,
-            color: designTokens.colors.neutral[40], // #404040 from Figma
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#FFF',
+            border: `1px solid ${getInputBorderColor()}`,
+            borderRadius: '4px',
+            padding: '10px 14px',
+            gap: '8px',
+            minHeight: '42px',
+            width: '100%',
           }}
         >
-          <span>{inputValue.length}/{maxLength}</span>
-        </div>
+          {/* Left: Attachment Icons - INSIDE the white input field */}
+          <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+            <button
+              onClick={() => {
+                setIsAttachingFiles(!isAttachingFiles)
+                setIsAttachingImages(false)
+              }}
+              style={{
+                width: '24px', height: '24px', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', borderRadius: '4px', cursor: 'pointer'
+              }}
+            >
+              <img src="/assets/icons/files.svg" width={20} height={20} alt="Attach file" />
+            </button>
+            <button
+              onClick={() => {
+                setIsAttachingImages(!isAttachingImages)
+                setIsAttachingFiles(false)
+              }}
+              style={{
+                width: '24px', height: '24px', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', borderRadius: '4px', cursor: 'pointer'
+              }}
+            >
+              <img src="/assets/icons/images.svg" width={20} height={20} alt="Attach image" />
+            </button>
+          </div>
 
-        {/* Send button using actual SVG */}
-        <IconButton
-          variant="send"
-          state={inputValue.trim() ? 'hover' : 'default'}
-          onClick={handleSend}
-          disabled={!inputValue.trim() || disabled}
-        />
+          {/* Center: Text Input - Takes remaining space */}
+          <textarea
+            ref={textareaRef}
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder={placeholder}
+            disabled={disabled}
+            rows={1}
+            className="flex-1 resize-none border-none outline-none bg-transparent"
+            style={{
+              fontFamily: 'Mabry Pro',
+              fontWeight: 500,
+              fontSize: '16px',
+              color: '#000',
+              minHeight: '22px',
+              maxHeight: '100px',
+              lineHeight: '1.25em',
+            }}
+          />
+
+          {/* Right: Character Count + Send Button */}
+          <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
+            <span
+              style={{
+                fontFamily: 'Mabry Pro',
+                fontWeight: 400,
+                fontSize: '16px',
+                color: '#404040',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {inputValue.length}/{maxLength}
+            </span>
+            <button
+              onClick={handleSend}
+              disabled={!inputValue.trim() && attachedImages.length === 0 && attachedFiles.length === 0}
+              style={{
+                width: '24px', height: '24px', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', borderRadius: '4px', cursor: inputValue.trim() || attachedImages.length > 0 || attachedFiles.length > 0 ? 'pointer' : 'not-allowed', opacity: inputValue.trim() || attachedImages.length > 0 || attachedFiles.length > 0 ? 1 : 0.5
+              }}
+            >
+              <img src="/assets/icons/send.svg" width={20} height={20} alt="Send" />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )

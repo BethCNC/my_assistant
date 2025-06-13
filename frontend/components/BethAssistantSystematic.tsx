@@ -21,13 +21,13 @@ const grid = {
 
 /**
  * Beth's Assistant - Main Component
- * Built with systematic components from Figma design system
- * Uses actual SVG assets with random shape generation
+ * Updated with improved components that match exact Figma specifications
  */
 export default function BethAssistant() {
   const [inputValue, setInputValue] = useState('')
   const [activeMCPTab, setActiveMCPTab] = useState<string | null>(null)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [chatHistory, setChatHistory] = useState<string[]>([])
 
   // Sample data
   const recentChats = [
@@ -40,46 +40,33 @@ export default function BethAssistant() {
     'Design system documentation',
   ]
 
-  // Dynamic suggestion cards that change over time
-  const [suggestionCards, setSuggestionCards] = useState([
-    { text: 'I would like to know about design tokens' },
-    { text: 'How do I create a component library?' },
+  // Static suggestion cards - shapes only change when chat history updates
+  const suggestions = [
+    { text: 'Guide me through Figma to code workflow' },
+    { text: 'Accessibility in design systems' },
+    { text: 'How to organize design files effectively?' },
+    { text: 'Component testing strategies' },
     { text: 'What are the best Figma plugins?' },
     { text: 'Help me implement responsive design' },
-    { text: 'Explain design system architecture' },
-    { text: 'Guide me through Figma to code workflow' },
-  ])
+  ]
 
-  // Auto-rotate suggestions every 15 seconds to show random shapes
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const allSuggestions = [
-        'I would like to know about design tokens',
-        'How do I create a component library?',
-        'What are the best Figma plugins?',
-        'Help me implement responsive design',
-        'Explain design system architecture',
-        'Guide me through Figma to code workflow',
-        'Tell me about color theory in design',
-        'How to organize design files effectively?',
-        'Best practices for component naming',
-        'Accessibility in design systems',
-        'Responsive design principles',
-        'Component testing strategies',
-        'Design system documentation',
-        'Figma auto-layout best practices',
-        'Creating scalable design systems',
-        'Typography in digital design',
-      ]
-      
-      // Shuffle and pick 6 random suggestions
-      const shuffled = allSuggestions.sort(() => 0.5 - Math.random())
-      const newSuggestions = shuffled.slice(0, 6).map(text => ({ text }))
-      setSuggestionCards(newSuggestions)
-    }, 15000) // Change every 15 seconds
+  // Generate suggestion shapes based on chat history length to avoid automatic rotation
+  const getSuggestionShapeVariant = (index: number, chatHistoryLength: number) => {
+    // Use chat history length as seed for consistent but varied shapes
+    return ((index + chatHistoryLength) % 7) + 1
+  }
 
-    return () => clearInterval(interval)
-  }, [])
+  const handleSuggestionClick = (text: string) => {
+    console.log('Suggestion clicked:', text)
+    setInputValue(text)
+  }
+
+  const handleSend = (message: string, attachments: { images: any[], files: any[] }) => {
+    console.log('Message sent:', message, attachments)
+    // Add to chat history to trigger shape updates
+    setChatHistory([...chatHistory, message])
+    setInputValue('')
+  }
 
   const mcpTools = ['notion', 'figma', 'github', 'email', 'calendar'] as const
 
@@ -107,7 +94,7 @@ export default function BethAssistant() {
           font-family: 'Mabry Pro';
           src: url('/assets/font/MabryPro-Black.woff') format('woff'),
                url('/assets/font/MabryPro-Black.ttf') format('truetype');
-          font-weight: 900;
+          font-weight: 700;
           font-style: normal;
           font-display: swap;
         }
@@ -156,8 +143,13 @@ export default function BethAssistant() {
         </div>
 
         <div className="flex flex-1 h-[calc(100vh-116px)] max-h-[684px]">
-          {/* Left Sidebar */}
-          <div style={{ marginLeft: `${grid.margin}px` }}>
+          {/* Left Sidebar - Fixed 24px gap from header */}
+          <div style={{ 
+            marginLeft: `${grid.margin}px`,
+            marginTop: `${grid.gutter}px`, // 24px gap from header
+            height: '100%', // Ensure sidebar takes full height
+            display: 'flex',
+          }}>
             <Sidebar
               variant={sidebarCollapsed ? 'collapsed' : 'default'}
               recentChats={recentChats}
@@ -169,18 +161,20 @@ export default function BethAssistant() {
                 console.log('Chat selected:', chat, index)
                 setInputValue(chat)
               }}
+              onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
             />
           </div>
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col">
-            {/* MCP Server Connection Tabs */}
+            {/* MCP Server Connection Tabs - Fixed 24px gap from sidebar */}
             <div 
-              className="flex gap-3 mb-6"
+              className="flex gap-3"
               style={{
-                marginLeft: `${grid.margin}px`,
+                marginLeft: `${grid.gutter}px`, // 24px gap from sidebar (matches Figma)
                 marginRight: `${grid.margin}px`,
-                marginTop: `${designTokens.spacing.lg}px`,
+                marginTop: `${grid.gutter}px`, // 24px gap from header to match sidebar
+                marginBottom: '10px',
               }}
             >
               {mcpTools.map((tool) => (
@@ -196,56 +190,56 @@ export default function BethAssistant() {
               ))}
             </div>
 
-            {/* Greeting */}
+            {/* Greeting - Fixed 24px gap from sidebar */}
             <div 
-              className="text-center mb-6"
+              className="text-center"
               style={{
-                marginLeft: `${grid.margin}px`,
+                marginLeft: `${grid.gutter}px`, // 24px gap from sidebar (matches Figma)
                 marginRight: `${grid.margin}px`,
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                marginBottom: '10px',
               }}
             >
               <h1
                 style={{
-                  fontSize: designTokens.fontSizes['3xl'],
-                  fontWeight: 400,
-                  color: designTokens.colors.white,
+                  fontSize: '42px',
+                  fontWeight: 500,
+                  color: designTokens.colors.neutral[50],
                   margin: 0,
-                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                  fontFamily: designTokens.fonts.greeting,
-                  lineHeight: 1.2,
+                  fontFamily: 'Behind The Nineties',
+                  lineHeight: '42px',
+                  letterSpacing: '0%',
+                  textAlign: 'center',
                 }}
               >
                 Good Morning Beth! What can I help you with today?
               </h1>
             </div>
 
-            {/* Suggestion Cards - WITH RANDOM SHAPES */}
+            {/* Suggestion Cards - Fixed 24px gap from sidebar */}
             <div 
               className="grid grid-cols-2 gap-6 flex-1 content-start"
               style={{
-                marginLeft: `${grid.margin}px`,
+                marginLeft: `${grid.gutter}px`, // 24px gap from sidebar (matches Figma)
                 marginRight: `${grid.margin}px`,
               }}
             >
-              {suggestionCards.map((card, index) => (
+              {suggestions.map((suggestion, index) => (
                 <SuggestionCard
-                  key={`${card.text}-${index}`} // Key includes text to trigger shape changes
-                  text={card.text}
-                  state={index === 1 ? 'state3' : index === 2 ? 'focus' : 'default'}
-                  onClick={() => {
-                    console.log('Suggestion clicked:', card.text)
-                    setInputValue(card.text)
-                  }}
-                  randomizeShape={true} // Enable random shape changes
+                  key={index}
+                  text={suggestion.text}
+                  shapeVariant={getSuggestionShapeVariant(index, chatHistory.length)}
+                  onClick={() => handleSuggestionClick(suggestion.text)}
                 />
               ))}
             </div>
 
-            {/* Input Area */}
+            {/* Input Area - Fixed 24px gap from sidebar */}
             <div 
               className="mt-auto"
               style={{
-                marginLeft: `${grid.margin}px`,
+                marginLeft: `${grid.gutter}px`, // 24px gap from sidebar (matches Figma)
                 marginRight: `${grid.margin}px`,
                 marginBottom: `${designTokens.spacing.lg}px`,
               }}
@@ -253,28 +247,18 @@ export default function BethAssistant() {
               <ChatInput
                 value={inputValue}
                 onChange={setInputValue}
-                onSend={(message) => {
-                  console.log('Message sent:', message)
-                  // Here you would handle sending the message
-                  setInputValue('')
-                }}
-                onAttachFiles={() => {
-                  console.log('Attach files clicked')
-                }}
-                onAttachImages={() => {
-                  console.log('Attach images clicked')
-                }}
+                onSend={handleSend}
               />
             </div>
           </div>
         </div>
 
-        {/* Optional: Show notification about auto-rotating suggestions */}
+        {/* Updated notification */}
         <div 
           className="fixed bottom-4 right-4 bg-black/70 backdrop-blur-md text-white px-3 py-2 rounded-md text-sm"
           style={{ fontSize: '12px' }}
         >
-          🎲 Suggestions auto-rotate every 15s with random shapes
+          🎯 Suggestions shapes update when you send messages
         </div>
       </div>
     </>
