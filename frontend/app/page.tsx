@@ -1,5 +1,5 @@
-import Component from "../beth-assistant"
+import BethAssistantSystematic from "../components/BethAssistantSystematic"
 
 export default function Page() {
-  return <Component />
+  return <BethAssistantSystematic />
 }

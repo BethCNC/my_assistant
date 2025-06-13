@@ -1,0 +1,232 @@
+/* Design tokens extracted from Figma design system */
+
+/* Font Face Declarations */
+@font-face {
+  font-family: 'Mabry Pro';
+  src: url('/assets/font/MabryPro-Regular.woff') format('woff'),
+       url('/assets/font/MabryPro-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mabry Pro';
+  src: url('/assets/font/MabryPro-Light.woff') format('woff'),
+       url('/assets/font/MabryPro-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mabry Pro';
+  src: url('/assets/font/MabryPro-Medium.woff') format('woff'),
+       url('/assets/font/MabryPro-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mabry Pro';
+  src: url('/assets/font/MabryPro-Bold.woff') format('woff'),
+       url('/assets/font/MabryPro-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mabry Pro';
+  src: url('/assets/font/MabryPro-Black.woff') format('woff'),
+       url('/assets/font/MabryPro-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Behind The Nineties';
+  src: url('/assets/font/Behind-The-Nineties-Rg.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Behind The Nineties';
+  src: url('/assets/font/Behind-The-Nineties-Md.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* CSS Custom Properties for Design Tokens */
+:root {
+  /* Brand Colors */
+  --color-orange: #ff7d59;
+  --color-blue: #2180ec;
+  
+  /* Neutral Colors */
+  --color-white: #ffffff;
+  --color-neutral-10: #f7f7f7;
+  --color-neutral-20: #bfbfbf;
+  --color-neutral-30: #808080;
+  --color-neutral-40: #404040;
+  --color-neutral-50: #171717;
+  --color-black: #000000;
+  
+  /* Gradients */
+  --gradient-rainbow: url('/assets/gradient.png');
+  --gradient-blue: linear-gradient(92.75deg, #69def2 0%, #126fd8 100%);
+  
+  /* Shadows */
+  --shadow-button: inset 0px 2px 1px rgba(255, 255, 255, 0.25), inset 0px -4px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(255, 255, 255, 0.1);
+  --shadow-inner-100: inset 0px 1px 4px rgba(23, 23, 23, 0.05);
+  --shadow-inner-200: inset 0px 1px 4px rgba(23, 23, 23, 0.05);
+  --shadow-inner-300: inset 0px 4px 4px rgba(23, 23, 23, 0.05);
+  --shadow-inner-400: inset 0px 16px 32px rgba(23, 23, 23, 0.1);
+  --shadow-inner-500: inset 0px 16px 16px rgba(23, 23, 23, 0.1);
+  --shadow-inner-600: inset 0px 16px 32px rgba(23, 23, 23, 0.4);
+  --shadow-drop-glow: 0px 0px 1px rgba(0, 0, 0, 0.2), 0px 0px 100px #feebe5;
+  --shadow-drop-sm: 0px 1px 3px rgba(0, 0, 0, 0.15);
+  
+  /* Blur Effects */
+  --blur-overlay: blur(2px);
+  --blur-layer: blur(2px);
+  --blur-glass: blur(2px);
+  
+  /* Typography */
+  --font-primary: 'Mabry Pro', sans-serif;
+  --font-greeting: 'Behind The Nineties', serif;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 40px;
+  --spacing-3xl: 48px;
+  --spacing-4xl: 64px;
+  
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  /* Font Sizes */
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-base: 16px;
+  --font-size-md: 20px;
+  --font-size-lg: 24px;
+  --font-size-xl: 28px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 40px;
+  --font-size-4xl: 48px;
+  --font-size-5xl: 56px;
+}
+
+/* Utility Classes based on Figma Styles */
+.Orange {
+  background: var(--color-orange);
+}
+
+.Blue {
+  background: var(--color-blue);
+}
+
+.rainbowgradient {
+  background: var(--gradient-rainbow);
+}
+
+.bluegradient {
+  background: var(--gradient-blue);
+}
+
+.neutral__White {
+  background: var(--color-white);
+}
+
+.neutral__10 {
+  background: var(--color-neutral-10);
+}
+
+.neutral__20 {
+  background: var(--color-neutral-20);
+}
+
+.neutral__30 {
+  background: var(--color-neutral-30);
+}
+
+.neutral__40 {
+  background: var(--color-neutral-40);
+}
+
+.neutral__50 {
+  background: var(--color-neutral-50);
+}
+
+.neutral__Black {
+  background: var(--color-black);
+}
+
+.buttonshadow {
+  box-shadow: var(--shadow-button);
+}
+
+.Blur__Overlay {
+  backdrop-filter: var(--blur-overlay);
+}
+
+.Blur__Layer {
+  filter: var(--blur-layer);
+}
+
+.Blur__Glass {
+  backdrop-filter: var(--blur-glass);
+}
+
+.InnerShadow__100 {
+  box-shadow: var(--shadow-inner-100);
+}
+
+.InnerShadow__200 {
+  box-shadow: var(--shadow-inner-200);
+}
+
+.InnerShadow__300 {
+  box-shadow: var(--shadow-inner-300);
+}
+
+.InnerShadow__400 {
+  box-shadow: var(--shadow-inner-400);
+}
+
+.InnerShadow__500 {
+  box-shadow: var(--shadow-inner-500);
+}
+
+.InnerShadow__600 {
+  box-shadow: var(--shadow-inner-600);
+}
+
+.dropshadow__glow {
+  box-shadow: var(--shadow-drop-glow);
+}
+
+.dropshadow__sm {
+  box-shadow: var(--shadow-drop-sm);
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-primary);
+  background: var(--gradient-rainbow);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.greeting-text {
+  font-family: var(--font-greeting);
+}
