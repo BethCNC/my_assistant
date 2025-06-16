@@ -4,15 +4,16 @@ import React, { useState } from 'react'
 import { designTokens } from '@/lib/design-tokens'
 
 // Import all our components
-import { IconButton } from '@/components/ui/IconButton'
-import { NavigationText } from '@/components/ui/NavigationText'
-import { ToolButton } from '@/components/ui/ToolButton'
-import { NewChatButton } from '@/components/ui/NewChatButton'
-import { ChatPreview } from '@/components/ui/ChatPreview'
-import { SuggestionCard } from '@/components/ui/SuggestionCard'
-import { SuggestionShapes, getRandomShapes } from '@/components/ui/SuggestionShapes'
-import { Sidebar } from '@/components/ui/Sidebar'
-import { ChatInput } from '@/components/ui/ChatInput'
+import IconButton from '@/components/figma-system/IconButton'
+import NavigationText from '@/components/figma-system/NavigationText'
+import ToolButton from '@/components/figma-system/ToolButton'
+import NewChatButton from '@/components/figma-system/NewChatButton'
+import ChatPreview from '@/components/figma-system/ChatPreview'
+import { SuggestionCard } from '@/components/figma-system/SuggestionCard'
+import { SuggestionShapes, getRandomShapes } from '@/components/figma-system/SuggestionShapes'
+import { Sidebar } from '@/components/figma-system/Sidebar'
+import { ChatInput } from '@/components/figma-system/ChatInput'
+import Icons from '@/components/figma-system/Icons'
 
 /**
  * Component Demo Page

@@ -10,17 +10,10 @@ interface ChatPreviewProps {
 }
 
 /**
- * Chat Preview Component - Based on Figma design system
+ * Chat Preview Component - Fixed to match screenshot layout
  * 
- * Measurements from Figma:
- * - Size: 270px × 50px
- * - Text: Mabry Pro Regular 20px
- * - Color: neutral/40 (#404040)
- * - Padding: 4px, 8px, 12px spacing from measurements
- * 
- * Component: Default
- * - Shows truncated chat message
- * - Hover effect with background and transform
+ * Shows chat history items in the sidebar with proper truncation
+ * and hover effects. Matches the layout shown in your screenshots.
  */
 export function ChatPreview({ 
   message, 
@@ -32,24 +25,32 @@ export function ChatPreview({
     <button
       onClick={onClick}
       className={cn(
-        // Base styles
         'flex items-center text-left w-full transition-all duration-200',
-        'hover:bg-white/10 hover:translate-x-0.5 hover:opacity-100',
-        'rounded-sm cursor-pointer',
+        'hover:bg-white/10 rounded-sm cursor-pointer',
         className
       )}
       style={{
-        width: isCollapsed ? 90 : 270, // Responsive width
-        height: 50, // 50px height from Figma
-        padding: '4px 8px 12px', // Padding from Figma measurements
-        fontSize: '20px', // Mabry Pro Regular 20px from Figma
+        width: isCollapsed ? 82 : 262, // Fit within sidebar bounds
+        minHeight: 40, // Minimum height for touch targets
+        padding: '8px 12px', // Comfortable padding
+        fontSize: '14px', // Smaller font for better fit
         fontFamily: designTokens.fonts.primary,
-        color: designTokens.colors.neutral[40], // #404040 from Figma
-        opacity: 0.8,
+        fontWeight: '400',
+        color: designTokens.colors.neutral[40], // #404040 gray text
+        textAlign: 'left',
+        marginBottom: '4px', // Small gap between items
       }}
     >
-      {/* Truncate long messages */}
-      <span className="truncate">
+      <span 
+        className="truncate"
+        style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          width: '100%',
+          lineHeight: '1.2',
+        }}
+      >
         {message}
       </span>
     </button>

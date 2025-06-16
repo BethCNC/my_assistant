@@ -334,7 +334,7 @@ async def chat(req: ChatRequest):
         {"role": "system", "content": system_prompt},
         *context,
     ]
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=messages,
         max_tokens=300

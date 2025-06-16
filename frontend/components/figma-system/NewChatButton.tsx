@@ -13,79 +13,75 @@ interface NewChatButtonProps {
   onClick?: () => void
   disabled?: boolean
   className?: string
+  style?: React.CSSProperties
 }
 
 /**
- * New Chat Button Component - Pixel Perfect Figma Implementation
+ * New Chat Button Component - Fixed icon size based on visual feedback
  * 
- * Exact measurements from Figma PDFs:
- * - full: 244px × 64px with "New Chat" text + plus icon
- * - collapsed: 96px × 64px with only plus icon
- * - Text: Mabry Pro Bold 28px, color: #F7F7F7 (neutral/10)
- * - Icon: 32px × 32px plus icon
- * - Border radius: 8px (from measurements)
- * - Padding: 16px (calculated from measurements)
- * 
- * States from Figma image:
- * - default: Black background (#000000), white text
- * - hover: Blue background (#2180EC), white text
- * - focus: Blue background (#2180EC) with focus ring, white text
- * - active: Blue gradient background, white text
+ * From Figma anatomy: lead icon (INSTANCE) - 32px × 32px
+ * But visual feedback suggests icon appears too small
+ * Adjusting for better visual balance
  */
 export function NewChatButton({ 
   size = 'full', 
   state = 'default',
   onClick,
   disabled = false,
-  className 
+  className,
+  style 
 }: NewChatButtonProps) {
   const [currentState, setCurrentState] = useState(state)
 
-  // Get dimensions based on size from Figma measurements
+  // Get exact dimensions from Figma measurements
   const getDimensions = () => {
     switch (size) {
       case 'collapsed':
-        return { width: 80, height: 48 } // Smaller to fit in 90px sidebar
+        return { width: 96, height: 64 } // Exact from Figma
       case 'full':
       default:
-        return { width: 260, height: 48 } // Smaller to fit in 270px sidebar
+        return { width: 244, height: 64 } // Exact from Figma
     }
   }
 
-  // Get styles based on state from Figma image
+  // Get styles based on state from Figma documentation
   const getStateStyles = () => {
     switch (currentState) {
       case 'hover':
         return {
-          backgroundColor: designTokens.colors.blue, // #2180EC from Figma
-          color: designTokens.colors.neutral[10], // #F7F7F7 from Figma
-          border: `1px solid ${designTokens.colors.blue}`,
+          backgroundColor: designTokens.colors.blue, // #2180EC
+          borderColor: designTokens.colors.blue, // #2180EC
+          color: designTokens.colors.neutral[10], // #F7F7F7
           iconColor: designTokens.colors.neutral[10],
           showFocusRing: false,
+          useGradient: false,
         }
       case 'focus':
         return {
-          backgroundColor: designTokens.colors.blue, // #2180EC from Figma
-          color: designTokens.colors.neutral[10], // #F7F7F7 from Figma
-          border: `1px solid ${designTokens.colors.blue}`,
+          backgroundColor: designTokens.colors.blue, // #2180EC
+          borderColor: designTokens.colors.blue, // #2180EC
+          color: designTokens.colors.neutral[10], // #F7F7F7
           iconColor: designTokens.colors.neutral[10],
           showFocusRing: true,
+          useGradient: false,
         }
       case 'active':
         return {
-          background: designTokens.gradients.blue, // Blue gradient: #69DEF2 to #126FD8
-          color: designTokens.colors.neutral[10], // #F7F7F7 from Figma
-          border: `1px solid ${designTokens.colors.blue}`,
+          backgroundColor: designTokens.colors.blue, // Fallback
+          borderColor: designTokens.colors.blue, // #2180EC stroke
+          color: designTokens.colors.neutral[10], // #F7F7F7
           iconColor: designTokens.colors.neutral[10],
           showFocusRing: false,
+          useGradient: true, // Use the blue gradient
         }
       default:
         return {
-          backgroundColor: designTokens.colors.black, // #000000 from Figma
-          color: designTokens.colors.neutral[10], // #F7F7F7 from Figma
-          border: `1px solid ${designTokens.colors.black}`,
+          backgroundColor: designTokens.colors.black, // #000000
+          borderColor: designTokens.colors.black, // #000000
+          color: designTokens.colors.neutral[10], // #F7F7F7
           iconColor: designTokens.colors.neutral[10],
           showFocusRing: false,
+          useGradient: false,
         }
     }
   }
@@ -97,57 +93,67 @@ export function NewChatButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      onMouseEnter={() => setCurrentState('hover')}
-      onMouseLeave={() => setCurrentState(state)}
-      onFocus={() => setCurrentState('focus')}
-      onBlur={() => setCurrentState(state)}
+      onMouseEnter={() => !disabled && setCurrentState('hover')}
+      onMouseLeave={() => !disabled && setCurrentState(state)}
+      onFocus={() => !disabled && setCurrentState('focus')}
+      onBlur={() => !disabled && setCurrentState(state)}
+      onMouseDown={() => !disabled && setCurrentState('active')}
+      onMouseUp={() => !disabled && setCurrentState('hover')}
       className={cn(
-        // Base styles
-        'relative inline-flex items-center justify-center gap-2',
-        'font-primary font-bold transition-all duration-300',
+        'relative inline-flex items-center justify-center',
+        'font-primary font-bold transition-all duration-200',
         'disabled:opacity-50 disabled:cursor-not-allowed',
-        'outline-none', // Remove default focus outline
+        'outline-none',
         className
       )}
       style={{
-        width: dimensions.width,
-        height: dimensions.height,
-        borderRadius: '8px', // Exact from Figma measurements
-        padding: '12px', // Smaller padding
-        fontSize: '20px', // Smaller font size
+        ...dimensions,
+        borderRadius: '8px', // Slightly more rounded for better visual
+        padding: '16px',
+        fontSize: '28px', // Exact from Figma: Mabry Pro Bold 28px
         fontFamily: designTokens.fonts.primary,
-        fontWeight: 700, // Bold
-        backgroundColor: stateStyles.backgroundColor,
-        background: stateStyles.background || stateStyles.backgroundColor,
+        fontWeight: 700,
+        // Use gradient for active state, solid color for others
+        background: stateStyles.useGradient ? designTokens.gradients.blue : stateStyles.backgroundColor,
+        backgroundColor: stateStyles.useGradient ? undefined : stateStyles.backgroundColor,
         color: stateStyles.color,
-        border: stateStyles.border,
+        border: `1px solid ${stateStyles.borderColor}`,
+        gap: size === 'full' ? '42px' : '0', // Exact 42px gap from Figma measurements
+        ...style, // Allow override styles
       }}
     >
-      {/* Focus ring - positioned absolutely like in Figma */}
+      {/* Focus ring */}
       {stateStyles.showFocusRing && (
         <div
           style={{
             position: 'absolute',
-            top: '-6px',
-            left: '-6px',
-            right: '-6px',
-            bottom: '-6px',
-            borderRadius: '14px', // 8px + 6px offset
-            border: `4px solid ${designTokens.colors.blue}`,
+            top: '-3px',
+            left: '-3px',
+            right: '-3px',
+            bottom: '-3px',
+            borderRadius: '11px', // 8px + 3px offset
+            border: `2px solid ${designTokens.colors.blue}`,
+            pointerEvents: 'none',
             zIndex: 1,
           }}
         />
       )}
 
-      {/* Show text only in full size */}
+      {/* Show "New Chat" text only in full size */}
       {size === 'full' && (
-        <span>New Chat</span>
+        <span style={{ 
+          fontSize: '28px', // Exact from Figma: Mabry Pro Bold 28px
+          fontWeight: 700,
+          color: stateStyles.color,
+        }}>
+          New Chat
+        </span>
       )}
       
-      {/* Plus icon - Smaller size */}
+      {/* Plus icon - 32px from Figma specification */}
       <Icons 
         icon="plus" 
-        size={24} 
+        size={32} // Exact 32px from Figma measurements
         color={stateStyles.iconColor}
       />
     </button>

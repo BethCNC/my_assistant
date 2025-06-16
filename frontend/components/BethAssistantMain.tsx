@@ -205,27 +205,6 @@ export default function BethAssistantMain() {
           />
         </div>
 
-        {/* Greeting Text */}
-        <div
-          style={{
-            marginBottom: '32px',
-            textAlign: 'left', // Left aligned as in Figma
-          }}
-        >
-          <h1
-            style={{
-              fontSize: '42px', // Adjusted size for better fit
-              fontFamily: designTokens.fonts.greeting, // Behind The Nineties font
-              color: designTokens.colors.neutral[50], // Dark text
-              margin: 0,
-              fontWeight: 'normal',
-              lineHeight: 1.2,
-            }}
-          >
-            Good Morning Beth! What can I help you with today?
-          </h1>
-        </div>
-
         {/* Suggestion Cards Grid */}
         <div
           style={{

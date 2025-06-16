@@ -152,18 +152,6 @@ const App = () => {
         }}>
           {currentView === 'suggestions' ? (
             <>
-              {/* Greeting */}
-              <h2 style={{
-                color: colors.white,
-                fontSize: fontSizes['4xl'], // Much larger text
-                fontWeight: 400,
-                margin: 0,
-                textAlign: 'center',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              }}>
-                Good Morning Beth! What can I help you with today?
-              </h2>
-              
               {/* Suggestions Grid */}
               <div style={{
                 display: 'grid',

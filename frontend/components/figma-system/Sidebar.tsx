@@ -18,14 +18,14 @@ interface SidebarProps {
 }
 
 /**
- * Sidebar Component - Rewritten to match Figma exactly
+ * Sidebar Component - Fixed based on Figma design and your screenshots
  * 
- * From Figma design:
- * - Simple vertical list layout
- * - Semi-transparent background
- * - Chat items with hover states
- * - New Chat button at bottom
- * - Toggle arrow in header
+ * Key fixes:
+ * - Proper semi-transparent background
+ * - Dark header section with "Recents Chat" text
+ * - Correct arrow behavior and positioning
+ * - Proper chat preview layout
+ * - Integrated New Chat button at bottom
  */
 export function Sidebar({ 
   variant = 'default', 
@@ -37,10 +37,10 @@ export function Sidebar({
 }: SidebarProps) {
   const isCollapsed = variant === 'collapsed'
   
-  // Default chat data for demo (matching Figma)
+  // Default chat data matching your screenshots
   const defaultChats = recentChats.length > 0 ? recentChats : [
-    'How can I better update my design tokens',
-    'What are design tokens?', 
+    'How can I better update my design system',
+    'What are design tokens?',
     'How do I implement glassmorphism?',
     'Best practices for component libraries',
     'Figma to code workflow tips',
@@ -50,43 +50,48 @@ export function Sidebar({
     'Creating scalable design systems',
   ]
 
+  // Get exact dimensions from Figma measurements
+  const sidebarWidth = isCollapsed ? 90 : 270
+
   return (
     <div
-      className={cn('flex flex-col', className)}
+      className={cn('flex flex-col relative', className)}
       style={{
-        width: isCollapsed ? '90px' : '270px',
-        height: '100%',
-        backgroundColor: 'rgba(247, 247, 247, 0.2)', // Semi-transparent from Figma
+        width: sidebarWidth,
+        height: '100%', // Full height of container
+        maxHeight: '680px', // Reasonable max height
+        // Semi-transparent background from Figma
+        backgroundColor: 'rgba(247, 247, 247, 0.2)',
         borderRadius: '4px',
-        padding: '4px', // Small padding around content
-        gap: '4px', // Gap between items
+        overflow: 'hidden',
       }}
     >
-      {/* Header - Recents Chat with toggle arrow */}
+      {/* Header Section - Dark background with "Recents Chat" text */}
       <div
         style={{
-          backgroundColor: '#171717', // Dark header background
-          borderRadius: '4px',
-          padding: '12px 16px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: isCollapsed ? 'center' : 'space-between',
-          minHeight: '50px',
+          padding: '12px 16px',
+          backgroundColor: designTokens.colors.neutral[50], // Dark background #171717
+          minHeight: '48px',
         }}
       >
+        {/* Show "Recents Chat" text in default variant */}
         {!isCollapsed && (
           <span
             style={{
-              fontFamily: 'Mabry Pro',
-              fontSize: '24px',
+              fontFamily: designTokens.fonts.primary,
+              fontSize: '20px', // Slightly smaller to fit better
               fontWeight: '400',
-              color: '#F7F7F7',
+              color: designTokens.colors.neutral[10], // White text #F7F7F7
             }}
           >
             Recents Chat
           </span>
         )}
         
+        {/* Toggle arrow button */}
         <button
           onClick={onToggleCollapse}
           style={{
@@ -98,26 +103,29 @@ export function Sidebar({
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            transform: isCollapsed ? 'rotate(180deg)' : 'none',
+            // Arrow points left when expanded (to collapse), right when collapsed (to expand)
+            transform: isCollapsed ? 'rotate(0deg)' : 'rotate(180deg)',
             transition: 'transform 0.3s ease',
           }}
         >
           <Icons 
             icon="arrow" 
-            size={24}
-            color="#F7F7F7"
+            size={20}
+            color={designTokens.colors.neutral[10]} // White arrow
           />
         </button>
       </div>
 
-      {/* Chat List - Scrollable */}
+      {/* Chat Preview List - Scrollable area */}
       <div
         style={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          gap: '4px',
           overflowY: 'auto',
+          padding: '8px 4px',
+          // Reserve space for New Chat Button
+          paddingBottom: '72px', // Space for button + padding
         }}
       >
         {defaultChats.map((chat, index) => (
@@ -130,10 +138,13 @@ export function Sidebar({
         ))}
       </div>
 
-      {/* New Chat Button at Bottom */}
+      {/* New Chat Button - Fixed at bottom */}
       <div
         style={{
-          padding: '4px',
+          position: 'absolute',
+          bottom: '8px',
+          left: '8px',
+          right: '8px',
           display: 'flex',
           justifyContent: 'center',
         }}
@@ -141,6 +152,10 @@ export function Sidebar({
         <NewChatButton
           size={isCollapsed ? 'collapsed' : 'full'}
           onClick={onNewChat}
+          style={{
+            width: isCollapsed ? '74px' : '254px', // Fit within sidebar
+            height: '56px',
+          }}
         />
       </div>
     </div>

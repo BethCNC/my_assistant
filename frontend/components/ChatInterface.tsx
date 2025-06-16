@@ -96,89 +96,82 @@ const ChatInterface = () => {
                   ))}
                 </div>
 
-                {/* Greeting */}
-                <div className={styles.greeting}>
-                  <div className={styles.greetingText}>
-                    Good Morning Beth! What can I help you with today?
-                  </div>
-                </div>
-              </div>
-
-              {/* Suggestions */}
-              <div className={styles.suggestionParent}>
-                {Array.from({ length: 6 }, (_, i) => (
-                  <div key={i} className={styles[`suggestion${i === 0 ? '' : i}`]}>
-                    <div className={styles.shapeWrapper}>
-                      <div className={styles.suggestionShapes}>
+                {/* Suggestions */}
+                <div className={styles.suggestionParent}>
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <div key={i} className={styles[`suggestion${i === 0 ? '' : i}`]}>
+                      <div className={styles.shapeWrapper}>
+                        <div className={styles.suggestionShapes}>
+                          <Image 
+                            className={styles.vectorIcon} 
+                            width={32} 
+                            height={32} 
+                            alt="Shape" 
+                            src="/assets/star.svg" 
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.iWouldLike}>I would like to know about design tokens</div>
+                      <div className={styles.icons}>
                         <Image 
-                          className={styles.vectorIcon} 
-                          width={32} 
-                          height={32} 
-                          alt="Shape" 
-                          src="/assets/star.svg" 
+                          className={styles.arrowIcon1} 
+                          width={31} 
+                          height={21} 
+                          alt="Arrow" 
+                          src="/assets/icon-arrow.svg" 
                         />
                       </div>
                     </div>
-                    <div className={styles.iWouldLike}>I would like to know about design tokens</div>
-                    <div className={styles.icons}>
-                      <Image 
-                        className={styles.arrowIcon1} 
-                        width={31} 
-                        height={21} 
-                        alt="Arrow" 
-                        src="/assets/icon-arrow.svg" 
-                      />
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Chat Input */}
-            <div className={styles.chatInput}>
-              <div className={styles.chatInputDefault}>
-                <div className={styles.textarea}>
-                  <div className={styles.input}>
-                    <div className={styles.text}>Ask me a question...</div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.controls1}>
-                <div className={styles.controlsLeft}>
-                  <div className={styles.iconButtons}>
-                    <div className={styles.icons6}>
-                      <Image 
-                        className={styles.filesIcon} 
-                        width={22} 
-                        height={24} 
-                        alt="Files" 
-                        src="/assets/icon-paperclip.svg" 
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.iconButtons}>
-                    <div className={styles.icons6}>
-                      <Image 
-                        className={styles.imagesIcon} 
-                        width={24} 
-                        height={20} 
-                        alt="Images" 
-                        src="/assets/icon-camera.svg" 
-                      />
+              {/* Chat Input */}
+              <div className={styles.chatInput}>
+                <div className={styles.chatInputDefault}>
+                  <div className={styles.textarea}>
+                    <div className={styles.input}>
+                      <div className={styles.text}>Ask me a question...</div>
                     </div>
                   </div>
                 </div>
-                <div className={styles.controlsRight}>
-                  <div className={styles.charCount}>0/1000</div>
-                  <div className={styles.iconButtons}>
-                    <div className={styles.icons6}>
-                      <Image 
-                        className={styles.sendIcon} 
-                        width={24} 
-                        height={22} 
-                        alt="Send" 
-                        src="/assets/icon-send.svg" 
-                      />
+                <div className={styles.controls1}>
+                  <div className={styles.controlsLeft}>
+                    <div className={styles.iconButtons}>
+                      <div className={styles.icons6}>
+                        <Image 
+                          className={styles.filesIcon} 
+                          width={22} 
+                          height={24} 
+                          alt="Files" 
+                          src="/assets/icon-paperclip.svg" 
+                        />
+                      </div>
+                    </div>
+                    <div className={styles.iconButtons}>
+                      <div className={styles.icons6}>
+                        <Image 
+                          className={styles.imagesIcon} 
+                          width={24} 
+                          height={20} 
+                          alt="Images" 
+                          src="/assets/icon-camera.svg" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.controlsRight}>
+                    <div className={styles.charCount}>0/1000</div>
+                    <div className={styles.iconButtons}>
+                      <div className={styles.icons6}>
+                        <Image 
+                          className={styles.sendIcon} 
+                          width={24} 
+                          height={22} 
+                          alt="Send" 
+                          src="/assets/icon-send.svg" 
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
