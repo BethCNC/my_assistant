@@ -299,6 +299,7 @@
 .mainContainer1 {
   align-self: stretch;
   flex: 1;
+  height: 704px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -391,6 +392,7 @@
 
 .suggestionParent {
   align-self: stretch;
+  flex: 1;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -401,7 +403,7 @@
   font-size: 18px;
   color: #171717;
   position: relative;
-  height: 226px;
+  min-height: 226px;
 }
 
 .suggestion,
