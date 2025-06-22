@@ -12,7 +12,42 @@ import json
 from datetime import datetime
 from typing import List, Optional
 
+# Import our service modules
+from notion import NotionService
+from figma import FigmaService
+from github import GitHubService
+from memory import MemoryService, create_conversation_session, add_conversation_message
+
 load_dotenv()
+
+# Initialize services
+try:
+    notion_service = NotionService()
+    print("✅ Notion service initialized")
+except Exception as e:
+    print(f"⚠️ Notion service failed to initialize: {e}")
+    notion_service = None
+
+try:
+    figma_service = FigmaService()
+    print("✅ Figma service initialized")
+except Exception as e:
+    print(f"⚠️ Figma service failed to initialize: {e}")
+    figma_service = None
+
+try:
+    github_service = GitHubService()
+    print("✅ GitHub service initialized")
+except Exception as e:
+    print(f"⚠️ GitHub service failed to initialize: {e}")
+    github_service = None
+
+try:
+    memory_service = MemoryService()
+    print("✅ Memory service initialized")
+except Exception as e:
+    print(f"⚠️ Memory service failed to initialize: {e}")
+    memory_service = None
 
 app = FastAPI()
 
@@ -29,6 +64,77 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 class ChatRequest(BaseModel):
     message: str
     chat_id: Optional[str] = None
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint to verify all services are running."""
+    services_status = {
+        "notion": notion_service is not None,
+        "figma": figma_service is not None,
+        "github": github_service is not None,
+        "memory": memory_service is not None,
+        "openai": bool(os.getenv("OPENAI_API_KEY"))
+    }
+    
+    all_healthy = all(services_status.values())
+    
+    return {
+        "status": "healthy" if all_healthy else "degraded",
+        "services": services_status,
+        "timestamp": datetime.now().isoformat()
+    }
+
+# Individual service health checks
+@app.get("/api/notion/health")
+async def notion_health():
+    """Check if Notion service is connected and working."""
+    if notion_service is None:
+        return {"status": "disconnected", "error": "Service not initialized"}
+    
+    try:
+        # Try a simple operation to verify connection
+        await notion_service.test_connection()
+        return {"status": "connected", "service": "notion"}
+    except Exception as e:
+        return {"status": "disconnected", "error": str(e)}
+
+@app.get("/api/figma/health")
+async def figma_health():
+    """Check if Figma service is connected and working."""
+    if figma_service is None:
+        return {"status": "disconnected", "error": "Service not initialized"}
+    
+    try:
+        # Try a simple operation to verify connection
+        await figma_service.test_connection()
+        return {"status": "connected", "service": "figma"}
+    except Exception as e:
+        return {"status": "disconnected", "error": str(e)}
+
+@app.get("/api/github/health")
+async def github_health():
+    """Check if GitHub service is connected and working."""
+    if github_service is None:
+        return {"status": "disconnected", "error": "Service not initialized"}
+    
+    try:
+        # Try a simple operation to verify connection
+        await github_service.test_connection()
+        return {"status": "connected", "service": "github"}
+    except Exception as e:
+        return {"status": "disconnected", "error": str(e)}
+
+@app.get("/api/email/health")
+async def email_health():
+    """Check if Email service is connected and working."""
+    # For now, return disconnected as we haven't implemented email service yet
+    return {"status": "disconnected", "error": "Email service not implemented"}
+
+@app.get("/api/calendar/health")
+async def calendar_health():
+    """Check if Calendar service is connected and working."""
+    # For now, return disconnected as we haven't implemented calendar service yet
+    return {"status": "disconnected", "error": "Calendar service not implemented"}
 
 class SaveChatRequest(BaseModel):
     chat_id: str
@@ -390,40 +496,111 @@ async def chat(req: ChatRequest):
 
 @app.get("/api/notion/databases")
 async def get_notion_databases():
-    token = os.getenv("NOTION_TOKEN")
-    if not token:
-        return {"error": "No NOTION_TOKEN in .env"}
-    notion = Client(auth=token)
-    results = notion.search(filter={"property": "object", "value": "database"})
-    dbs = [
-        {"id": db["id"], "title": db["title"][0]["plain_text"] if db["title"] else "Untitled"}
-        for db in results.get("results", [])
-    ]
-    return {"databases": dbs}
-
-@app.get("/api/figma/files")
-async def get_figma_files():
-    token = os.getenv("FIGMA_ACCESS_TOKEN")
-    if not token:
-        return {"error": "No FIGMA_ACCESS_TOKEN in .env"}
-    headers = {"X-Figma-Token": token}
+    """Get all accessible Notion databases."""
+    if not notion_service:
+        return {"error": "Notion service not available"}
+    
     try:
-        resp = requests.get("https://api.figma.com/v1/me/files", headers=headers)
-        if resp.status_code != 200:
-            return {"error": f"Figma API error: {resp.status_code}", "details": resp.text}
-        files = resp.json().get("files", [])
-        return {"files": [{"name": f["name"], "key": f["key"]} for f in files]}
+        result = notion_service.get_all_databases()
+        return result
     except Exception as e:
         return {"error": str(e), "trace": traceback.format_exc()}
 
+@app.get("/api/notion/tasks")
+async def get_notion_tasks():
+    """Get tasks from Notion."""
+    if not notion_service:
+        return {"error": "Notion service not available"}
+    
+    try:
+        result = notion_service.get_tasks()
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/api/notion/tasks")
+async def create_notion_task(task_data: dict):
+    """Create a new task in Notion."""
+    if not notion_service:
+        return {"error": "Notion service not available"}
+    
+    try:
+        result = notion_service.create_task(
+            title=task_data.get("title"),
+            description=task_data.get("description"),
+            priority=task_data.get("priority", "Medium"),
+            due_date=task_data.get("due_date")
+        )
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/figma/files")
+async def get_figma_files():
+    """Get Figma files using the Figma service."""
+    if not figma_service:
+        return {"error": "Figma service not available"}
+    
+    try:
+        result = figma_service.get_user_files()
+        return result
+    except Exception as e:
+        return {"error": str(e), "trace": traceback.format_exc()}
+
+@app.get("/api/figma/file/{file_key}")
+async def get_figma_file_details(file_key: str):
+    """Get details of a specific Figma file."""
+    if not figma_service:
+        return {"error": "Figma service not available"}
+    
+    try:
+        result = figma_service.get_file_details(file_key)
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
 @app.get("/api/github/repos")
 async def get_github_repos():
-    token = os.getenv("GITHUB_TOKEN")
-    if not token:
-        return {"error": "No GITHUB_TOKEN in .env"}
-    headers = {"Authorization": f"token {token}"}
-    resp = requests.get("https://api.github.com/user/repos", headers=headers)
-    if resp.status_code != 200:
-        return {"error": f"GitHub API error: {resp.status_code}", "details": resp.text}
-    repos = resp.json()
-    return {"repos": [{"name": r["name"], "url": r["html_url"]} for r in repos]}
+    """Get GitHub repositories using the GitHub service."""
+    if not github_service:
+        return {"error": "GitHub service not available"}
+    
+    try:
+        result = github_service.get_user_repositories()
+        return result
+    except Exception as e:
+        return {"error": str(e), "trace": traceback.format_exc()}
+
+@app.get("/api/memory/stats")
+async def get_memory_stats():
+    """Get memory database statistics."""
+    if not memory_service:
+        return {"error": "Memory service not available"}
+    
+    try:
+        result = memory_service.get_memory_stats()
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/api/memory/conversation")
+async def create_memory_conversation(conversation_data: dict):
+    """Create a new conversation in memory."""
+    if not memory_service:
+        return {"error": "Memory service not available"}
+    
+    try:
+        result = create_conversation_session(
+            user_id=conversation_data.get("user_id", "beth"),
+            title=conversation_data.get("title")
+        )
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+if __name__ == "__main__":
+    import uvicorn
+    print("🚀 Starting Beth's Unified Assistant Backend...")
+    print("📍 Health check: http://localhost:8000/health")
+    print("📖 API docs: http://localhost:8000/docs")
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

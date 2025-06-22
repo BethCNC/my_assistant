@@ -1,5 +1,5 @@
-import BethAssistantSystematic from "../components/BethAssistantSystematic"
+import FunctionalChatInterface from '@/components/FunctionalChatInterface';
 
-export default function Page() {
-  return <BethAssistantSystematic />
+export default function Home() {
+  return <FunctionalChatInterface />;
 }
