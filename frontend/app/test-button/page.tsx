@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react'
 import { NewChatButton } from '@/components/figma-system/NewChatButton'
 import { designTokens } from '@/lib/design-tokens'
