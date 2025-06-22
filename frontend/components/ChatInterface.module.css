@@ -403,6 +403,8 @@
   gap: 24px;
   font-size: 18px;
   color: #171717;
+  position: relative;
+  height: 226px;
 }
 
 .suggestion,
@@ -411,14 +413,14 @@
 .suggestion3,
 .suggestion4,
 .suggestion5 {
-  width: calc(50% - 12px);
-  position: absolute;
+  width: 501px;
   border-radius: 4px;
   background-color: #f7f7f7;
   border: 2px solid #171717;
   box-sizing: border-box;
-  height: 64px;
+  height: 60px;
   overflow: hidden;
+  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -437,42 +439,6 @@
 .suggestion5:hover {
   transform: translateY(-2px);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.suggestion {
-  top: -2px;
-  left: -2px;
-  z-index: 0;
-}
-
-.suggestion1 {
-  top: -2px;
-  right: -2px;
-  z-index: 1;
-}
-
-.suggestion2 {
-  top: 81px;
-  left: -2px;
-  z-index: 2;
-}
-
-.suggestion3 {
-  top: 81px;
-  right: -2px;
-  z-index: 3;
-}
-
-.suggestion4 {
-  top: 164px;
-  left: -2px;
-  z-index: 4;
-}
-
-.suggestion5 {
-  top: 164px;
-  right: -2px;
-  z-index: 5;
 }
 
 .shapeWrapper {
