@@ -46,9 +46,9 @@
 }
 
 .chatContainer {
-  width: 100%;
+  width: 100vw;
   position: relative;
-  height: 900px;
+  height: 100vh;
   overflow: hidden;
   background-image: url('/assets/gradient.png');
   background-size: cover;
@@ -62,9 +62,10 @@
 
 .content {
   position: absolute;
-  top: calc(50% - 402px);
-  left: calc(50% - 672px);
-  width: 1344px;
+  top: 48px;
+  left: 0px; /* Remove left offset, handle margins in mainContainer */
+  width: 100vw;
+  height: calc(100vh - 96px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -74,23 +75,24 @@
 
 .header {
   align-self: stretch;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: #171717;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
-  gap: 0px;
+  padding: 12px 24px;
+  gap: 120px;
+  margin: 0 48px; /* Same 48px margins as mainContainer */
 }
 
 .iconNameDefault {
-  align-self: stretch;
+  height: 42px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 16px;
 }
 
 .navigationText {
@@ -119,9 +121,13 @@
 
 .name {
   position: relative;
-  line-height: 32px;
+  font-family: 'Mabry Pro', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1em;
   text-transform: uppercase;
-  font-weight: 900;
+  text-align: center;
+  color: #f7f7f7;
 }
 
 .dateTime {
@@ -141,46 +147,61 @@
 
 .time {
   position: relative;
-  line-height: 32px;
-  font-weight: 900;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.302em;
+  text-align: center;
+  color: #f7f7f7;
 }
 
 .mainContainer {
   align-self: stretch;
-  height: 704px;
+  flex: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 48px;
+  gap: 24px; /* 24px gutter as per Figma specs */
   text-align: left;
   font-size: 24px;
+  margin: 0 48px 0 48px; /* 48px margins for 12-column grid */
 }
 
 .sidebar {
-  align-self: stretch;
-  width: 270px;
-  border-radius: 4px;
+  width: 204px;
+  min-width: 204px;
+  max-width: 204px;
+  flex-shrink: 0;
+  height: 100%;
+  border-radius: 4px; /* Figma: 4px border radius */
   background-color: rgba(247, 247, 247, 0.2);
   backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 0px;
-  min-width: 90px;
+  gap: 12px; /* Figma: 12px gap */
+  padding: 0px;
+  transition: width 0.3s ease;
+}
+
+.sidebarCollapsed {
+  width: 80px;
+  min-width: 80px;
+  max-width: 80px;
 }
 
 .recentChats {
   align-self: stretch;
-  border-radius: 6px 6px 0px 0px;
+  border-radius: 6px 6px 0px 0px; /* Figma: 6px 6px 0px 0px */
   background-color: #171717;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
-  gap: 0px;
+  padding: 16px 12px; /* Figma: 16px 12px padding */
+  gap: 12px; /* Figma: 12px gap */
 }
 
 .labelText {
@@ -192,25 +213,36 @@
 
 .newChatButton {
   position: relative;
-  line-height: 30px;
+  line-height: 1.25em; /* Figma: 1.25em line-height */
+  font-family: 'Mabry Pro', sans-serif;
+  font-weight: 400; /* Figma: 400 weight, not 700 */
+  font-size: 24px;
+  color: #f7f7f7; /* Keep white for header */
 }
 
 .leadIcon {
-  width: 32px;
+  width: 24px;
   position: relative;
-  height: 32px;
-  transform: rotate(180deg);
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 .arrowIcon {
   position: absolute;
-  height: 66.56%;
-  top: 16.67%;
-  bottom: 16.77%;
-  left: calc(50% - 15.24px);
+  height: 100%;
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
   max-height: 100%;
   width: 100%;
   transform: rotate(-180deg);
+  transition: transform 0.3s ease;
+}
+
+.arrowCollapsed {
+  transform: rotate(0deg);
 }
 
 .leftColumn {
@@ -218,10 +250,12 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch; /* Figma: stretch alignment */
   justify-content: flex-start;
   font-size: 20px;
   color: #404040;
+  padding: 0px; /* Remove padding, individual components have their own */
+  gap: 24px; /* Figma: 24px gap */
 }
 
 .recentChats1 {
@@ -251,39 +285,69 @@
   align-items: center;
   justify-content: flex-start;
   padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.chatHistory1:hover {
+  background-color: rgba(247, 247, 247, 0.1);
 }
 
 .howCanI {
   flex: 1;
   position: relative;
-  line-height: 26px;
+  line-height: 1.3em; /* Figma: 1.3em line-height */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-family: 'Mabry Pro', sans-serif;
+  font-weight: 400; /* Figma: 400 weight, not 500 */
+  font-size: 20px; /* Figma: 20px */
+  color: #404040; /* Figma: Neutral 40 */
 }
 
 .newChatButton1 {
   align-self: stretch;
-  border-radius: 0px 0px 6px 6px;
+  border-radius: 0px 0px 6px 6px; /* Figma: 0px 0px 6px 6px */
   background-color: #171717;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
+  padding: 16px;
   gap: 0px;
   font-size: 28px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.newChatButton1:hover {
+  background-color: #2a2a2a;
+}
+
+.newChatButton1:focus {
+  background-color: #2a2a2a;
+  outline: 2px solid #f7f7f7;
+  outline-offset: -2px;
+}
+
+.newChatButton1:active {
+  background-color: #404040;
 }
 
 .newChatButton2 {
   position: relative;
-  line-height: 32px;
+  line-height: 1.25em; /* Figma: 1.25em line-height */
+  font-family: 'Mabry Pro', sans-serif;
+  font-weight: 400; /* Figma: 400 weight, not 700 */
+  font-size: 24px;
+  color: #f7f7f7; /* Keep white for New Chat button */
 }
 
 .icons {
-  width: 32px;
+  width: 24px;
   position: relative;
-  height: 32px;
+  height: 24px;
 }
 
 .plusIcon {
@@ -291,7 +355,8 @@
   height: 100%;
   top: 0%;
   bottom: 0%;
-  left: calc(50% - 16px);
+  left: 0%;
+  right: 0%;
   max-height: 100%;
   width: 100%;
 }
@@ -299,30 +364,35 @@
 .mainContainer1 {
   align-self: stretch;
   flex: 1;
+  height: 100%;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 0px 0px 0px 0px;
-  font-size: 20px;
+  align-items: stretch;
+  justify-content: space-between; /* Figma: space-between */
+  gap: 160px; /* Figma: 160px gap */
+  padding: 0px; /* Remove padding */
 }
 
 .contentContainer {
   align-self: stretch;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: flex-start;
-  gap: 48px;
+  gap: 48px; /* Figma: 48px gap between greeting and suggestions */
+  padding: 12px 48px; /* Figma: 12px vertical, 48px horizontal padding */
 }
 
 .container {
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
-  gap: 22px;
+  gap: 48px; /* Gap between greeting and suggestions */
+  padding: 48px; /* 48px margins all around */
 }
 
 .buttonContainer {
@@ -371,38 +441,39 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-  padding: 12px 0px;
-  font-size: 40px;
-  color: #171717;
-  font-family: 'Behind The Nineties', serif;
+  justify-content: center;
+  padding: 12px; /* Figma: 12px padding */
+  font-size: 42px; /* Figma: 42px fontSize */
+  color: #171717; /* Figma: #171717 fill */
+  font-family: 'Behind The Nineties', serif; /* Figma: Behind The Nineties */
+  font-weight: 500; /* Figma: 500 fontWeight */
+  line-height: 1.2380952380952381em; /* Figma: exact lineHeight ratio */
+  text-align: center; /* Figma: CENTER textAlign */
+  height: 42px; /* Figma: fixed height 42px */
 }
 
 .greetingText {
   align-self: stretch;
   flex: 1;
   position: relative;
-  line-height: 40px;
   font-weight: 500;
   white-space: pre-wrap;
   display: flex;
   align-items: center;
+  justify-content: center; /* Center text both horizontally and vertically */
+  text-align: center; /* Figma: CENTER textAlignHorizontal and textAlignVertical */
 }
 
 .suggestionParent {
   align-self: stretch;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  grid-template-rows: 1fr 1fr 1fr; /* Three rows */
+  gap: 24px; /* 24px gutter between cards */
   font-size: 18px;
   color: #171717;
-  position: relative;
-  height: 226px;
-  margin-bottom: 48px;
+  width: 100%; /* Fill available space */
+  margin-bottom: 48px; /* Add 48px bottom margin */
 }
 
 .suggestion,
@@ -411,14 +482,13 @@
 .suggestion3,
 .suggestion4,
 .suggestion5 {
-  width: 501px;
+  width: 100%; /* Fill grid cell */
   border-radius: 4px;
   background-color: #f7f7f7;
   border: 2px solid #171717;
   box-sizing: border-box;
-  height: 60px;
+  height: 64px; /* Match Figma height */
   overflow: hidden;
-  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -494,9 +564,9 @@
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
+  padding: 0px 48px; /* Only horizontal padding - chat input should be at bottom edge */
   font-size: 16px;
   color: #000;
-  margin-top: auto;
 }
 
 .chatInputDefault {
@@ -504,12 +574,15 @@
   box-shadow: 0px 1px 1px rgba(10, 13, 18, 0.14), 0px 1px 2px rgba(10, 13, 18, 0.06);
   border-radius: 4px;
   background-color: #f7f7f7;
+  border: 2px solid #000000;
   box-sizing: border-box;
-  height: 142px;
+  height: 180px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 12px;
   padding: 16px 12px;
 }
 

@@ -96,7 +96,7 @@ export function SuggestionCard({
       onBlur={() => setIsFocused(false)}
       className={cn(
         'inline-flex items-center text-left transition-all duration-200',
-        'outline-none',
+        'outline-none cursor-pointer',
         className
       )}
       style={{
@@ -115,6 +115,7 @@ export function SuggestionCard({
         alignItems: 'center',
         justifyContent: 'flex-start',
         boxSizing: 'border-box',
+        transform: currentState === 'hover' ? 'translateY(-1px)' : 'none', // Subtle lift on hover
       }}
       {...props}
     >

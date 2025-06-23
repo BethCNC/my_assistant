@@ -4,6 +4,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useChat } from '@/hooks/use-chat';
 import { apiClient } from '@/lib/api';
+import { SuggestionCard } from './figma-system/SuggestionCard';
+import { SuggestionShapeVariant } from './figma-system/SuggestionShapes';
 import styles from './ChatInterface.module.css';
 
 const FunctionalChatInterface = () => {
@@ -11,48 +13,75 @@ const FunctionalChatInterface = () => {
   const [inputValue, setInputValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [conversations, setConversations] = useState<any[]>([]);
-  const [toolStatuses, setToolStatuses] = useState<{[key: string]: boolean}>({});
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const tools = ['Notion', 'Figma', 'Github', 'Email', 'Calendar'];
-  const suggestions = [
-    "I would like to know about design tokens",
-    "Help me organize my tasks in Notion", 
-    "Show me recent GitHub activity",
-    "What's on my calendar today?",
-    "Create a new task for tomorrow",
-    "Search my Figma files"
-  ];
+  // Enhanced dynamic suggestions based on context
+  const getContextualSuggestions = () => {
+    const baseTopics = [
+      'design tokens and system components',
+      'organizing tasks and projects in Notion', 
+      'recent GitHub activity and pull requests',
+      'calendar events and upcoming meetings',
+      'creating new tasks and reminders',
+      'searching and managing Figma files',
+      'analyzing project progress and metrics',
+      'setting up automation workflows'
+    ];
 
-  // Check tool connection status
-  useEffect(() => {
-    const checkToolStatuses = async () => {
-      const statuses: {[key: string]: boolean} = {};
-      
-      try {
-        const notionResponse = await apiClient.request('/api/notion/health');
-        statuses.Notion = notionResponse.status === 200;
-      } catch { statuses.Notion = false; }
-      
-      try {
-        const figmaResponse = await apiClient.request('/api/figma/health');
-        statuses.Figma = figmaResponse.status === 200;
-      } catch { statuses.Figma = false; }
-      
-      try {
-        const githubResponse = await apiClient.request('/api/github/health');
-        statuses.Github = githubResponse.status === 200;
-      } catch { statuses.Github = false; }
-      
-      // Email and Calendar would need separate implementation
-      statuses.Email = false;
-      statuses.Calendar = false;
-      
-      setToolStatuses(statuses);
-    };
+    // Add context-based suggestions if we have chat history
+    const contextualSuggestions = [];
     
-    checkToolStatuses();
-  }, []);
+    if (conversations.length > 0) {
+      contextualSuggestions.push(
+        'Continue our previous conversation',
+        'Summarize recent chat topics'
+      );
+    }
+    
+    // Mix base topics with contextual ones
+    const allSuggestions = [...contextualSuggestions, ...baseTopics];
+    
+    // Return 6 suggestions with varied phrasing
+    return allSuggestions.slice(0, 6).map(topic => {
+      const starters = [
+        'I would like to know about',
+        'Help me with',
+        'Show me information about',
+        'Can you explain',
+        'I need assistance with',
+        'Tell me about'
+      ];
+      const starter = starters[Math.floor(Math.random() * starters.length)];
+      return `${starter} ${topic}`;
+    });
+  };
+
+  const [suggestions, setSuggestions] = useState(getContextualSuggestions());
+
+  // Generate random shapes ensuring no duplicates
+  const generateRandomShapes = (): SuggestionShapeVariant[] => {
+    const shapes: SuggestionShapeVariant[] = [1, 2, 3, 4, 5, 6, 7];
+    const selected: SuggestionShapeVariant[] = [];
+    
+    while (selected.length < 6) {
+      const randomIndex = Math.floor(Math.random() * shapes.length);
+      const shape = shapes[randomIndex];
+      if (!selected.includes(shape)) {
+        selected.push(shape);
+      }
+    }
+    
+    return selected;
+  };
+
+  const [suggestionShapes, setSuggestionShapes] = useState(generateRandomShapes());
+
+  // Update suggestions when conversations change
+  useEffect(() => {
+    setSuggestions(getContextualSuggestions());
+    setSuggestionShapes(generateRandomShapes());
+  }, [conversations]);
 
   // Load conversations on mount
   useEffect(() => {
@@ -67,17 +96,51 @@ const FunctionalChatInterface = () => {
     loadConversations();
   }, []);
 
+  // Function to load a specific chat
+  const handleChatClick = async (chatId: string) => {
+    const response = await apiClient.getChatHistory(chatId);
+    if (response.data && response.data.chat) {
+      // Load the chat messages and switch to chat view
+      const chatData = response.data.chat;
+      // You can implement message loading here if needed
+      setShowSuggestions(false);
+    }
+  };
+
+  // Function to format chat title for display
+  const formatChatTitle = (chat: any) => {
+    if (chat.title && chat.title !== 'undefined') {
+      return chat.title.length > 30 ? chat.title.substring(0, 30) + '...' : chat.title;
+    }
+    if (chat.preview) {
+      return chat.preview.length > 30 ? chat.preview.substring(0, 30) + '...' : chat.preview;
+    }
+    return 'Untitled Chat';
+  };
+
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
     
     setShowSuggestions(false);
     await sendMessage(inputValue.trim());
     setInputValue('');
+    
+    // Reload conversations to update recent chats
+    const response = await apiClient.getConversations();
+    if (response.data && response.data.chats) {
+      setConversations(response.data.chats);
+    }
   };
 
   const handleSuggestionClick = async (suggestion: string) => {
     setShowSuggestions(false);
     await sendMessage(suggestion);
+    
+    // Reload conversations to update recent chats
+    const response = await apiClient.getConversations();
+    if (response.data && response.data.chats) {
+      setConversations(response.data.chats);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -136,131 +199,145 @@ const FunctionalChatInterface = () => {
 
         <div className={styles.mainContainer}>
           {/* Sidebar */}
-          <div className={styles.sidebar}>
+          <div className={`${styles.sidebar} ${isSidebarCollapsed ? styles.sidebarCollapsed : ''}`}>
             <div className={styles.recentChats}>
               <div className={styles.labelText}>
-                <div className={styles.newChatButton}>Recent Chats</div>
+                <div className={styles.newChatButton}>Recents</div>
               </div>
-              <div className={styles.leadIcon}>
+              <div className={styles.leadIcon} onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
                 <Image 
-                  className={styles.arrowIcon} 
-                  width={31} 
-                  height={21} 
+                  className={`${styles.arrowIcon} ${isSidebarCollapsed ? styles.arrowCollapsed : ''}`}
+                  width={24} 
+                  height={24} 
                   alt="Arrow" 
-                  src="/assets/icon-arrow.svg" 
+                  src="/assets/icons/arrow.svg" 
                 />
               </div>
             </div>
             
-            <div className={styles.leftColumn}>
-              <div className={styles.recentChats1}>
-                {conversations.length > 0 ? (
-                  conversations.slice(0, 9).map((conv, i) => (
-                    <div key={conv.id || i} className={styles.chatHistory}>
-                      <div className={styles.chatHistory1}>
-                        <div className={styles.howCanI}>
-                          {conv.title || conv.preview || `Conversation ${i + 1}`}
+            {!isSidebarCollapsed && (
+              <>
+                <div className={styles.leftColumn}>
+                  <div className={styles.recentChats1}>
+                    {conversations.length > 0 ? (
+                      conversations.slice(0, 9).map((conv, i) => (
+                        <div 
+                          key={conv.id || i} 
+                          className={styles.chatHistory}
+                          onClick={() => handleChatClick(conv.id)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <div className={styles.chatHistory1}>
+                            <div className={styles.howCanI}>
+                              {formatChatTitle(conv)}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  Array.from({ length: 9 }, (_, i) => (
-                    <div key={i} className={styles.chatHistory}>
-                      <div className={styles.chatHistory1}>
-                        <div className={styles.howCanI}>No recent chats</div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+                      ))
+                    ) : (
+                      Array.from({ length: 9 }, (_, i) => (
+                        <div key={i} className={styles.chatHistory}>
+                          <div className={styles.chatHistory1}>
+                            <div className={styles.howCanI}>No recent chats</div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
 
-            <div className={styles.newChatButton1} onClick={() => {
-              clearMessages();
-              setShowSuggestions(true);
-            }}>
-              <div className={styles.labelText}>
-                <b className={styles.newChatButton2}>New Chat</b>
-              </div>
-              <div className={styles.icons}>
-                <Image 
-                  className={styles.plusIcon} 
-                  width={32} 
-                  height={32} 
-                  alt="Plus" 
-                  src="/assets/icon-plus.svg" 
-                />
-              </div>
-            </div>
+                <div className={styles.newChatButton1} onClick={() => {
+                  clearMessages();
+                  setShowSuggestions(true);
+                  // Refresh suggestions and shapes for new chat
+                  setSuggestions(getContextualSuggestions());
+                  setSuggestionShapes(generateRandomShapes());
+                }}>
+                  <div className={styles.labelText}>
+                    <b className={styles.newChatButton2}>New Chat</b>
+                  </div>
+                  <div className={styles.icons}>
+                    <Image 
+                      className={styles.plusIcon} 
+                      width={24} 
+                      height={24} 
+                      alt="Plus" 
+                      src="/assets/icons/plus.svg" 
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Main Content */}
           <div className={styles.mainContainer1}>
             <div className={styles.contentContainer}>
               <div className={styles.container}>
-                {/* Tool Buttons */}
-                <div className={styles.buttonContainer}>
-                  {tools.map((tool) => (
-                    <div key={tool} className={styles.toolButton} style={{
-                      position: 'relative'
-                    }}>
-                      <div className={styles.labelText2}>
-                        <b className={styles.notion}>{tool}</b>
-                      </div>
-                      {/* Connection status indicator */}
-                      <div style={{
-                        position: 'absolute',
-                        top: '8px',
-                        right: '8px',
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        backgroundColor: toolStatuses[tool] ? '#00ff00' : '#ff6600'
-                      }} />
-                    </div>
-                  ))}
-                </div>
-
                 {/* Show suggestions or chat messages */}
                 {showSuggestions ? (
                   <>
                     <div className={styles.greeting}>
                       <div className={styles.greetingText}>
-                        Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 17 ? 'Afternoon' : 'Evening'} Beth!
+                        Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 17 ? 'Afternoon' : 'Evening'} Beth! What can I help you with today?
                       </div>
                     </div>
-                    <div className={styles.suggestionParent}>
-                      {suggestions.map((suggestion, i) => (
-                        <div 
-                          key={i} 
-                          className={styles[`suggestion${i === 0 ? '' : i}`]}
-                          onClick={() => handleSuggestionClick(suggestion)}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <div className={styles.shapeWrapper}>
-                            <div className={styles.suggestionShapes}>
-                              <Image 
-                                className={styles.vectorIcon} 
-                                width={32} 
-                                height={32} 
-                                alt="Shape" 
-                                src="/assets/star.svg" 
-                              />
-                            </div>
-                          </div>
-                          <div className={styles.iWouldLike}>{suggestion}</div>
-                          <div className={styles.icons}>
-                            <Image 
-                              className={styles.arrowIcon1} 
-                              width={31} 
-                              height={21} 
-                              alt="Arrow" 
-                              src="/assets/icon-arrow.svg" 
-                            />
-                          </div>
-                        </div>
-                      ))}
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '24px', // 24px gap between rows from Figma specs
+                      width: '100%',
+                      maxWidth: '912px', // 2 × 433px + 48px gap
+                      margin: '0 auto',
+                      padding: '0 48px' // Maintain grid margins
+                    }}>
+                      {/* First row */}
+                      <div style={{
+                        display: 'flex',
+                        gap: '48px', // 48px gap between cards from Figma specs
+                        justifyContent: 'center'
+                      }}>
+                        {suggestions.slice(0, 2).map((suggestion, i) => (
+                          <SuggestionCard
+                            key={`row1-${i}`}
+                            text={suggestion}
+                            shapeVariant={suggestionShapes[i]}
+                            onClick={() => handleSuggestionClick(suggestion)}
+                          />
+                        ))}
+                      </div>
+                      
+                      {/* Second row */}
+                      <div style={{
+                        display: 'flex',
+                        gap: '48px', // 48px gap between cards from Figma specs
+                        justifyContent: 'center'
+                      }}>
+                        {suggestions.slice(2, 4).map((suggestion, i) => (
+                          <SuggestionCard
+                            key={`row2-${i}`}
+                            text={suggestion}
+                            shapeVariant={suggestionShapes[i + 2]}
+                            onClick={() => handleSuggestionClick(suggestion)}
+                          />
+                        ))}
+                      </div>
+                      
+                      {/* Third row */}
+                      <div style={{
+                        display: 'flex',
+                        gap: '48px', // 48px gap between cards from Figma specs
+                        justifyContent: 'center'
+                      }}>
+                        {suggestions.slice(4, 6).map((suggestion, i) => (
+                          <SuggestionCard
+                            key={`row3-${i}`}
+                            text={suggestion}
+                            shapeVariant={suggestionShapes[i + 4]}
+                            onClick={() => handleSuggestionClick(suggestion)}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </>
                 ) : (
@@ -300,79 +377,79 @@ const FunctionalChatInterface = () => {
                   </div>
                 )}
               </div>
+            </div>
 
-              {/* Chat Input - keeping exact same styling and position */}
-              <div className={styles.chatInput}>
-                <div className={styles.chatInputDefault}>
-                  <div className={styles.textarea}>
-                    <div className={styles.input}>
-                      <textarea
-                        ref={inputRef}
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        placeholder="Ask me a question..."
-                        disabled={isLoading}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          border: 'none',
-                          outline: 'none',
-                          background: 'transparent',
-                          resize: 'none',
-                          fontSize: '16px',
-                          fontWeight: '500',
-                          color: inputValue ? '#000' : '#808080',
-                          fontFamily: 'inherit'
-                        }}
+            {/* Chat Input - moved outside contentContainer to be a sibling */}
+            <div className={styles.chatInput}>
+              <div className={styles.chatInputDefault}>
+                <div className={styles.textarea}>
+                  <div className={styles.input}>
+                    <textarea
+                      ref={inputRef}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Ask me a question..."
+                      disabled={isLoading}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        border: 'none',
+                        outline: 'none',
+                        background: 'transparent',
+                        resize: 'none',
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        color: inputValue ? '#000' : '#808080',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className={styles.controls1}>
+                <div className={styles.controlsLeft}>
+                  <div className={styles.iconButtons}>
+                    <div className={styles.icons6}>
+                      <Image 
+                        className={styles.filesIcon} 
+                        width={22} 
+                        height={24} 
+                        alt="Files" 
+                        src="/assets/icon-paperclip.svg" 
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.iconButtons}>
+                    <div className={styles.icons6}>
+                      <Image 
+                        className={styles.imagesIcon} 
+                        width={24} 
+                        height={20} 
+                        alt="Images" 
+                        src="/assets/icon-camera.svg" 
                       />
                     </div>
                   </div>
                 </div>
-                <div className={styles.controls1}>
-                  <div className={styles.controlsLeft}>
-                    <div className={styles.iconButtons}>
-                      <div className={styles.icons6}>
-                        <Image 
-                          className={styles.filesIcon} 
-                          width={22} 
-                          height={24} 
-                          alt="Files" 
-                          src="/assets/icon-paperclip.svg" 
-                        />
-                      </div>
-                    </div>
-                    <div className={styles.iconButtons}>
-                      <div className={styles.icons6}>
-                        <Image 
-                          className={styles.imagesIcon} 
-                          width={24} 
-                          height={20} 
-                          alt="Images" 
-                          src="/assets/icon-camera.svg" 
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.controlsRight}>
-                    <div className={styles.charCount}>{inputValue.length}/1000</div>
-                    <div 
-                      className={styles.iconButtons} 
-                      onClick={handleSendMessage}
-                      style={{
-                        opacity: inputValue.trim() && !isLoading ? 1 : 0.5,
-                        cursor: inputValue.trim() && !isLoading ? 'pointer' : 'not-allowed'
-                      }}
-                    >
-                      <div className={styles.icons6}>
-                        <Image 
-                          className={styles.sendIcon} 
-                          width={24} 
-                          height={22} 
-                          alt="Send" 
-                          src="/assets/icon-send.svg" 
-                        />
-                      </div>
+                <div className={styles.controlsRight}>
+                  <div className={styles.charCount}>{inputValue.length}/1000</div>
+                  <div 
+                    className={styles.iconButtons} 
+                    onClick={handleSendMessage}
+                    style={{
+                      opacity: inputValue.trim() && !isLoading ? 1 : 0.5,
+                      cursor: inputValue.trim() && !isLoading ? 'pointer' : 'not-allowed'
+                    }}
+                  >
+                    <div className={styles.icons6}>
+                      <Image 
+                        className={styles.sendIcon} 
+                        width={24} 
+                        height={22} 
+                        alt="Send" 
+                        src="/assets/icon-send.svg" 
+                      />
                     </div>
                   </div>
                 </div>
