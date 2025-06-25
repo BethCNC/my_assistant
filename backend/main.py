@@ -19,42 +19,41 @@ from firebase_admin import initialize_app
 # Initialize Firebase Admin
 initialize_app()
 
-# Import our service modules
-from notion import NotionService
-from figma import FigmaService
-from github import GitHubService
-from memory import MemoryService, create_conversation_session, add_conversation_message
+# Import our service modules with error handling
+notion_service = None
+figma_service = None
+github_service = None
+memory_service = None
 
-load_dotenv()
-
-# Initialize services
 try:
+    from notion import NotionService
     notion_service = NotionService()
     print("✅ Notion service initialized")
 except Exception as e:
     print(f"⚠️ Notion service failed to initialize: {e}")
-    notion_service = None
 
 try:
+    from figma import FigmaService
     figma_service = FigmaService()
     print("✅ Figma service initialized")
 except Exception as e:
     print(f"⚠️ Figma service failed to initialize: {e}")
-    figma_service = None
 
 try:
+    from github import GitHubService
     github_service = GitHubService()
     print("✅ GitHub service initialized")
 except Exception as e:
     print(f"⚠️ GitHub service failed to initialize: {e}")
-    github_service = None
 
 try:
+    from memory import MemoryService, create_conversation_session, add_conversation_message
     memory_service = MemoryService()
     print("✅ Memory service initialized")
 except Exception as e:
     print(f"⚠️ Memory service failed to initialize: {e}")
-    memory_service = None
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -610,8 +609,8 @@ async def create_memory_conversation(conversation_data: dict):
     except Exception as e:
         return {"error": str(e)}
 
-# Firebase Functions export
-api = https_fn.on_request(app)
+# Firebase Functions export - simple approach
+# The firebase.json will point to this main.py file and the app variable
 
 if __name__ == "__main__":
     import uvicorn

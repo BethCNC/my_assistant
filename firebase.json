@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "frontend/.next",
+    "public": "frontend/out",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -10,10 +10,17 @@
       {
         "source": "/api/**",
         "function": "api"
-      },
+      }
+    ],
+    "headers": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
       }
     ]
   },
