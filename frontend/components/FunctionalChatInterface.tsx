@@ -104,11 +104,16 @@ const FunctionalChatInterface = () => {
   // Load conversations on mount
   useEffect(() => {
     const loadConversations = async () => {
-      const response = await apiClient.getConversations();
-      if (response.data && response.data.chats) {
-        setConversations(response.data.chats);
-      } else if (response.data && Array.isArray(response.data)) {
-        setConversations(response.data);
+      try {
+        const response = await apiClient.getConversations();
+        if (response.data && response.data.chats) {
+          setConversations(response.data.chats);
+        } else if (response.data && Array.isArray(response.data)) {
+          setConversations(response.data);
+        }
+      } catch (error) {
+        // Silently handle offline mode - conversations will show placeholders
+        console.log('API offline, using placeholder conversations');
       }
     };
     loadConversations();
@@ -116,12 +121,17 @@ const FunctionalChatInterface = () => {
 
   // Function to load a specific chat
   const handleChatClick = async (chatId: string) => {
-    const response = await apiClient.getChatHistory(chatId);
-    if (response.data && response.data.chat) {
-      // Load the chat messages and switch to chat view
-      const chatData = response.data.chat;
-      // You can implement message loading here if needed
-      setShowSuggestions(false);
+    try {
+      const response = await apiClient.getChatHistory(chatId);
+      if (response.data && response.data.chat) {
+        // Load the chat messages and switch to chat view
+        const chatData = response.data.chat;
+        // You can implement message loading here if needed
+        setShowSuggestions(false);
+      }
+    } catch (error) {
+      // Silently handle offline mode
+      console.log('API offline, cannot load chat history');
     }
   };
 
@@ -143,10 +153,15 @@ const FunctionalChatInterface = () => {
     await sendMessage(inputValue.trim());
     setInputValue('');
     
-    // Reload conversations to update recent chats
-    const response = await apiClient.getConversations();
-    if (response.data && response.data.chats) {
-      setConversations(response.data.chats);
+    // Try to reload conversations, but don't fail if offline
+    try {
+      const response = await apiClient.getConversations();
+      if (response.data && response.data.chats) {
+        setConversations(response.data.chats);
+      }
+    } catch (error) {
+      // Silently handle offline mode
+      console.log('API offline, conversations not updated');
     }
   };
 
@@ -154,10 +169,15 @@ const FunctionalChatInterface = () => {
     setShowSuggestions(false);
     await sendMessage(suggestion);
     
-    // Reload conversations to update recent chats
-    const response = await apiClient.getConversations();
-    if (response.data && response.data.chats) {
-      setConversations(response.data.chats);
+    // Try to reload conversations, but don't fail if offline
+    try {
+      const response = await apiClient.getConversations();
+      if (response.data && response.data.chats) {
+        setConversations(response.data.chats);
+      }
+    } catch (error) {
+      // Silently handle offline mode
+      console.log('API offline, conversations not updated');
     }
   };
 
