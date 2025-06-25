@@ -1,8 +1,19 @@
 {
   "buildCommand": "cd frontend && npm run build",
-  "outputDirectory": "frontend/.next",
+  "outputDirectory": "frontend/out",
   "framework": "nextjs",
   "installCommand": "cd frontend && npm install",
   "devCommand": "cd frontend && npm run dev",
-  "rootDirectory": "frontend"
+  "rootDirectory": "frontend",
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.9"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/main.py"
+    }
+  ]
 } 
