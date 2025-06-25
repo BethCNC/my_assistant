@@ -6,12 +6,6 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [
-      {
-        "source": "/api/**",
-        "function": "api"
-      }
-    ],
     "headers": [
       {
         "source": "**",
@@ -23,10 +17,5 @@
         ]
       }
     ]
-  },
-  "functions": {
-    "source": "backend",
-    "runtime": "python311",
-    "entryPoint": "app"
   }
 } 
