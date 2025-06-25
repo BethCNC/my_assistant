@@ -4,11 +4,5 @@
   "framework": "nextjs",
   "installCommand": "cd frontend && npm install",
   "devCommand": "cd frontend && npm run dev",
-  "rootDirectory": "frontend",
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://beth-assistant-backend.onrender.com/api/$1"
-    }
-  ]
+  "rootDirectory": "frontend"
 } 

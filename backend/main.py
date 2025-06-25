@@ -12,6 +12,13 @@ import json
 from datetime import datetime
 from typing import List, Optional
 
+# Firebase Functions compatibility
+from firebase_functions import https_fn
+from firebase_admin import initialize_app
+
+# Initialize Firebase Admin
+initialize_app()
+
 # Import our service modules
 from notion import NotionService
 from figma import FigmaService
@@ -602,6 +609,9 @@ async def create_memory_conversation(conversation_data: dict):
         return result
     except Exception as e:
         return {"error": str(e)}
+
+# Firebase Functions export
+api = https_fn.on_request(app)
 
 if __name__ == "__main__":
     import uvicorn

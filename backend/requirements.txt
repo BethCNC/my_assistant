@@ -12,4 +12,6 @@ notion-client==2.2.1
 gitpython==3.1.40
 python-dateutil==2.8.2
 click==8.1.7
-rich==13.7.0 
+rich==13.7.0
+firebase-functions==0.1.0
+firebase-admin==6.2.0 
