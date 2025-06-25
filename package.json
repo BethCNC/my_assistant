@@ -1,18 +1,19 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "beth-assistant-workspace",
+  "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "frontend"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm run start",
+    "backend": "cd backend && python main.py",
+    "deploy:frontend": "cd frontend && npm run build",
+    "deploy:backend": "cd backend && gcloud run deploy"
   },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.5.1",
-    "vite": "^5.4.19"
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

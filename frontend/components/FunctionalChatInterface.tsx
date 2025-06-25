@@ -18,43 +18,61 @@ const FunctionalChatInterface = () => {
 
   // Enhanced dynamic suggestions based on context
   const getContextualSuggestions = () => {
-    const baseTopics = [
-      'design tokens and system components',
-      'organizing tasks and projects in Notion', 
-      'recent GitHub activity and pull requests',
-      'calendar events and upcoming meetings',
-      'creating new tasks and reminders',
-      'searching and managing Figma files',
-      'analyzing project progress and metrics',
-      'setting up automation workflows'
-    ];
-
-    // Add context-based suggestions if we have chat history
-    const contextualSuggestions = [];
-    
+    // If we have chat history, generate suggestions based on recent topics
     if (conversations.length > 0) {
-      contextualSuggestions.push(
-        'Continue our previous conversation',
-        'Summarize recent chat topics'
-      );
-    }
-    
-    // Mix base topics with contextual ones
-    const allSuggestions = [...contextualSuggestions, ...baseTopics];
-    
-    // Return 6 suggestions with varied phrasing
-    return allSuggestions.slice(0, 6).map(topic => {
-      const starters = [
-        'I would like to know about',
-        'Help me with',
-        'Show me information about',
-        'Can you explain',
-        'I need assistance with',
-        'Tell me about'
+      const recentTopics = conversations.slice(0, 5).map(conv => {
+        const title = formatChatTitle(conv);
+        // Extract key topics from chat titles to generate follow-up suggestions
+        if (title.toLowerCase().includes('design')) {
+          return 'Continue discussing design system improvements';
+        } else if (title.toLowerCase().includes('notion') || title.toLowerCase().includes('organize')) {
+          return 'Help me organize more projects in Notion';
+        } else if (title.toLowerCase().includes('github') || title.toLowerCase().includes('code')) {
+          return 'Show me recent GitHub activity and updates';
+        } else if (title.toLowerCase().includes('calendar') || title.toLowerCase().includes('schedule')) {
+          return 'Review my upcoming calendar events';
+        } else if (title.toLowerCase().includes('task') || title.toLowerCase().includes('todo')) {
+          return 'Help me create and manage new tasks';
+        } else if (title.toLowerCase().includes('figma') || title.toLowerCase().includes('file')) {
+          return 'Find and organize my Figma files';
+        } else {
+          // Generic follow-up based on the conversation
+          return `Continue our conversation about ${title.toLowerCase().replace(/^how can i better /, '').replace(/\?$/, '')}`;
+        }
+      });
+
+      // Add some general contextual suggestions
+      const contextualSuggestions = [
+        'Summarize my recent chat topics',
+        'What were we discussing last time?',
+        ...recentTopics
       ];
-      const starter = starters[Math.floor(Math.random() * starters.length)];
-      return `${starter} ${topic}`;
-    });
+
+      // Fill remaining slots with general suggestions if needed
+      const generalSuggestions = [
+        'Tell me about my upcoming appointments',
+        'Show me my recent GitHub commits',
+        'Help me plan my day',
+        'What tasks do I have pending?',
+        'Check my Notion workspace updates',
+        'Review my calendar for this week'
+      ];
+
+      const allSuggestions = [...contextualSuggestions, ...generalSuggestions];
+      return allSuggestions.slice(0, 6);
+    }
+
+    // Default suggestions when no chat history exists
+    const defaultSuggestions = [
+      'Tell me about design tokens and system components',
+      'Show me information about organizing projects',
+      'Can you explain recent GitHub activity',
+      'Can you explain calendar events and meetings',
+      'I need assistance with creating new tasks',
+      'Can you explain searching and managing files'
+    ];
+    
+    return defaultSuggestions;
   };
 
   const [suggestions, setSuggestions] = useState(getContextualSuggestions());
@@ -235,10 +253,21 @@ const FunctionalChatInterface = () => {
                         </div>
                       ))
                     ) : (
-                      Array.from({ length: 9 }, (_, i) => (
+                      // Show placeholder chat history items that match Figma design
+                      [
+                        'How can I better update my design tokens',
+                        'How can I better organize my projects', 
+                        'How can I better manage my calendar',
+                        'How can I better track my tasks',
+                        'How can I better use GitHub workflows',
+                        'How can I better structure my files',
+                        'How can I better automate my work',
+                        'How can I better sync my tools',
+                        'How can I better plan my schedule'
+                      ].map((placeholderText, i) => (
                         <div key={i} className={styles.chatHistory}>
                           <div className={styles.chatHistory1}>
-                            <div className={styles.howCanI}>No recent chats</div>
+                            <div className={styles.howCanI}>{placeholderText}</div>
                           </div>
                         </div>
                       ))
