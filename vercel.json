@@ -1,30 +1,10 @@
 {
   "functions": {
-    "api/chat.py": {
-      "runtime": "python3.9"
-    },
     "api/health.py": {
       "runtime": "python3.9"
-    }
-  },
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/next"
     },
-    {
-      "src": "api/*.py",
-      "use": "@vercel/python"
+    "api/chat.py": {
+      "runtime": "python3.9"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
-    }
-  ]
+  }
 } 
