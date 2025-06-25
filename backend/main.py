@@ -59,6 +59,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    """Root endpoint for deployment verification."""
+    return {"message": "Beth Assistant API is running", "status": "healthy"}
+
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class ChatRequest(BaseModel):
