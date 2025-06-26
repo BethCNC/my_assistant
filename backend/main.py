@@ -14,9 +14,14 @@ from typing import List, Optional
 # Firebase Functions import
 from firebase_functions import https_fn
 from firebase_admin import initialize_app
+import firebase_admin
 
 # Initialize Firebase Admin
-initialize_app()
+try:
+    initialize_app()
+except ValueError:
+    # App already initialized, continue
+    pass
 
 # Load environment variables
 load_dotenv()
@@ -62,6 +67,62 @@ async def chat_endpoint(chat_request: ChatMessage):
             "conversation_id": chat_request.conversation_id or "new-conversation",
             "timestamp": datetime.now().isoformat()
         }
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.get("/api/chats")
+async def get_conversations():
+    """Get list of conversations."""
+    try:
+        # Mock conversation data for now
+        # TODO: Integrate with database
+        mock_conversations = [
+            {
+                "id": "1",
+                "title": "How can I better update my design tokens",
+                "preview": "Discussion about design system tokens",
+                "timestamp": datetime.now().isoformat()
+            },
+            {
+                "id": "2", 
+                "title": "How can I better organize my projects",
+                "preview": "Project organization strategies",
+                "timestamp": datetime.now().isoformat()
+            },
+            {
+                "id": "3",
+                "title": "How can I better manage my calendar",
+                "preview": "Calendar management tips",
+                "timestamp": datetime.now().isoformat()
+            }
+        ]
+        return mock_conversations
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.get("/api/chats/{conversation_id}")
+async def get_chat_history(conversation_id: str):
+    """Get chat history for a specific conversation."""
+    try:
+        # Mock chat history for now
+        # TODO: Integrate with database
+        mock_messages = [
+            {
+                "id": "1",
+                "content": "How can I better update my design tokens?",
+                "role": "user",
+                "timestamp": datetime.now().isoformat(),
+                "conversation_id": conversation_id
+            },
+            {
+                "id": "2",
+                "content": "I can help you with design tokens! Here are some best practices...",
+                "role": "assistant", 
+                "timestamp": datetime.now().isoformat(),
+                "conversation_id": conversation_id
+            }
+        ]
+        return mock_messages
     except Exception as e:
         return {"error": str(e), "status": "error"}
 

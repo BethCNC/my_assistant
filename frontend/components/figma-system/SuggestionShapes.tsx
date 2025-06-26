@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 export type SuggestionShapeVariant = 1 | 2 | 3 | 4 | 5 | 6 | 7
 
 interface SuggestionShapeProps {
-  shape?: SuggestionShapeVariant
+  shape: SuggestionShapeVariant // Make required to prevent hydration issues
   className?: string
   size?: number
   color?: string
@@ -22,15 +22,15 @@ interface SuggestionShapeProps {
  * Can be used with random selection for dynamic suggestions
  */
 export function SuggestionShapes({ 
-  shape,
+  shape, // Now required
   className, 
   size = 32, 
   color,
   style = {},
   ...props
 }: SuggestionShapeProps) {
-  // If no shape is specified, randomly select one
-  const selectedShape = shape || getRandomShape()
+  // Use the provided shape directly
+  const selectedShape = shape
   
   const shapeStyle = {
     width: size,

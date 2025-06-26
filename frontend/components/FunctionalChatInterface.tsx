@@ -16,6 +16,17 @@ const FunctionalChatInterface = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // Function to format chat title for display - moved before usage
+  const formatChatTitle = (chat: any) => {
+    if (chat.title && chat.title !== 'undefined') {
+      return chat.title.length > 30 ? chat.title.substring(0, 30) + '...' : chat.title;
+    }
+    if (chat.preview) {
+      return chat.preview.length > 30 ? chat.preview.substring(0, 30) + '...' : chat.preview;
+    }
+    return 'Untitled Chat';
+  };
+
   // Enhanced dynamic suggestions based on context
   const getContextualSuggestions = () => {
     // If we have chat history, generate suggestions based on recent topics
@@ -77,28 +88,12 @@ const FunctionalChatInterface = () => {
 
   const [suggestions, setSuggestions] = useState(getContextualSuggestions());
 
-  // Generate random shapes ensuring no duplicates
-  const generateRandomShapes = (): SuggestionShapeVariant[] => {
-    const shapes: SuggestionShapeVariant[] = [1, 2, 3, 4, 5, 6, 7];
-    const selected: SuggestionShapeVariant[] = [];
-    
-    while (selected.length < 6) {
-      const randomIndex = Math.floor(Math.random() * shapes.length);
-      const shape = shapes[randomIndex];
-      if (!selected.includes(shape)) {
-        selected.push(shape);
-      }
-    }
-    
-    return selected;
-  };
-
-  const [suggestionShapes, setSuggestionShapes] = useState(generateRandomShapes());
+  // Use fixed shapes to prevent hydration mismatch (server vs client random differences)
+  const suggestionShapes: SuggestionShapeVariant[] = [3, 1, 2, 7, 4, 6];
 
   // Update suggestions when conversations change
   useEffect(() => {
     setSuggestions(getContextualSuggestions());
-    setSuggestionShapes(generateRandomShapes());
   }, [conversations]);
 
   // Load conversations on mount
@@ -133,17 +128,6 @@ const FunctionalChatInterface = () => {
       // Silently handle offline mode
       console.log('API offline, cannot load chat history');
     }
-  };
-
-  // Function to format chat title for display
-  const formatChatTitle = (chat: any) => {
-    if (chat.title && chat.title !== 'undefined') {
-      return chat.title.length > 30 ? chat.title.substring(0, 30) + '...' : chat.title;
-    }
-    if (chat.preview) {
-      return chat.preview.length > 30 ? chat.preview.substring(0, 30) + '...' : chat.preview;
-    }
-    return 'Untitled Chat';
   };
 
   const handleSendMessage = async () => {
@@ -300,7 +284,6 @@ const FunctionalChatInterface = () => {
                   setShowSuggestions(true);
                   // Refresh suggestions and shapes for new chat
                   setSuggestions(getContextualSuggestions());
-                  setSuggestionShapes(generateRandomShapes());
                 }}>
                   <div className={styles.labelText}>
                     <b className={styles.newChatButton2}>New Chat</b>
