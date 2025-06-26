@@ -1,6 +1,6 @@
 """
 Figma API service for Beth's unified assistant.
-Handles design file management, asset extraction, and team collaboration.
+Handles design file management, asset extraction, team collaboration, and design variables.
 """
 
 import os
@@ -9,6 +9,8 @@ from typing import List, Dict, Optional, Any
 import logging
 from urllib.parse import urljoin
 import base64
+import json
+from datetime import datetime
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -399,6 +401,247 @@ class FigmaService:
         except Exception as e:
             logger.error(f"Download image error: {str(e)}")
             return {'success': False, 'error': str(e)}
+    
+    def get_file_variables(self, file_key: str) -> Dict:
+        """Get all variables from a Figma file including collections and modes."""
+        try:
+            url = urljoin(self.base_url, f"files/{file_key}/variables/local")
+            response = requests.get(url, headers=self.headers)
+            
+            if response.status_code != 200:
+                return {
+                    'success': False,
+                    'error': f'Figma Variables API error: {response.status_code}',
+                    'details': response.text
+                }
+            
+            data = response.json()
+            
+            # Organize variables by collection
+            collections = {}
+            variables_by_collection = {}
+            
+            # Process variable collections
+            for collection_id, collection_data in data.get('meta', {}).get('variableCollections', {}).items():
+                collection_name = collection_data.get('name', 'Unknown')
+                collections[collection_id] = {
+                    'id': collection_id,
+                    'name': collection_name,
+                    'modes': collection_data.get('modes', []),
+                    'defaultModeId': collection_data.get('defaultModeId'),
+                    'remote': collection_data.get('remote', False),
+                    'hiddenFromPublishing': collection_data.get('hiddenFromPublishing', False),
+                    'variables': []
+                }
+                variables_by_collection[collection_id] = []
+            
+            # Process variables
+            for variable_id, variable_data in data.get('meta', {}).get('variables', {}).items():
+                collection_id = variable_data.get('variableCollectionId')
+                
+                variable_info = {
+                    'id': variable_id,
+                    'name': variable_data.get('name'),
+                    'description': variable_data.get('description', ''),
+                    'type': variable_data.get('resolvedType'),
+                    'scopes': variable_data.get('scopes', []),
+                    'hiddenFromPublishing': variable_data.get('hiddenFromPublishing', False),
+                    'values': {},
+                    'aliases': {},
+                    'raw_values': variable_data.get('valuesByMode', {})
+                }
+                
+                # Process values by mode
+                for mode_id, value in variable_data.get('valuesByMode', {}).items():
+                    if isinstance(value, dict) and 'type' in value:
+                        # This is an alias reference
+                        if value['type'] == 'VARIABLE_ALIAS':
+                            variable_info['aliases'][mode_id] = {
+                                'type': 'alias',
+                                'id': value.get('id'),
+                                'raw': value
+                            }
+                        else:
+                            variable_info['values'][mode_id] = value
+                    else:
+                        # Direct value
+                        variable_info['values'][mode_id] = value
+                
+                if collection_id and collection_id in collections:
+                    collections[collection_id]['variables'].append(variable_info)
+                    variables_by_collection[collection_id].append(variable_info)
+            
+            return {
+                'success': True,
+                'collections': collections,
+                'variables_by_collection': variables_by_collection,
+                'total_collections': len(collections),
+                'total_variables': len(data.get('meta', {}).get('variables', {})),
+                'raw_data': data
+            }
+            
+        except Exception as e:
+            logger.error(f"Get file variables error: {str(e)}")
+            return {'success': False, 'error': str(e)}
+    
+    def generate_variables_documentation(self, file_key: str, output_format: str = 'markdown') -> Dict:
+        """Generate comprehensive documentation for all variable collections."""
+        try:
+            variables_data = self.get_file_variables(file_key)
+            
+            if not variables_data['success']:
+                return variables_data
+            
+            collections = variables_data['collections']
+            documentation = {
+                'primitives': [],
+                'alias': [],
+                'semantics': [],
+                'other': []
+            }
+            
+            # Categorize collections
+            for collection_id, collection in collections.items():
+                collection_name = collection['name'].lower()
+                
+                if 'primitive' in collection_name or 'base' in collection_name:
+                    category = 'primitives'
+                elif 'alias' in collection_name or 'token' in collection_name:
+                    category = 'alias'
+                elif 'semantic' in collection_name or 'theme' in collection_name:
+                    category = 'semantics'
+                else:
+                    category = 'other'
+                
+                documentation[category].append(collection)
+            
+            # Generate markdown documentation
+            if output_format == 'markdown':
+                markdown_content = self._generate_markdown_documentation(documentation, file_key)
+                return {
+                    'success': True,
+                    'documentation': documentation,
+                    'markdown': markdown_content,
+                    'collections_count': len(collections)
+                }
+            
+            return {
+                'success': True,
+                'documentation': documentation,
+                'collections_count': len(collections)
+            }
+            
+        except Exception as e:
+            logger.error(f"Generate variables documentation error: {str(e)}")
+            return {'success': False, 'error': str(e)}
+    
+    def _generate_markdown_documentation(self, documentation: Dict, file_key: str) -> str:
+        """Generate markdown documentation for variable collections."""
+        
+        markdown = f"""# Design System Variables Documentation
+
+**File Key:** `{file_key}`  
+**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+---
+
+"""
+        
+        # Process each category
+        for category, collections in documentation.items():
+            if not collections:
+                continue
+                
+            category_title = category.title()
+            markdown += f"## {category_title} Collections\n\n"
+            
+            for collection in collections:
+                markdown += f"### {collection['name']}\n\n"
+                
+                # Collection metadata
+                markdown += f"- **ID:** `{collection['id']}`\n"
+                markdown += f"- **Variables Count:** {len(collection['variables'])}\n"
+                markdown += f"- **Modes:** {len(collection['modes'])}\n"
+                
+                if collection.get('hiddenFromPublishing'):
+                    markdown += f"- **Status:** Hidden from publishing\n"
+                
+                markdown += "\n"
+                
+                # Modes information
+                if collection['modes']:
+                    markdown += "#### Modes\n\n"
+                    for mode in collection['modes']:
+                        mode_indicator = " (Default)" if mode['modeId'] == collection.get('defaultModeId') else ""
+                        markdown += f"- **{mode['name']}**{mode_indicator}: `{mode['modeId']}`\n"
+                    markdown += "\n"
+                
+                # Variables table
+                if collection['variables']:
+                    markdown += "#### Variables\n\n"
+                    markdown += "| Name | Type | Description | Values/Aliases |\n"
+                    markdown += "|------|------|-------------|----------------|\n"
+                    
+                    for variable in collection['variables']:
+                        name = variable['name']
+                        var_type = variable.get('type', 'Unknown')
+                        description = variable.get('description', '').replace('\n', ' ')[:100]
+                        if len(description) > 100:
+                            description += "..."
+                        
+                        # Format values/aliases
+                        values_info = []
+                        
+                        # Direct values
+                        for mode_id, value in variable.get('values', {}).items():
+                            mode_name = next((m['name'] for m in collection['modes'] if m['modeId'] == mode_id), mode_id)
+                            if isinstance(value, dict):
+                                if 'r' in value and 'g' in value and 'b' in value:
+                                    # Color value
+                                    r = int(value['r'] * 255)
+                                    g = int(value['g'] * 255)
+                                    b = int(value['b'] * 255)
+                                    a = value.get('a', 1)
+                                    values_info.append(f"{mode_name}: rgba({r},{g},{b},{a})")
+                                else:
+                                    values_info.append(f"{mode_name}: {str(value)[:50]}")
+                            else:
+                                values_info.append(f"{mode_name}: {str(value)}")
+                        
+                        # Aliases
+                        for mode_id, alias in variable.get('aliases', {}).items():
+                            mode_name = next((m['name'] for m in collection['modes'] if m['modeId'] == mode_id), mode_id)
+                            values_info.append(f"{mode_name}: →alias({alias.get('id', 'unknown')})")
+                        
+                        values_display = "<br>".join(values_info[:3])  # Limit to 3 entries
+                        if len(values_info) > 3:
+                            values_display += f"<br>... +{len(values_info)-3} more"
+                        
+                        markdown += f"| `{name}` | {var_type} | {description} | {values_display} |\n"
+                    
+                    markdown += "\n"
+                
+                markdown += "---\n\n"
+        
+        # Summary section
+        total_collections = sum(len(collections) for collections in documentation.values())
+        total_variables = sum(len(collection['variables']) for collections in documentation.values() for collection in collections)
+        
+        markdown += f"""## Summary
+
+- **Total Collections:** {total_collections}
+- **Total Variables:** {total_variables}
+- **Primitives Collections:** {len(documentation['primitives'])}
+- **Alias Collections:** {len(documentation['alias'])}
+- **Semantics Collections:** {len(documentation['semantics'])}
+- **Other Collections:** {len(documentation['other'])}
+
+---
+
+*Generated by Beth's Assistant Design System Documentation Tool*
+"""
+        
+        return markdown
 
 # Global instance
 figma_service = FigmaService()

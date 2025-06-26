@@ -330,6 +330,111 @@ async def get_design_files():
     except Exception as e:
         return {"error": str(e), "status": "error"}
 
+@app.get("/api/figma/variables/{file_key}")
+async def get_figma_variables(file_key: str):
+    """Get all variables from a Figma file."""
+    try:
+        if not FIGMA_AVAILABLE:
+            return {"error": "Figma service not available", "status": "error"}
+        
+        from figma import figma_service
+        return figma_service.get_file_variables(file_key)
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.get("/api/figma/variables/{file_key}/documentation")
+async def generate_figma_variables_documentation(file_key: str, format: str = "markdown"):
+    """Generate comprehensive documentation for Figma variable collections."""
+    try:
+        if not FIGMA_AVAILABLE:
+            return {"error": "Figma service not available", "status": "error"}
+        
+        from figma import figma_service
+        result = figma_service.generate_variables_documentation(file_key, format)
+        
+        if result['success'] and format == "markdown":
+            # Save the documentation to a file
+            doc_filename = f"FIGMA_VARIABLES_DOCUMENTATION_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+            try:
+                with open(doc_filename, 'w', encoding='utf-8') as f:
+                    f.write(result['markdown'])
+                result['saved_file'] = doc_filename
+            except Exception as e:
+                result['file_save_error'] = str(e)
+        
+        return result
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.post("/api/figma/variables/analyze")
+async def analyze_figma_variables():
+    """Analyze Figma variables and provide insights using RAG."""
+    class VariableAnalysisRequest(BaseModel):
+        file_key: str
+        focus_areas: Optional[List[str]] = ["primitives", "alias", "semantics"]
+        generate_recommendations: bool = True
+    
+    try:
+        request_data = await request.json()
+        analysis_request = VariableAnalysisRequest(**request_data)
+        
+        if not FIGMA_AVAILABLE:
+            return {"error": "Figma service not available", "status": "error"}
+        
+        from figma import figma_service
+        
+        # Get variables data
+        variables_result = figma_service.get_file_variables(analysis_request.file_key)
+        if not variables_result['success']:
+            return variables_result
+        
+        # Generate documentation
+        doc_result = figma_service.generate_variables_documentation(
+            analysis_request.file_key, 
+            'markdown'
+        )
+        
+        analysis = {
+            'file_key': analysis_request.file_key,
+            'timestamp': datetime.now().isoformat(),
+            'collections_summary': {},
+            'insights': [],
+            'recommendations': []
+        }
+        
+        # Analyze collections
+        for category, collections in doc_result['documentation'].items():
+            if category in analysis_request.focus_areas:
+                analysis['collections_summary'][category] = {
+                    'count': len(collections),
+                    'total_variables': sum(len(c['variables']) for c in collections),
+                    'collections': [{'name': c['name'], 'variable_count': len(c['variables'])} for c in collections]
+                }
+        
+        # Generate insights using RAG if available
+        if RAG_AVAILABLE and analysis_request.generate_recommendations:
+            variables_context = f"Figma design system analysis: {json.dumps(analysis['collections_summary'])}"
+            
+            rag_insights = get_contextual_insights(
+                "design system variables optimization recommendations", 
+                context=variables_context
+            )
+            
+            if rag_insights.get('success'):
+                analysis['rag_insights'] = rag_insights.get('insights', {})
+        
+        return {
+            'success': True,
+            'analysis': analysis,
+            'documentation': doc_result if doc_result['success'] else None,
+            'raw_variables': variables_result
+        }
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
 # For local development
 if __name__ == "__main__":
     import uvicorn
