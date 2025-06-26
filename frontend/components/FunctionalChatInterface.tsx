@@ -172,20 +172,30 @@ const FunctionalChatInterface = () => {
     }
   };
 
-  const formatTime = () => {
-    const now = new Date();
-    return now.toLocaleString('en-US', {
-      weekday: 'long',
-      month: 'long', 
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    }).split(', ');
-  };
+  const [timeDisplay, setTimeDisplay] = useState({ weekday: '', date: '', time: '' });
 
-  const [weekday, date, time] = formatTime();
+  useEffect(() => {
+    const formatTime = () => {
+      const now = new Date();
+      const formatted = now.toLocaleString('en-US', {
+        weekday: 'long',
+        month: 'long', 
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      }).split(', ');
+      
+      return {
+        weekday: formatted[0],
+        date: formatted[1],
+        time: formatted[2]
+      };
+    };
+
+    setTimeDisplay(formatTime());
+  }, []);
 
   return (
     <div className={styles.chatContainer}>
@@ -208,13 +218,13 @@ const FunctionalChatInterface = () => {
           </div>
           <div className={styles.dateTime}>
             <div className={styles.navigationText2}>
-              <div className={styles.name}>{weekday}</div>
+              <div className={styles.name}>{timeDisplay.weekday}</div>
             </div>
             <div className={styles.navigationText2}>
-              <div className={styles.name}>{date}</div>
+              <div className={styles.name}>{timeDisplay.date}</div>
             </div>
             <div className={styles.navigationText2}>
-              <div className={styles.time}>{time}</div>
+              <div className={styles.time}>{timeDisplay.time}</div>
             </div>
           </div>
         </div>

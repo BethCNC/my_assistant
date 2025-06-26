@@ -11,23 +11,68 @@ import json
 from datetime import datetime
 from typing import List, Optional
 
-# Firebase Functions import
-from firebase_functions import https_fn
-from firebase_admin import initialize_app
-import firebase_admin
-
-# Initialize Firebase Admin
+# Import all services
 try:
-    initialize_app()
-except ValueError:
-    # App already initialized, continue
-    pass
+    from rag_service import (
+        learn_from_conversation, 
+        get_enhanced_response, 
+        get_contextual_insights,
+        get_rag_learning_stats
+    )
+    RAG_AVAILABLE = True
+except ImportError as e:
+    print(f"RAG service not available: {e}")
+    RAG_AVAILABLE = False
+
+try:
+    from memory import (
+        create_conversation_session,
+        add_conversation_message,
+        get_conversation_messages,
+        get_memory_statistics
+    )
+    MEMORY_AVAILABLE = True
+except ImportError as e:
+    print(f"Memory service not available: {e}")
+    MEMORY_AVAILABLE = False
+
+try:
+    from notion import (
+        search_notion,
+        create_notion_task,
+        get_recent_notion_tasks
+    )
+    NOTION_AVAILABLE = True
+except ImportError as e:
+    print(f"Notion service not available: {e}")
+    NOTION_AVAILABLE = False
+
+try:
+    from github import (
+        get_github_repos,
+        get_recent_github_activity,
+        create_github_issue
+    )
+    GITHUB_AVAILABLE = True
+except ImportError as e:
+    print(f"GitHub service not available: {e}")
+    GITHUB_AVAILABLE = False
+
+try:
+    from figma import (
+        get_figma_files,
+        get_recent_figma_files
+    )
+    FIGMA_AVAILABLE = True
+except ImportError as e:
+    print(f"Figma service not available: {e}")
+    FIGMA_AVAILABLE = False
 
 # Load environment variables
 load_dotenv()
 
 # Initialize FastAPI app
-app = FastAPI(title="Beth Assistant API", version="1.0.0")
+app = FastAPI(title="Beth Assistant API with RAG", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -40,7 +85,17 @@ app.add_middleware(
 @app.get("/")
 async def root():
     """Root endpoint for deployment verification."""
-    return {"message": "Beth Assistant API is running", "status": "healthy"}
+    return {
+        "message": "Beth Assistant API with RAG is running", 
+        "status": "healthy",
+        "services": {
+            "rag": RAG_AVAILABLE,
+            "memory": MEMORY_AVAILABLE,
+            "notion": NOTION_AVAILABLE,
+            "github": GITHUB_AVAILABLE,
+            "figma": FIGMA_AVAILABLE
+        }
+    }
 
 @app.get("/health")
 async def health_check():
@@ -48,55 +103,128 @@ async def health_check():
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
-        "version": "1.0.0"
+        "version": "2.0.0",
+        "rag_enabled": RAG_AVAILABLE
     }
 
-# Basic chat endpoint
+# Enhanced chat endpoint with RAG
 class ChatMessage(BaseModel):
     message: str
     conversation_id: Optional[str] = None
+    context: Optional[dict] = None
 
 @app.post("/api/chat")
-async def chat_endpoint(chat_request: ChatMessage):
-    """Basic chat endpoint."""
+async def enhanced_chat_endpoint(chat_request: ChatMessage):
+    """Enhanced chat endpoint with RAG learning and personalized responses."""
     try:
-        # For now, return a simple response
-        # TODO: Integrate with OpenAI and other services
+        conversation_id = chat_request.conversation_id or f"conv_{datetime.now().timestamp()}"
+        
+        # Create conversation if new
+        if MEMORY_AVAILABLE:
+            create_conversation_session(user_id="beth", title=f"Chat {datetime.now().strftime('%H:%M')}")
+            
+            # Add user message to memory
+            add_conversation_message(
+                conversation_id=conversation_id,
+                role="user",
+                content=chat_request.message,
+                metadata=chat_request.context
+            )
+        
+        # Generate enhanced response using RAG
+        if RAG_AVAILABLE:
+            rag_result = get_enhanced_response(
+                query=chat_request.message,
+                context=chat_request.context
+            )
+            
+            if rag_result['success']:
+                response_text = rag_result['response']
+                
+                # Add assistant response to memory
+                if MEMORY_AVAILABLE:
+                    add_conversation_message(
+                        conversation_id=conversation_id,
+                        role="assistant",
+                        content=response_text,
+                        metadata={
+                            "rag_enhanced": True,
+                            "context_used": rag_result.get('context_used', 0),
+                            "insights_applied": rag_result.get('insights_applied', [])
+                        }
+                    )
+                
+                # Learn from this conversation
+                if MEMORY_AVAILABLE:
+                    messages = get_conversation_messages(conversation_id)
+                    if messages['success']:
+                        learn_from_conversation(
+                            conversation_id=conversation_id,
+                            messages=messages['messages'],
+                            context=chat_request.context
+                        )
+                
+                return {
+                    "response": response_text,
+                    "conversation_id": conversation_id,
+                    "timestamp": datetime.now().isoformat(),
+                    "rag_enhanced": True,
+                    "learning_applied": True
+                }
+            else:
+                # Fallback to simple response
+                response_text = f"I understand you're asking about: {chat_request.message}. Let me help you with that."
+        else:
+            # Simple response without RAG
+            response_text = f"I received your message: {chat_request.message}"
+        
         return {
-            "response": f"I received your message: {chat_request.message}",
-            "conversation_id": chat_request.conversation_id or "new-conversation",
-            "timestamp": datetime.now().isoformat()
+            "response": response_text,
+            "conversation_id": conversation_id,
+            "timestamp": datetime.now().isoformat(),
+            "rag_enhanced": False
         }
+        
     except Exception as e:
-        return {"error": str(e), "status": "error"}
+        return {
+            "error": str(e), 
+            "status": "error",
+            "conversation_id": chat_request.conversation_id
+        }
 
 @app.get("/api/chats")
 async def get_conversations():
-    """Get list of conversations."""
+    """Get list of conversations with learning insights."""
     try:
-        # Mock conversation data for now
-        # TODO: Integrate with database
+        if MEMORY_AVAILABLE:
+            # Get real conversations from memory
+            from memory import memory_service
+            conversations = memory_service.get_recent_conversations(days=30, limit=20)
+            
+            if conversations['success']:
+                return conversations['conversations']
+        
+        # Fallback to mock data
         mock_conversations = [
             {
                 "id": "1",
                 "title": "How can I better update my design tokens",
                 "preview": "Discussion about design system tokens",
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
+                "message_count": 5,
+                "rag_enhanced": True
             },
             {
                 "id": "2", 
                 "title": "How can I better organize my projects",
                 "preview": "Project organization strategies",
-                "timestamp": datetime.now().isoformat()
-            },
-            {
-                "id": "3",
-                "title": "How can I better manage my calendar",
-                "preview": "Calendar management tips",
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
+                "message_count": 8,
+                "rag_enhanced": True
             }
         ]
         return mock_conversations
+        
     except Exception as e:
         return {"error": str(e), "status": "error"}
 
@@ -104,38 +232,110 @@ async def get_conversations():
 async def get_chat_history(conversation_id: str):
     """Get chat history for a specific conversation."""
     try:
-        # Mock chat history for now
-        # TODO: Integrate with database
-        mock_messages = [
+        if MEMORY_AVAILABLE:
+            result = get_conversation_messages(conversation_id)
+            if result['success']:
+                return result['messages']
+        
+        # Fallback to mock data
+        return [
             {
                 "id": "1",
                 "content": "How can I better update my design tokens?",
                 "role": "user",
                 "timestamp": datetime.now().isoformat(),
                 "conversation_id": conversation_id
-            },
-            {
-                "id": "2",
-                "content": "I can help you with design tokens! Here are some best practices...",
-                "role": "assistant", 
-                "timestamp": datetime.now().isoformat(),
-                "conversation_id": conversation_id
             }
         ]
-        return mock_messages
+        
     except Exception as e:
         return {"error": str(e), "status": "error"}
 
-# Firebase Functions export
-@https_fn.on_request()
-def api(req):
-    """Firebase Functions entry point."""
-    return app(req.environ, req.start_response)
+# RAG-specific endpoints
+@app.get("/api/rag/insights")
+async def get_learning_insights(query: str = "", limit: int = 5):
+    """Get contextual insights based on learned patterns."""
+    try:
+        if not RAG_AVAILABLE:
+            return {"error": "RAG service not available", "status": "error"}
+        
+        if query:
+            insights = get_contextual_insights(query, limit)
+        else:
+            insights = get_rag_learning_stats()
+        
+        return insights
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.get("/api/rag/stats")
+async def get_learning_statistics():
+    """Get statistics about what the system has learned."""
+    try:
+        if not RAG_AVAILABLE:
+            return {"error": "RAG service not available", "status": "error"}
+        
+        return get_rag_learning_stats()
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+# Service-specific endpoints
+@app.get("/api/notion/search")
+async def search_notion_content(query: str, limit: int = 10):
+    """Search Notion content."""
+    try:
+        if not NOTION_AVAILABLE:
+            return {"error": "Notion service not available", "status": "error"}
+        
+        return search_notion(query, limit)
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.post("/api/notion/task")
+async def create_task(title: str, description: str = "", project: str = ""):
+    """Create a new task in Notion."""
+    try:
+        if not NOTION_AVAILABLE:
+            return {"error": "Notion service not available", "status": "error"}
+        
+        return create_notion_task(title, description, project)
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.get("/api/github/repos")
+async def get_repositories():
+    """Get GitHub repositories."""
+    try:
+        if not GITHUB_AVAILABLE:
+            return {"error": "GitHub service not available", "status": "error"}
+        
+        return get_github_repos()
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.get("/api/figma/files")
+async def get_design_files():
+    """Get Figma design files."""
+    try:
+        if not FIGMA_AVAILABLE:
+            return {"error": "Figma service not available", "status": "error"}
+        
+        return get_figma_files()
+        
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
 
 # For local development
 if __name__ == "__main__":
     import uvicorn
-    print("🚀 Starting Beth's Assistant Backend...")
+    print("🚀 Starting Beth's Assistant Backend with RAG...")
+    print("🧠 RAG Learning: ENABLED" if RAG_AVAILABLE else "🧠 RAG Learning: DISABLED")
     print("📍 Health check: http://localhost:8000/health")
     print("📖 API docs: http://localhost:8000/docs")
+    print("🔍 RAG insights: http://localhost:8000/api/rag/stats")
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
