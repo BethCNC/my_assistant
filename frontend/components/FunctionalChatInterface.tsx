@@ -198,7 +198,7 @@ const FunctionalChatInterface = () => {
   }, []);
 
   return (
-    <div className={styles.chatContainer}>
+    <div className={styles.appWrapper}>
       <div className={styles.content}>
         {/* Header */}
         <div className={styles.header}>
@@ -228,7 +228,6 @@ const FunctionalChatInterface = () => {
             </div>
           </div>
         </div>
-
         <div className={styles.mainContainer}>
           {/* Sidebar */}
           <div className={`${styles.sidebar} ${isSidebarCollapsed ? styles.sidebarCollapsed : ''}`}>
@@ -311,9 +310,8 @@ const FunctionalChatInterface = () => {
               </>
             )}
           </div>
-
           {/* Main Content */}
-          <div className={styles.mainContainer1} style={{paddingBottom: '200px'}}>
+          <div className={styles.rightContainer}>
             <div className={styles.contentContainer}>
               <div className={styles.container}>
                 {/* Show suggestions or chat messages */}
@@ -420,80 +418,80 @@ const FunctionalChatInterface = () => {
                 )}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      {/* Chat Input - now outside main content, docked at bottom */}
-      <div className={styles.chatInputDocked}>
-        <div className={styles.chatInputDefault}>
-          <div className={styles.textarea}>
-            <div className={styles.input}>
-              <textarea
-                ref={inputRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask me a question..."
-                disabled={isLoading}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  border: 'none',
-                  outline: 'none',
-                  background: 'transparent',
-                  resize: 'none',
-                  fontSize: '16px',
-                  fontWeight: '500',
-                  color: inputValue ? '#000' : '#808080',
-                  fontFamily: 'inherit'
-                }}
-              />
-            </div>
-          </div>
-        </div>
-        <div className={styles.controls1}>
-          <div className={styles.controlsLeft}>
-            <div className={styles.iconButtons}>
-              <div className={styles.icons6}>
-                <Image 
-                  className={styles.filesIcon} 
-                  width={22} 
-                  height={24} 
-                  alt="Files" 
-                  src="/assets/icon-paperclip.svg" 
-                />
-              </div>
-            </div>
-            <div className={styles.iconButtons}>
-              <div className={styles.icons6}>
-                <Image 
-                  className={styles.imagesIcon} 
-                  width={24} 
-                  height={20} 
-                  alt="Images" 
-                  src="/assets/icon-camera.svg" 
-                />
-              </div>
-            </div>
-          </div>
-          <div className={styles.controlsRight}>
-            <div className={styles.charCount}>{inputValue.length}/1000</div>
-            <div 
-              className={styles.iconButtons} 
-              onClick={handleSendMessage}
-              style={{
-                opacity: inputValue.trim() && !isLoading ? 1 : 0.5,
-                cursor: inputValue.trim() && !isLoading ? 'pointer' : 'not-allowed'
-              }}
-            >
-              <div className={styles.icons6}>
-                <Image 
-                  className={styles.sendIcon} 
-                  width={24} 
-                  height={22} 
-                  alt="Send" 
-                  src="/assets/icon-send.svg" 
-                />
+            {/* Chat Input at bottom, not fixed */}
+            <div className={styles.chatInput}>
+              <div className={styles.chatInputDefault}>
+                <div className={styles.textarea}>
+                  <div className={styles.input}>
+                    <textarea
+                      ref={inputRef}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Ask me a question..."
+                      disabled={isLoading}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        border: 'none',
+                        outline: 'none',
+                        background: 'transparent',
+                        resize: 'none',
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        color: inputValue ? '#000' : '#808080',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className={styles.controls1}>
+                  <div className={styles.controlsLeft}>
+                    <div className={styles.iconButtons}>
+                      <div className={styles.icons6}>
+                        <Image 
+                          className={styles.filesIcon} 
+                          width={22} 
+                          height={24} 
+                          alt="Files" 
+                          src="/assets/icon-paperclip.svg" 
+                        />
+                      </div>
+                    </div>
+                    <div className={styles.iconButtons}>
+                      <div className={styles.icons6}>
+                        <Image 
+                          className={styles.imagesIcon} 
+                          width={24} 
+                          height={20} 
+                          alt="Images" 
+                          src="/assets/icon-camera.svg" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.controlsRight}>
+                    <div className={styles.charCount}>{inputValue.length}/1000</div>
+                    <div 
+                      className={styles.iconButtons} 
+                      onClick={handleSendMessage}
+                      style={{
+                        opacity: inputValue.trim() && !isLoading ? 1 : 0.5,
+                        cursor: inputValue.trim() && !isLoading ? 'pointer' : 'not-allowed'
+                      }}
+                    >
+                      <div className={styles.icons6}>
+                        <Image 
+                          className={styles.sendIcon} 
+                          width={24} 
+                          height={22} 
+                          alt="Send" 
+                          src="/assets/icon-send.svg" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -557,6 +557,39 @@
   width: 100%;
 }
 
+.appWrapper {
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 48px;
+  background-image: url('/assets/gradient.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 1024px) {
+  .appWrapper {
+    padding: 24px;
+  }
+}
+@media (max-width: 600px) {
+  .appWrapper {
+    padding: 8px;
+  }
+}
+
+.rightContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  min-width: 0;
+  /* Ensures chat input is always at the bottom */
+}
+
 .chatInput {
   align-self: stretch;
   display: flex;
@@ -564,38 +597,46 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  padding: 48px; /* 48px margin all around */
-  font-size: 16px;
-  color: #000;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #fff;
-  z-index: 100;
-  box-sizing: border-box; /* Ensure padding is included in total width */
+  margin-top: 24px;
+  margin-bottom: 0;
+  padding: 0;
+  background: none;
+  position: static;
+  left: unset;
+  right: unset;
+  bottom: unset;
+  z-index: unset;
+  box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
-  .chatInput {
-    position: fixed; /* Keep fixed positioning on desktop too */
-    padding: 48px; /* 48px margin all around on desktop */
-    background: #fff; /* Keep background on desktop */
-  }
-}
-
-/* Make the main chat area above input scrollable and not hidden */
-.mainContainer1 {
+/* Remove .chatInputDocked fixed positioning for new layout */
+.chatInputDocked {
+  position: static;
+  left: unset;
+  right: unset;
+  bottom: unset;
+  border-radius: 12px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.10), 0 1.5px 4px rgba(0,0,0,0.08);
+  padding: 24px 32px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  padding-bottom: 240px; /* Space for fixed input with 48px margins - increased for safety */
+  gap: 12px;
+  background: #fff;
 }
-
-.contentContainer {
-  flex: 1;
-  overflow-y: auto;
-  padding-bottom: 240px; /* Extra space for input on mobile - increased for safety */
+@media (max-width: 1024px) {
+  .chatInputDocked {
+    padding: 16px;
+    max-width: none;
+  }
+}
+@media (max-width: 600px) {
+  .chatInputDocked {
+    border-radius: 0;
+    padding: 12px 8px;
+  }
 }
 
 .chatInputDefault {
@@ -718,40 +759,4 @@
   position: relative;
   line-height: 16px;
   font-size: 12px;
-}
-
-.chatInputDocked {
-  position: fixed;
-  left: 48px;
-  right: 48px;
-  bottom: 48px;
-  z-index: 100;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.10), 0 1.5px 4px rgba(0,0,0,0.08);
-  padding: 24px 32px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-@media (max-width: 1024px) {
-  .chatInputDocked {
-    left: 24px;
-    right: 24px;
-    bottom: 24px;
-    padding: 16px;
-    max-width: none;
-  }
-}
-@media (max-width: 600px) {
-  .chatInputDocked {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 0;
-    padding: 12px 8px;
-  }
 }
