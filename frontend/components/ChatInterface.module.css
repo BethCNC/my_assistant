@@ -564,7 +564,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  padding: 0px 16px 16px 16px;
+  padding: 48px; /* 48px margin all around */
   font-size: 16px;
   color: #000;
   position: fixed;
@@ -573,13 +573,14 @@
   bottom: 0;
   background: #fff;
   z-index: 100;
+  box-sizing: border-box; /* Ensure padding is included in total width */
 }
 
 @media (min-width: 768px) {
   .chatInput {
-    position: static;
-    padding: 0px 48px;
-    background: none;
+    position: fixed; /* Keep fixed positioning on desktop too */
+    padding: 48px; /* 48px margin all around on desktop */
+    background: #fff; /* Keep background on desktop */
   }
 }
 
@@ -588,12 +589,13 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  padding-bottom: 240px; /* Space for fixed input with 48px margins - increased for safety */
 }
 
 .contentContainer {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 200px; /* space for input on mobile */
+  padding-bottom: 240px; /* Extra space for input on mobile - increased for safety */
 }
 
 .chatInputDefault {

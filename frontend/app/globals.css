@@ -111,7 +111,8 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: var(--font-mabry-pro);
-  overflow: hidden;
+  overflow-x: hidden; /* Only hide horizontal overflow */
+  overflow-y: auto; /* Allow vertical scrolling */
   background: var(--gradient-blue);
   background-attachment: fixed;
 }
