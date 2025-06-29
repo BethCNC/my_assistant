@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export": "next build",
+    "build:firebase": "next build && next export && mv out ../firebase-build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -12,6 +14,8 @@
     "@radix-ui/react-slot": "1.1.1",
     "autoprefixer": "^10.4.20",
     "clsx": "^2.1.1",
+    "critters": "^0.0.25",
+    "firebase": "^11.9.1",
     "lucide-react": "^0.454.0",
     "next": "^15.2.4",
     "next-themes": "^0.4.4",

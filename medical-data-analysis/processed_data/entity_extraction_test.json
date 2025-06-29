@@ -1,0 +1,121 @@
+{
+  "conditions": [
+    {
+      "name": "Ehlers-Danlos Syndrome",
+      "category": "EDS",
+      "position": [
+        44,
+        66
+      ],
+      "text": "Ehlers-Danlos Syndrome"
+    },
+    {
+      "name": "hEDS",
+      "category": "EDS",
+      "position": [
+        68,
+        72
+      ],
+      "text": "hEDS"
+    },
+    {
+      "name": "Autism",
+      "category": "neurodivergent",
+      "position": [
+        695,
+        701
+      ],
+      "text": "Autism"
+    },
+    {
+      "name": "Autism Spectrum Disorder",
+      "category": "neurodivergent",
+      "position": [
+        695,
+        719
+      ],
+      "text": "Autism Spectrum Disorder"
+    },
+    {
+      "name": "POTS",
+      "category": "comorbid",
+      "position": [
+        596,
+        600
+      ],
+      "text": "POTS"
+    },
+    {
+      "name": "EDS",
+      "text": "Ehlers-Danlos Syndrome",
+      "start": 69,
+      "end": 72,
+      "confidence": 0.94,
+      "type": "condition"
+    }
+  ],
+  "medications": [
+    {
+      "name": "tramadol",
+      "dosage": "50mg",
+      "frequency": "twice",
+      "position": [
+        283,
+        291
+      ],
+      "context": "edications include:\n        - Tramadol 50mg twice daily for pain\n        - Cymbalta 60mg"
+    }
+  ],
+  "symptoms": [
+    {
+      "text": "joint pain",
+      "category": "EDS",
+      "position": [
+        113,
+        123
+      ]
+    }
+  ],
+  "procedures": [
+    {
+      "name": "tilt table test",
+      "position": [
+        624,
+        639
+      ],
+      "text": "tilt table test"
+    }
+  ],
+  "lab_results": [
+    {
+      "test": "ESR",
+      "value": "22",
+      "interpretation": "normal",
+      "position": [
+        484,
+        490
+      ],
+      "context": "y markers. \n        ESR 22 mm/hr (normal range 0-20)\n        CRP 2.4 mg/L (n"
+    },
+    {
+      "test": "CRP",
+      "value": "0",
+      "interpretation": "normal",
+      "position": [
+        525,
+        532
+      ],
+      "context": "range 0-20)\n        CRP 2.4 mg/L (normal range 0-1.0)\n        \n        Also d"
+    },
+    {
+      "test": "vitamin D",
+      "value": "2000",
+      "interpretation": null,
+      "position": [
+        376,
+        390
+      ],
+      "context": " and mood\n        - Vitamin D 2000 IU daily\n        \n        Recent tests show sligh"
+    }
+  ]
+}

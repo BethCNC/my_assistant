@@ -1,0 +1,28 @@
+{
+  "source_file": "input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf",
+  "file_hash": "7e57c9edfa8b93c7d94d9596ade23c47cde85cdf9e5c73e22a92afdc9ce351e7",
+  "metadata": {
+    "file_date": "2021-04-13",
+    "creation_time": "2025-04-30T16:10:12.575103",
+    "modification_time": "2025-04-30T16:10:12.574552",
+    "file_size": 16739,
+    "file_type": "rtf",
+    "file_name": "Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf"
+  },
+  "extraction_date": "2025-04-30T16:18:17.650488",
+  "confidence_score": 1.0,
+  "extracted_dates": [
+    "1982-09-13"
+  ],
+  "appointment_dates": [
+    {
+      "date": "2021-04-13",
+      "indicator": "inferred from document",
+      "context": "Document date used as appointment date"
+    }
+  ],
+  "providers": [
+    "DR tablet\nCommonly"
+  ],
+  "content_length": 5622
+}

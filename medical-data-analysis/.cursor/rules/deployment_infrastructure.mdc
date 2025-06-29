@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Deployment and Infrastructure
+
+## Docker Containerization
+- Create specialized containers for each service component
+- Implement multi-stage builds for optimized images
+- Use proper base images for security and efficiency
+- Create consistent container networking model
+- Implement health checks for all service containers
+- Design efficient volume management for persistent data
+
+## Infrastructure as Code
+- Use Terraform or Pulumi for infrastructure provisioning
+- Implement modular design for resource organization
+- Create environment-specific configurations
+- Design proper state management strategy
+- Implement secure secret handling
+- Use explicit dependency management
+
+## CI/CD Pipeline
+- Implement GitHub Actions or GitLab CI for automation
+- Create consistent build and test stages
+- Design deployment strategies with blue-green capability
+- Implement automated security scanning
+- Create proper testing environments
+- Design efficient artifact management
+
+## Monitoring and Observability
+- Use Prometheus for metric collection
+- Implement Grafana for visualization dashboards
+- Create ELK/Loki stack for log management
+- Design comprehensive alerting system
+- Implement distributed tracing with Jaeger/Zipkin
+- Create health monitoring for all components
+
+## Scaling Strategy
+- Design horizontal scaling for stateless components
+- Implement database read replicas for query scaling
+- Create efficient caching tiers for performance
+- Use proper load balancing techniques
+- Implement auto-scaling based on usage patterns
+- Design resource limits and requests for all containers
+
+## Backup and Disaster Recovery
+- Create regular database backup procedures
+- Implement point-in-time recovery capability
+- Design cross-region replication where appropriate
+- Create proper retention policies for all backups
+- Implement recovery testing procedures
+- Design business continuity planning

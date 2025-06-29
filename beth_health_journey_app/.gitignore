@@ -1,0 +1,62 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+
+# production
+build
+dist
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# data files (only ignore the actual data, not the structure)
+data/raw/*
+data/processed/*
+data/archive/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/archive/.gitkeep
+
+# Supabase
+.temp
+.vercel
+
+# Large video files
+assets/videos/flower-meadow-spikelets-and-sunflowers-2023-11-27-05-28-42-utc.mov
+assets/videos/milky-way-galaxy-stars-night-sky-background-time-l-2024-08-27-20-30-29-utc.mp4
+assets/videos/optimized/*.mp4
+
+# Additional media files to ignore
+*.heic
+*.mp4
+*.mov
+*.dng
+*.acr
+
+# Specific large folders to ignore
+assets/images/health-image-*.*

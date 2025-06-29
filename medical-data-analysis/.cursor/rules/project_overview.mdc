@@ -1,0 +1,39 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Medical Data Processing Project
+
+## Project Goals
+- Extract and normalize medical data from multiple formats (PDF, text, HTML, CSV, RTF, Markdown)
+- Process and analyze medical history with focus on chronic conditions (EDS, ADHD, ASD, chronic pain)
+- Create a comprehensive, chronologically sorted medical database with symptom tracking
+- Enable backend integration with a personal health website
+- Support an interactive chatbot with comprehensive medical history understanding
+
+## Data Types to Process
+- Medical test results (Labs, X-rays, MRIs, etc.) with corresponding dates
+- Doctor's notes and appointment summaries
+- Personal health narratives and symptom descriptions
+- Diagnostic criteria for conditions (ASD, EDS, etc.)
+- Medical assessments and test results
+- Medical imaging documentation and findings
+- Medication history and effectiveness tracking
+
+## Technical Approach
+- Convert all document formats to processable text while preserving metadata
+- Normalize dates to ISO 8601 format (YYYY-MM-DD)
+- Standardize medical terminology using medical coding standards
+- Apply NLP to extract symptoms, treatments, and medical events from unstructured narrative text
+- Create a chronological event timeline correlating medical events with symptoms
+- Integrate specialized structure for neurodivergent and connective tissue conditions
+- Support personal symptom tracking and correlation with diagnosed conditions
+
+## Key Features to Develop
+- Chronological medical timeline with filterable events
+- Symptom tracking and correlation with treatments
+- Cross-referencing between personal narratives and clinical documentation
+- Provider directory with specialty categorization (rheumatology, neurology, etc.)
+- Specialized knowledge representation for hypermobility and neurodivergent conditions
+- Conversational interface for exploring medical history with context awareness

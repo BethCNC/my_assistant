@@ -1,0 +1,55 @@
+{
+  "concepts": [
+    {
+      "type": "general",
+      "text": "patient shows improvement in joint stability following 6",
+      "score": 0.6978107541799545,
+      "sentence": "\n        Patient shows improvement in joint stability following 6 weeks of physical therapy."
+    },
+    {
+      "type": "general",
+      "text": "of physical therapy .",
+      "score": 0.6914775669574738,
+      "sentence": "\n        Patient shows improvement in joint stability following 6 weeks of physical therapy."
+    },
+    {
+      "type": "general",
+      "text": "reports reduced pain levels (",
+      "score": 0.6929155230522156,
+      "sentence": "Reports reduced pain levels (6/10 down from 8/10) and fewer subluxation events."
+    },
+    {
+      "type": "general",
+      "text": "patient is compliant with medication regimen and reports no significant side effects .",
+      "score": 0.7143834948539733,
+      "sentence": "Patient is compliant with medication regimen and reports no significant side effects."
+    },
+    {
+      "type": "general",
+      "text": "recommended continued physical therapy twice weekly , focusing on joint stabilization exercises and gradual cardiovascular conditioning .",
+      "score": 0.7009238694843493,
+      "sentence": "Recommended continued physical therapy twice weekly, focusing on joint stabilization\n        exercises and gradual cardiovascular conditioning."
+    }
+  ],
+  "negation": [],
+  "temporality": [],
+  "severity": [
+    {
+      "level": "moderate",
+      "text": "significant",
+      "position": [
+        208,
+        219
+      ]
+    },
+    {
+      "level": "moderate",
+      "text": "significant",
+      "position": [
+        437,
+        448
+      ]
+    }
+  ],
+  "raw_text": "\n        Patient shows improvement in joint stability following 6 weeks of physical therapy.\n        Reports reduced pain levels (6/10 down from 8/10) and fewer subluxation events.\n        Still experiencing significant fatigue, especially after physical exertion.\n        \n        Sleep quality remains poor, with frequent awakenings and difficulty maintaining sleep.\n        Patient is compliant with medication regimen and reports no significant side effects.\n        Mood has improved with current antidepressant dosage.\n        \n        Recommended continued physical therapy twice weekly, focusing on joint stabilization\n        exercises and gradual cardiovascular conditioning. Patient agrees to try melatonin\n        2mg at bedtime for sleep difficulties.\n        "
+}

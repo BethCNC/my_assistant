@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { designTokens } from '@/lib/design-tokens'
+import { apiClient } from '@/lib/api'
 
 // Import our systematic components from figma-system
 import { NavigationText } from '@/components/figma-system/NavigationText'
-import { ToolButton } from '@/components/figma-system/ToolButton'
 import { SuggestionCard } from '@/components/figma-system/SuggestionCard'
 import { Sidebar } from '@/components/figma-system/Sidebar'
 import { ChatInput } from '@/components/figma-system/ChatInput'
@@ -29,11 +29,17 @@ const grid = {
  */
 export default function BethAssistant() {
   const [inputValue, setInputValue] = useState('')
-  const [activeMCPTab, setActiveMCPTab] = useState<string | null>(null)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [chatHistory, setChatHistory] = useState<string[]>([])
   const [chatMessages, setChatMessages] = useState<any[]>([]) // Store actual chat messages
   const [hasStartedChat, setHasStartedChat] = useState(false) // Track if conversation has started
+  const [isLoading, setIsLoading] = useState(false) // Track loading state
+  const [conversationId, setConversationId] = useState<string | undefined>(undefined)
+
+  // Keep ChatInput value in sync
+  useEffect(() => {
+    // This ensures the ChatInput component updates when we clear the input
+  }, [inputValue])
 
   // Sample data matching your screenshots
   const recentChats = [
@@ -61,7 +67,7 @@ export default function BethAssistant() {
   // Generate suggestion shapes based on chat history length to avoid automatic rotation
   const getSuggestionShapeVariant = (index: number, chatHistoryLength: number) => {
     // Use chat history length as seed for consistent but varied shapes
-    return ((index + chatHistoryLength) % 7) + 1
+    return (((index + chatHistoryLength) % 7) + 1) as any
   }
 
   const handleSuggestionClick = (text: string) => {
@@ -71,10 +77,12 @@ export default function BethAssistant() {
     handleSend(text, { images: [], files: [] })
   }
 
-  const handleSend = (message: string, attachments: { images: any[], files: any[] }) => {
+  const handleSend = async (message: string, attachments: { images: any[], files: any[] }) => {
     console.log('Message sent:', message, attachments)
     
-    if (!message.trim()) return
+    if (!message.trim() || isLoading) return
+    
+    setIsLoading(true)
     
     // Create user message
     const userMessage = {
@@ -85,40 +93,64 @@ export default function BethAssistant() {
       isUser: true
     }
     
-    // Add user message
+    // Add user message immediately
     const newMessages = [...chatMessages, userMessage]
     setChatMessages(newMessages)
     setHasStartedChat(true)
     
     // Add to chat history for sidebar
     setChatHistory([...chatHistory, message])
+    
+    // Clear input immediately
     setInputValue('')
     
-    // Simulate assistant response after a short delay
-    setTimeout(() => {
-      const assistantMessage = {
+    try {
+      // Send message to backend API
+      const response = await apiClient.sendMessage(message, conversationId)
+      
+      if (response.data) {
+        // Create assistant response message
+        const assistantMessage = {
+          id: (Date.now() + 1).toString(),
+          sender: 'Assistant',
+          message: response.data.response || response.data.message || 'I received your message!',
+          timestamp: 'Just now',
+          isUser: false
+        }
+        
+        // Update conversation ID if provided
+        if (response.data.conversation_id) {
+          setConversationId(response.data.conversation_id)
+        }
+        
+        setChatMessages(prev => [...prev, assistantMessage])
+      } else if (response.error) {
+        // Handle API error
+        const errorMessage = {
+          id: (Date.now() + 1).toString(),
+          sender: 'Assistant',
+          message: `Sorry, I encountered an error: ${response.error}`,
+          timestamp: 'Just now',
+          isUser: false
+        }
+        setChatMessages(prev => [...prev, errorMessage])
+      }
+    } catch (error) {
+      // Handle network error
+      const errorMessage = {
         id: (Date.now() + 1).toString(),
         sender: 'Assistant',
-        message: getAssistantResponse(message),
+        message: 'Sorry, I\'m having trouble connecting right now. Please try again later.',
         timestamp: 'Just now',
         isUser: false
       }
-      setChatMessages(prev => [...prev, assistantMessage])
-    }, 1000)
-  }
-  
-  // Simple response generator for demo
-  const getAssistantResponse = (userMessage: string): string => {
-    if (userMessage.toLowerCase().includes('design token')) {
-      return 'Design tokens are the visual design atoms of the design system — specifically, they are named entities that store visual design attributes. They help maintain consistency and scalability across your design system.'
+      setChatMessages(prev => [...prev, errorMessage])
+      console.error('Chat error:', error)
+    } finally {
+      setIsLoading(false)
     }
-    if (userMessage.toLowerCase().includes('figma')) {
-      return 'Figma is excellent for design systems! I can help you learn about components, variables, auto-layout, and best practices for organizing your design files. What specific aspect would you like to explore?'
-    }
-    return 'I can help you with that! Could you tell me more about what specific aspects you\'d like to focus on?'
   }
 
-  const mcpTools = ['notion', 'figma', 'github', 'email', 'calendar'] as const
 
   return (
     <>
@@ -158,12 +190,13 @@ export default function BethAssistant() {
       `}</style>
 
       <div 
-        className="w-screen h-screen max-h-[800px] overflow-hidden flex flex-col"
+        className="w-screen h-screen flex flex-col"
         style={{ 
           background: `url('/assets/gradient.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           fontFamily: designTokens.fonts.primary,
+          minHeight: '100vh',
         }}
       >
         {/* Header with exact 48px margins */}
@@ -193,7 +226,7 @@ export default function BethAssistant() {
         </div>
 
         {/* Main content area with proper grid spacing */}
-        <div className="flex flex-1" style={{ marginTop: `${grid.gutter}px` }}>
+        <div className="flex flex-1 min-h-0" style={{ marginTop: `${grid.gutter}px`, paddingBottom: `${grid.gutter}px` }}>
           {/* Left Sidebar - exactly 48px from edge */}
           <div style={{ 
             marginLeft: `${grid.margin}px`, // 48px from screen edge
@@ -220,31 +253,12 @@ export default function BethAssistant() {
 
           {/* Main Content Area - fills remaining space */}
           <div 
-            className="flex-1 flex flex-col min-w-0" // min-w-0 prevents flex overflow
+            className="flex-1 flex flex-col min-w-0 min-h-0" // min-w-0 prevents flex overflow, min-h-0 for proper flex behavior
             style={{
               marginRight: `${grid.margin}px`, // 48px margin to screen edge
+              paddingBottom: `${grid.gutter}px`, // Extra padding at bottom
             }}
           >
-            {/* MCP Server Connection Tabs */}
-            <div 
-              className="flex gap-3 flex-wrap" // Added flex-wrap for responsiveness
-              style={{
-                marginBottom: `${grid.gutter}px`, // 24px gap below
-              }}
-            >
-              {mcpTools.map((tool) => (
-                <ToolButton
-                  key={tool}
-                  variant={tool}
-                  state={activeMCPTab === tool ? 'active' : 'default'}
-                  onClick={() => {
-                    setActiveMCPTab(activeMCPTab === tool ? null : tool)
-                    console.log(`${tool} MCP server clicked`)
-                  }}
-                />
-              ))}
-            </div>
-
             {/* Greeting Text - only show when no conversation started */}
             {!hasStartedChat && (
               <div
@@ -275,10 +289,9 @@ export default function BethAssistant() {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(2, 1fr)', // 2 columns
-                  gridTemplateRows: 'repeat(3, 1fr)', // 3 rows  
+                  gridTemplateRows: 'repeat(3, auto)', // Auto height rows instead of 1fr
                   gap: `${grid.gutter}px`, // 24px gaps both horizontal and vertical
-                  marginBottom: '104px', // CRITICAL: 104px gap from suggestions to chat input
-                  flex: 1, // Take remaining space
+                  marginBottom: `${grid.gutter * 2}px`, // 48px gap from suggestions to chat input
                   alignContent: 'start', // Align to top
                 }}
               >
@@ -299,8 +312,10 @@ export default function BethAssistant() {
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'flex-start',
-                  marginBottom: '48px', // Space above chat input
-                  paddingTop: '24px', // Small padding from top
+                  marginBottom: `${grid.gutter * 2}px`, // 48px space above chat input
+                  paddingTop: `${grid.gutter}px`, // 24px padding from top
+                  overflowY: 'auto', // Allow scrolling if content is too long
+                  minHeight: 0, // Allow flex shrinking
                 }}
               >
                 <ChatConversation 
@@ -309,8 +324,13 @@ export default function BethAssistant() {
               </div>
             )}
 
-            {/* Chat Input at bottom */}
-            <div>
+            {/* Chat Input at bottom - always visible */}
+            <div 
+              style={{
+                flexShrink: 0, // Don't shrink the chat input
+                marginTop: 'auto', // Push to bottom
+              }}
+            >
               <ChatInput
                 value={inputValue}
                 onChange={setInputValue}

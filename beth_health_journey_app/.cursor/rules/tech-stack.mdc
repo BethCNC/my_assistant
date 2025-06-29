@@ -1,0 +1,149 @@
+# Tech Stack & Development Guidelines
+
+## Core Technologies
+
+### Frontend
+- **React 18+**: Library for building the UI
+- **Next.js 14+**: React framework for server-side rendering and routing
+- **TypeScript**: For type-safe JavaScript development
+- **Styled Components**: CSS-in-JS library for component styling
+- **Framer Motion**: For animations and transitions
+- **Storybook**: For component development and documentation
+
+### Backend & Data
+- **Supabase**: For database, authentication, and storage
+  - PostgreSQL database
+  - Row-level security
+  - User authentication
+  - Realtime subscriptions
+- **Notion API**: For importing existing health data
+- **OpenAI API**: For the medical chatbot functionality
+- **NextAuth.js**: For handling authentication flows
+
+### Development Tools
+- **ESLint**: For code linting
+- **Prettier**: For code formatting
+- **Jest & React Testing Library**: For unit and component testing
+- **Cypress**: For end-to-end testing
+- **GitHub Actions**: For CI/CD workflows
+- **Vercel**: For hosting and deployment
+
+## Environment Setup
+
+1. **Node.js**: Use v18+ (LTS)
+2. **Package Manager**: Use npm
+3. **IDE**: VS Code with recommended extensions:
+   - ESLint
+   - Prettier
+   - TypeScript Hero
+   - styled-components-snippets
+   - Jest Runner
+
+## Project Structure
+
+```
+health-journey-website/
+├── .github/                  # GitHub workflows
+├── .storybook/               # Storybook configuration
+├── public/                   # Static assets
+├── src/
+│   ├── components/           # React components
+│   │   ├── common/           # Shared components
+│   │   ├── layout/           # Layout components
+│   │   ├── medical/          # Domain-specific components
+│   │   └── ui/               # UI components
+│   ├── hooks/                # Custom React hooks
+│   ├── lib/                  # Utility libraries
+│   │   ├── api/              # API clients
+│   │   ├── notion/           # Notion integration
+│   │   ├── supabase/         # Supabase client
+│   │   └── openai/           # OpenAI integration
+│   ├── pages/                # Next.js pages
+│   │   ├── api/              # API routes
+│   │   ├── auth/             # Authentication pages
+│   │   ├── medical/          # Medical information pages
+│   │   └── admin/            # Admin pages
+│   ├── styles/               # Global styles and theme
+│   │   ├── global.css        # Global CSS
+│   │   ├── theme.ts          # Theme configuration
+│   │   └── tokens/           # Design tokens
+│   ├── types/                # TypeScript type definitions
+│   └── utils/                # Utility functions
+├── tests/                    # Test files
+├── .env.local                # Environment variables (gitignored)
+├── .eslintrc.js              # ESLint configuration
+├── .prettierrc               # Prettier configuration
+├── jest.config.js            # Jest configuration
+├── next.config.js            # Next.js configuration
+├── package.json              # Dependencies and scripts
+└── tsconfig.json             # TypeScript configuration
+```
+
+## Coding Standards
+
+### General
+- Use TypeScript for all new code
+- Maintain 90%+ test coverage for critical paths
+- Document complex functions and components
+- Follow the principle of least privilege for all data access
+
+### React Components
+- Use functional components with hooks
+- Implement proper prop validation with TypeScript interfaces
+- Create focused, single-responsibility components
+- Implement error boundaries for critical UI sections
+- Use React.memo() for performance optimization when needed
+
+### Styling
+- Use styled-components with the theme provider
+- Always reference design tokens instead of hardcoded values
+- Implement responsive designs using theme breakpoints
+- Follow mobile-first approach for all styles
+- Use semantic HTML elements wherever possible
+
+### State Management
+- Use React Context for global state
+- Use React Query for server state
+- Implement local component state with useState/useReducer
+- Consider atomic state management for complex forms
+- Ensure proper loading and error states for all API calls
+
+## Performance Guidelines
+
+1. **Optimization Targets**
+   - First Contentful Paint: < 1s
+   - Time to Interactive: < 3s
+   - Lighthouse Performance Score: > 90
+
+2. **Optimization Techniques**
+   - Implement code splitting
+   - Use Next.js Image component for optimized images
+   - Enable component and route-based code splitting
+   - Implement proper caching strategies
+   - Use incremental static regeneration where appropriate
+
+## Accessibility Standards
+
+1. **Compliance Target**: WCAG 2.1 Level AA
+2. **Requirements**:
+   - Proper semantic HTML
+   - Keyboard navigation for all interactive elements
+   - ARIA attributes where appropriate
+   - Color contrast ratios meeting WCAG standards
+   - Screen reader compatibility
+   - Focus management for modals and dynamic content
+
+## Security Practices
+
+1. **Authentication**:
+   - Implement proper JWT handling
+   - Use secure HTTP-only cookies
+   - Implement proper CSRF protection
+   - Use rate limiting for authentication attempts
+
+2. **Data Protection**:
+   - Implement row-level security in Supabase
+   - Sanitize all user inputs
+   - Validate data on both client and server
+   - Use proper content security policies
+   - Implement secure headers 

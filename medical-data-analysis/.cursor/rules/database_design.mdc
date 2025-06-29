@@ -1,0 +1,56 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Database Architecture
+
+## Schema Design
+- Implement chronological event timeline as primary structure
+- Create entity relationships between medical events (appointments, tests, medications)
+- Design specialized tables for chronic conditions tracking:
+  - EDS and hypermobility metrics
+  - Autism/ADHD symptom tracking
+  - Chronic pain patterns and triggers
+  - Medication effectiveness and side effects
+- Maintain a robust metadata system for tracking data provenance
+- Support specialized schemas for lab result trends over time
+
+## Data Organization
+- Store both raw extracted text and processed interpretations
+- Implement a doctor/provider directory with specialty classification
+- Create specialized tables for symptoms with severity tracking
+- Design efficient query patterns for timeline-based access
+- Enable cross-references between related symptoms and conditions
+- Structure narrative data with extractable symptom references
+
+## API Design
+- Create RESTful endpoints for timeline-based medical history access
+- Implement GraphQL for flexible symptom-condition relationship queries
+- Design conversational endpoints for chatbot integration
+- Support natural language queries about medical history
+- Enable specialized endpoints for chronic condition management
+- Implement secure authentication with granular access control
+
+## Integration Capabilities
+- Support integration with personal health websites
+- Enable export to standard medical data formats (FHIR, HL7)
+- Design webhook system for real-time updates from new documents
+- Create notification system for new insights or correlations
+- Support integration with symptom tracking applications
+- Enable selective sharing with healthcare providers
+
+## Performance Considerations
+- Optimize for complex time-series queries across medical events
+- Implement caching for frequently accessed medical summaries
+- Design efficient storage for large text narratives
+- Support fuzzy search across all medical content
+- Optimize for rapid filtering by condition, provider, or date range
+- Implement pagination for large result sets
+
+## Security Considerations
+- Implement HIPAA-compliant data security measures
+- Encrypt all personal health information at rest and in transit
+- Design granular permission system for different access levels
+- Maintain comprehensive access logs for all data operations
+- Support data anonymization for analytical purposes

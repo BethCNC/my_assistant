@@ -562,11 +562,38 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 8px;
-  padding: 0px 48px; /* Only horizontal padding - chat input should be at bottom edge */
+  padding: 0px 16px 16px 16px;
   font-size: 16px;
   color: #000;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  z-index: 100;
+}
+
+@media (min-width: 768px) {
+  .chatInput {
+    position: static;
+    padding: 0px 48px;
+    background: none;
+  }
+}
+
+/* Make the main chat area above input scrollable and not hidden */
+.mainContainer1 {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.contentContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 200px; /* space for input on mobile */
 }
 
 .chatInputDefault {

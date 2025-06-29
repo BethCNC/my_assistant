@@ -1,0 +1,1004 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Health Journey Website Project
+
+## Purpose & Goals
+
+This project is a personal website designed to effectively present and manage health information for sharing with medical professionals. The primary goals are:
+
+1. **Medical Information Access**: Create an intuitive interface for doctors and medical staff to quickly access your health history
+2. **Data Organization**: Structure complex medical information in a clear, navigable format
+3. **Efficient Communication**: Reduce appointment time spent on history review
+4. **Data Synchronization**: Maintain a continuous flow from Notion health databases to the website
+5. **Searchability**: Enable fast retrieval of specific information via navigation and chatbot interface
+
+## Target Audience
+
+1. **Medical Professionals**: Doctors, specialists, and emergency staff who need quick access to your medical history
+2. **Personal Use**: For tracking and managing your own health journey
+3. **Caregivers**: Authorized individuals who may need to assist with your healthcare
+
+## Core Features
+
+1. **Medical Timeline**: Interactive chronological view of health events
+2. **Condition-Specific Views**: Detailed pages for each diagnosis with relevant information
+3. **Emergency Summary**: One-page printable overview for urgent situations
+4. **Treatment Tracker**: Log of medications, therapies, and their effects
+5. **Lab Results Dashboard**: Visualization of test results over time
+6. **Searchable Medical Chatbot**: AI assistant trained on your health data
+7. **Responsive Design**: Accessible on any device in clinical settings
+
+## Technical Foundations
+
+1. **React & Next.js**: For building a performant, server-rendered frontend
+2. **TypeScript**: For type safety and better code quality
+3. **Supabase**: For database, authentication, and storage 
+4. **Notion API**: For importing existing health data
+5. **Design System**: Implementing custom tokens from Figma designs
+6. **OpenAI API**: For powering the medical chatbot functionality
+
+## Project Architecture
+
+The application follows a modern React architecture with:
+
+1. **Component-Based Structure**: Reusable UI components built on design system
+2. **Server-Side Rendering**: For performance and SEO benefits
+3. **API-First Approach**: Clear separation between frontend and data services
+4. **Authentication Layer**: Secure access for you and healthcare providers
+5. **Data Synchronization**: Automated workflows between Notion and Supabase
+
+## Non-Negotiable Requirements
+
+1. **Medical Data Privacy**: Strict adherence to security best practices
+2. **Accessibility**: WCAG compliance for all users regardless of abilities
+3. **Performance**: Fast load times even with complex medical data
+4. **Reliability**: Consistent, error-free operation for critical health information
+5. **Maintainability**: Clear workflows for adding new health information
+
+# GeneratePress Implementation Plan for Health Journey Site
+
+## Overview
+
+This implementation plan focuses on using GeneratePress as the foundation for your health journey WordPress site. GeneratePress provides the ideal lightweight framework for implementing custom animations, interactive timeline elements, and maintaining excellent performance.
+
+## Step 1: Setup Environment
+
+### Local WordPress Installation
+
+```bash
+# Using Local by Flywheel
+# 1. Download and install Local by Flywheel from localwp.com
+# 2. Create a new site with these settings:
+#    - Site Name: Health Journey
+#    - Environment: Custom
+#    - PHP: 8.0+
+#    - Web server: Nginx
+```
+
+### Theme and Plugin Installation
+
+1. Install and activate GeneratePress free theme
+2. Install these essential plugins:
+   - GeneratePress Premium (adds significant customization options)
+   - Advanced Custom Fields (for structured data)
+   - Custom Post Type UI (for timeline events)
+   - EWWW Image Optimizer (for performance)
+   - WP Rocket or similar (caching for animation-heavy site)
+
+## Step 2: Child Theme Setup
+
+Create a GeneratePress child theme structure:
+
+```
+/wp-content/themes/generatepress-child/
+├── style.css
+├── functions.php
+├── screenshot.png
+├── assets/
+│   ├── css/
+│   │   ├── custom.css
+│   │   └── animations.css
+│   ├── js/
+│   │   ├── timeline.js
+│   │   └── animations.js
+│   └── images/
+└── templates/
+    ├── timeline.php
+    └── condition.php
+```
+
+### style.css
+
+```css
+/*
+ Theme Name:   GeneratePress Child
+ Theme URI:    https://yoursite.com
+ Description:  GeneratePress Child Theme for Health Journey
+ Author:       Your Name
+ Template:     generatepress
+ Version:      1.0.0
+ Text Domain:  generatepress-child
+*/
+
+/* Don't add styles here, they should go in assets/css/custom.css */
+```
+
+### functions.php
+
+```php
+<?php
+/**
+ * GeneratePress Child Theme functions and definitions
+ */
+
+// Enqueue styles and scripts
+function gpc_enqueue_scripts() {
+    // Enqueue parent theme stylesheet
+    wp_enqueue_style('generatepress-style', get_template_directory_uri() . '/style.css');
+    
+    // Enqueue child theme stylesheet
+    wp_enqueue_style('generatepress-child-style', 
+        get_stylesheet_directory_uri() . '/assets/css/custom.css', 
+        array('generatepress-style'),
+        filemtime(get_stylesheet_directory() . '/assets/css/custom.css')
+    );
+    
+    // Enqueue animation stylesheet
+    wp_enqueue_style('generatepress-animations', 
+        get_stylesheet_directory_uri() . '/assets/css/animations.css', 
+        array('generatepress-child-style'),
+        filemtime(get_stylesheet_directory() . '/assets/css/animations.css')
+    );
+    
+    // Enqueue GSAP
+    wp_enqueue_script('gsap-core', 
+        'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js', 
+        array(), '3.11.4', true
+    );
+    
+    // Enqueue ScrollTrigger
+    wp_enqueue_script('gsap-scrolltrigger', 
+        'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js', 
+        array('gsap-core'), '3.11.4', true
+    );
+    
+    // Enqueue custom timeline script
+    wp_enqueue_script('timeline-script', 
+        get_stylesheet_directory_uri() . '/assets/js/timeline.js', 
+        array('gsap-scrolltrigger'), 
+        filemtime(get_stylesheet_directory() . '/assets/js/timeline.js'), 
+        true
+    );
+    
+    // Enqueue general animations
+    wp_enqueue_script('animations-script', 
+        get_stylesheet_directory_uri() . '/assets/js/animations.js', 
+        array('gsap-scrolltrigger'), 
+        filemtime(get_stylesheet_directory() . '/assets/js/animations.js'), 
+        true
+    );
+}
+add_action('wp_enqueue_scripts', 'gpc_enqueue_scripts');
+
+/**
+ * Register Custom Post Types and Taxonomies
+ */
+function gpc_register_custom_post_types() {
+    // Timeline Event CPT
+    register_post_type('timeline_event', array(
+        'labels' => array(
+            'name' => __('Timeline Events'),
+            'singular_name' => __('Timeline Event')
+        ),
+        'public' => true,
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'journey'),
+        'menu_position' => 20,
+        'menu_icon' => 'dashicons-calendar-alt',
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+    
+    // Event Type Taxonomy
+    register_taxonomy('event_type', 'timeline_event', array(
+        'labels' => array(
+            'name' => __('Event Types'),
+            'singular_name' => __('Event Type')
+        ),
+        'hierarchical' => true,
+        'show_admin_column' => true,
+        'show_in_rest' => true,
+    ));
+    
+    // Pre-populate Event Types
+    $event_types = array(
+        'diagnosis' => 'Diagnosis',
+        'treatment' => 'Treatment',
+        'symptom' => 'Symptom Onset',
+        'victory' => 'Victory',
+        'setback' => 'Setback'
+    );
+    
+    foreach ($event_types as $slug => $name) {
+        if (!term_exists($name, 'event_type')) {
+            wp_insert_term($name, 'event_type', array('slug' => $slug));
+        }
+    }
+}
+add_action('init', 'gpc_register_custom_post_types');
+
+/**
+ * Add Timeline shortcode
+ */
+function gpc_timeline_shortcode($atts) {
+    // Normalize attribute keys, lowercase
+    $atts = array_change_key_case((array)$atts, CASE_LOWER);
+    
+    // Override default attributes with user attributes
+    $atts = shortcode_atts(array(
+        'limit' => -1,
+        'order' => 'ASC',
+        'type' => ''
+    ), $atts);
+    
+    // Start output buffering
+    ob_start();
+    
+    // Build query args
+    $args = array(
+        'post_type' => 'timeline_event',
+        'posts_per_page' => $atts['limit'],
+        'meta_key' => 'event_date',
+        'orderby' => 'meta_value',
+        'order' => $atts['order']
+    );
+    
+    // Add event type if specified
+    if (!empty($atts['type'])) {
+        $args['tax_query'] = array(
+            array(
+                'taxonomy' => 'event_type',
+                'field' => 'slug',
+                'terms' => explode(',', $atts['type'])
+            )
+        );
+    }
+    
+    // Run the query
+    $timeline_query = new WP_Query($args);
+    
+    if ($timeline_query->have_posts()) :
+        ?>
+        <div class="health-journey-timeline">
+            <div class="timeline-line"></div>
+            <?php while ($timeline_query->have_posts()) : $timeline_query->the_post();
+                // Get event meta
+                $event_date = get_post_meta(get_the_ID(), 'event_date', true);
+                $battle_metaphor = get_post_meta(get_the_ID(), 'battle_metaphor', true);
+                
+                // Get event type
+                $event_types = get_the_terms(get_the_ID(), 'event_type');
+                $event_type_class = '';
+                $event_type_name = '';
+                
+                if (!empty($event_types) && !is_wp_error($event_types)) {
+                    $event_type_class = $event_types[0]->slug;
+                    $event_type_name = $event_types[0]->name;
+                }
+                
+                // Format date
+                $display_date = '';
+                if (!empty($event_date)) {
+                    $date_obj = new DateTime($event_date);
+                    $display_date = $date_obj->format('F j, Y');
+                }
+            ?>
+                <div class="timeline-event <?php echo esc_attr($event_type_class); ?>">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content-wrapper">
+                        <?php if (!empty($display_date)) : ?>
+                            <div class="timeline-date"><?php echo esc_html($display_date); ?></div>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($event_type_name)) : ?>
+                            <div class="timeline-type"><?php echo esc_html($event_type_name); ?></div>
+                        <?php endif; ?>
+                        
+                        <h3 class="timeline-title"><?php the_title(); ?></h3>
+                        
+                        <div class="timeline-content">
+                            <?php the_content(); ?>
+                        </div>
+                        
+                        <?php if (!empty($battle_metaphor)) : ?>
+                            <div class="battle-metaphor">
+                                <span class="battle-icon">⚔️</span>
+                                <blockquote><?php echo esc_html($battle_metaphor); ?></blockquote>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        </div>
+        <?php
+    else :
+        echo '<p>No timeline events found.</p>';
+    endif;
+    
+    // Reset postdata
+    wp_reset_postdata();
+    
+    // Return the output
+    return ob_get_clean();
+}
+add_shortcode('health_journey_timeline', 'gpc_timeline_shortcode');
+
+/**
+ * Register custom page templates
+ */
+function gpc_add_page_templates($templates) {
+    $templates['templates/timeline.php'] = 'Timeline';
+    $templates['templates/condition.php'] = 'Medical Condition';
+    return $templates;
+}
+add_filter('theme_page_templates', 'gpc_add_page_templates');
+
+/**
+ * Add ACF fields programmatically
+ */
+function gpc_acf_init() {
+    if (function_exists('acf_add_local_field_group')) {
+        // Timeline Event Fields
+        acf_add_local_field_group(array(
+            'key' => 'group_timeline_event',
+            'title' => 'Timeline Event Details',
+            'fields' => array(
+                array(
+                    'key' => 'field_event_date',
+                    'label' => 'Event Date',
+                    'name' => 'event_date',
+                    'type' => 'date_picker',
+                    'required' => 1,
+                    'display_format' => 'F j, Y',
+                    'return_format' => 'Ymd',
+                    'first_day' => 0,
+                ),
+                array(
+                    'key' => 'field_battle_metaphor',
+                    'label' => 'Battle Metaphor',
+                    'name' => 'battle_metaphor',
+                    'type' => 'textarea',
+                    'instructions' => 'Describe this health event using the metaphor of a battle or journey',
+                    'required' => 0,
+                    'placeholder' => 'Example: "The diagnosis arrived like an unexpected ambush, forcing me to quickly rethink my battle strategy."',
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'timeline_event',
+                    ),
+                ),
+            ),
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+        ));
+        
+        // Condition Fields
+        acf_add_local_field_group(array(
+            'key' => 'group_condition',
+            'title' => 'Condition Details',
+            'fields' => array(
+                array(
+                    'key' => 'field_condition_overview',
+                    'label' => 'Condition Overview',
+                    'name' => 'condition_overview',
+                    'type' => 'wysiwyg',
+                    'instructions' => 'Provide a brief overview of this condition',
+                    'required' => 0,
+                ),
+                array(
+                    'key' => 'field_symptoms',
+                    'label' => 'Symptoms',
+                    'name' => 'symptoms',
+                    'type' => 'repeater',
+                    'instructions' => 'Add symptoms associated with this condition',
+                    'required' => 0,
+                    'min' => 0,
+                    'max' => 0,
+                    'layout' => 'table',
+                    'button_label' => 'Add Symptom',
+                    'sub_fields' => array(
+                        array(
+                            'key' => 'field_symptom_name',
+                            'label' => 'Symptom',
+                            'name' => 'symptom_name',
+                            'type' => 'text',
+                            'required' => 1,
+                        ),
+                        array(
+                            'key' => 'field_symptom_description',
+                            'label' => 'Description',
+                            'name' => 'symptom_description',
+                            'type' => 'textarea',
+                            'required' => 0,
+                        ),
+                        array(
+                            'key' => 'field_symptom_severity',
+                            'label' => 'Severity',
+                            'name' => 'symptom_severity',
+                            'type' => 'range',
+                            'required' => 0,
+                            'min' => 1,
+                            'max' => 10,
+                            'step' => 1,
+                            'default_value' => 5,
+                        ),
+                    ),
+                ),
+                array(
+                    'key' => 'field_treatments',
+                    'label' => 'Treatments',
+                    'name' => 'treatments',
+                    'type' => 'wysiwyg',
+                    'instructions' => 'Describe treatments for this condition',
+                    'required' => 0,
+                ),
+                array(
+                    'key' => 'field_resources',
+                    'label' => 'Resources',
+                    'name' => 'resources',
+                    'type' => 'repeater',
+                    'instructions' => 'Add helpful resources about this condition',
+                    'required' => 0,
+                    'min' => 0,
+                    'max' => 0,
+                    'layout' => 'table',
+                    'button_label' => 'Add Resource',
+                    'sub_fields' => array(
+                        array(
+                            'key' => 'field_resource_title',
+                            'label' => 'Title',
+                            'name' => 'resource_title',
+                            'type' => 'text',
+                            'required' => 1,
+                        ),
+                        array(
+                            'key' => 'field_resource_url',
+                            'label' => 'URL',
+                            'name' => 'resource_url',
+                            'type' => 'url',
+                            'required' => 1,
+                        ),
+                        array(
+                            'key' => 'field_resource_description',
+                            'label' => 'Description',
+                            'name' => 'resource_description',
+                            'type' => 'textarea',
+                            'required' => 0,
+                        ),
+                    ),
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'page_template',
+                        'operator' => '==',
+                        'value' => 'templates/condition.php',
+                    ),
+                ),
+            ),
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+        ));
+    }
+}
+add_action('acf/init', 'gpc_acf_init');
+
+## Step 3: GeneratePress Configuration
+
+GeneratePress has specific hooks and configuration options that make it ideal for your project. Here's how to set them up:
+
+### Key GeneratePress Hooks to Use
+
+```php
+// Add to functions.php
+
+// Add custom classes to body for advanced targeting with CSS/JS
+function gpc_custom_body_classes($classes) {
+    if (is_page_template('templates/timeline.php')) {
+        $classes[] = 'timeline-page';
+    }
+    if (is_page_template('templates/condition.php')) {
+        $classes[] = 'condition-page';
+    }
+    return $classes;
+}
+add_filter('body_class', 'gpc_custom_body_classes');
+
+// Modify content container width for timeline pages
+function gpc_container_width() {
+    if (is_page_template('templates/timeline.php')) {
+        return '1200px'; // Wider container for timeline
+    }
+    return ''; // Default
+}
+add_filter('generate_container_width', 'gpc_container_width');
+
+// Remove sidebar on timeline pages for full-width layout
+function gpc_disable_sidebar() {
+    if (is_page_template('templates/timeline.php')) {
+        return true;
+    }
+    return false;
+}
+add_filter('generate_sidebar_layout', 'gpc_disable_sidebar');
+
+// Add custom styling to GeneratePress elements
+function gpc_custom_element_classes($attr, $settings, $context) {
+    if ('content-title' === $context) {
+        $attr['class'] .= ' animated-title';
+    }
+    return $attr;
+}
+add_filter('generate_element_attributes', 'gpc_custom_element_classes', 10, 3);
+```
+
+## Step 4: Animation Implementation
+
+### assets/css/animations.css
+
+```css
+/* Base animation styles */
+.animated {
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.animated.in-view {
+    opacity: 1;
+}
+
+/* Title animations */
+.animated-title {
+    position: relative;
+    overflow: hidden;
+}
+
+.animated-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color, #1e73be);
+    transition: width 0.6s ease;
+}
+
+.animated-title.in-view::after {
+    width: 100%;
+}
+
+/* Timeline specific animations */
+.timeline-event {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.timeline-event:nth-child(odd) {
+    transform: translateX(-30px);
+}
+
+.timeline-event:nth-child(even) {
+    transform: translateX(30px);
+}
+
+.timeline-event.in-view {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+/* Staggered animation for symptoms list */
+.symptom-item {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.symptom-item.in-view {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Battle metaphor animation */
+.battle-metaphor {
+    position: relative;
+    overflow: hidden;
+}
+
+.battle-icon {
+    display: inline-block;
+    transform: scale(0) rotate(0deg);
+    transition: transform 0.5s ease;
+}
+
+.battle-metaphor.in-view .battle-icon {
+    transform: scale(1) rotate(360deg);
+}
+
+/* Parallax effect for headers */
+.parallax-header {
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+}
+
+.parallax-header-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
+
+/* Page transition animations */
+.page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--accent-color, #1e73be);
+    transform: translateY(100%);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.page-loading .page-transition-overlay {
+    transform: translateY(0);
+}
+```
+
+### assets/js/animations.js
+
+```javascript
+/**
+ * Main animations for Health Journey site
+ */
+(function() {
+    'use strict';
+    
+    // Register GSAP plugins
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Initialize animations when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        initParallaxHeaders();
+        initScrollAnimations();
+        initPageTransitions();
+    });
+    
+    /**
+     * Initialize parallax header effects
+     */
+    function initParallaxHeaders() {
+        const parallaxHeaders = document.querySelectorAll('.parallax-header');
+        
+        parallaxHeaders.forEach(header => {
+            const image = header.querySelector('.parallax-header-image');
+            
+            if (image) {
+                gsap.to(image, {
+                    yPercent: 30,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: header,
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            }
+        });
+    }
+    
+    /**
+     * Initialize scroll-based animations
+     */
+    function initScrollAnimations() {
+        // Animated elements that fade in when scrolled into view
+        const animatedElements = document.querySelectorAll('.animated:not(.timeline-event)');
+        
+        animatedElements.forEach(element => {
+            ScrollTrigger.create({
+                trigger: element,
+                start: "top 85%",
+                onEnter: () => element.classList.add('in-view'),
+                once: true
+            });
+        });
+        
+        // Animate timeline events with staggered effect
+        const timelineEvents = document.querySelectorAll('.timeline-event');
+        
+        timelineEvents.forEach((event, index) => {
+            ScrollTrigger.create({
+                trigger: event,
+                start: "top 85%",
+                onEnter: () => {
+                    gsap.to(event, {
+                        opacity: 1,
+                        x: 0,
+                        y: 0,
+                        duration: 0.6,
+                        delay: index * 0.1,
+                        ease: "power2.out"
+                    });
+                    
+                    // Animate battle metaphor icons if present
+                    const battleIcon = event.querySelector('.battle-icon');
+                    if (battleIcon) {
+                        gsap.to(battleIcon, {
+                            scale: 1,
+                            rotation: 360,
+                            duration: 0.8,
+                            delay: index * 0.1 + 0.3,
+                            ease: "back.out(1.7)"
+                        });
+                    }
+                },
+                once: true
+            });
+        });
+        
+        // Animate symptom items with stagger
+        const symptomLists = document.querySelectorAll('.symptom-list');
+        
+        symptomLists.forEach(list => {
+            const items = list.querySelectorAll('.symptom-item');
+            
+            ScrollTrigger.create({
+                trigger: list,
+                start: "top 80%",
+                onEnter: () => {
+                    gsap.to(items, {
+                        opacity: 1,
+                        x: 0,
+                        duration: 0.4,
+                        stagger: 0.1,
+                        ease: "power1.out"
+                    });
+                },
+                once: true
+            });
+        });
+        
+        // Animate titles
+        const titles = document.querySelectorAll('.animated-title');
+        
+        titles.forEach(title => {
+            ScrollTrigger.create({
+                trigger: title,
+                start: "top 85%",
+                onEnter: () => {
+                    title.classList.add('in-view');
+                },
+                once: true
+            });
+        });
+    }
+    
+    /**
+     * Initialize page transition effects
+     */
+    function initPageTransitions() {
+        // Only add page transitions for internal links
+        const internalLinks = document.querySelectorAll('a[href^="' + window.location.origin + '"]');
+        
+        // Create overlay element for transitions
+        const overlay = document.createElement('div');
+        overlay.className = 'page-transition-overlay';
+        document.body.appendChild(overlay);
+        
+        internalLinks.forEach(link => {
+            // Skip links with special attributes
+            if (link.hasAttribute('target') || link.hasAttribute('download') || link.getAttribute('href').includes('#')) {
+                return;
+            }
+            
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const destination = this.getAttribute('href');
+                
+                // Add loading class to trigger animation
+                document.body.classList.add('page-loading');
+                
+                // Animate the overlay
+                gsap.to(overlay, {
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        window.location = destination;
+                    }
+                });
+            });
+        });
+        
+        // Handle page load completion
+        window.addEventListener('pageshow', function(e) {
+            // Reset overlay position when page loads
+            gsap.to(overlay, {
+                y: '100%',
+                duration: 0.5,
+                ease: "power2.inOut"
+            });
+            
+            document.body.classList.remove('page-loading');
+        });
+    }
+})();
+```
+
+### assets/js/timeline.js
+
+```javascript
+/**
+ * Timeline specific animations and interactions
+ */
+(function() {
+    'use strict';
+    
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        initTimelineAnimations();
+        initTimelineFilters();
+        initTimelinePopups();
+    });
+    
+    /**
+     * Initialize timeline specific animations
+     */
+    function initTimelineAnimations() {
+        // Create the timeline line animation
+        const timelineLine = document.querySelector('.timeline-line');
+        
+        if (timelineLine) {
+            gsap.fromTo(timelineLine, 
+                { height: 0 }, 
+                {
+                    height: '100%',
+                    duration: 2,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: '.health-journey-timeline',
+                        start: "top 80%",
+                        end: "bottom bottom",
+                        scrub: true
+                    }
+                }
+            );
+        }
+        
+        // Animate timeline markers
+        const timelineMarkers = document.querySelectorAll('.timeline-marker');
+        
+        timelineMarkers.forEach((marker, index) => {
+            gsap.fromTo(marker, 
+                { scale: 0, opacity: 0 }, 
+                {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.5,
+                    delay: 0.2 + (index * 0.1),
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: marker.closest('.timeline-event'),
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+        });
+    }
+    
+    /**
+     * Initialize timeline filtering functionality
+     */
+    function initTimelineFilters() {
+        const filterButtons = document.querySelectorAll('.timeline-filter-button');
+        const timelineEvents = document.querySelectorAll('.timeline-event');
+        
+        if (filterButtons.length) {
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // Filter timeline events
+                    timelineEvents.forEach(event => {
+                        if (filterValue === 'all' || event.classList.contains(filterValue)) {
+                            // Show the event
+                            gsap.to(event, {
+                                opacity: 1,
+                                height: 'auto',
+                                margin: '',
+                                duration: 0.4,
+                                ease: "power1.out",
+                                onStart: () => {
+                                    event.style.display = '';
+                                }
+                            });
+                        } else {
+                            // Hide the event
+                            gsap.to(event, {
+                                opacity: 0,
+                                height: 0,
+                                margin: 0,
+                                duration: 0.4,
+                                ease: "power1.in",
+                                onComplete: () => {
+                                    event.style.display = 'none';
+                                }
+                            });
+                        }
+                    });
+                    
+                    // Refresh ScrollTrigger
+                    ScrollTrigger.refresh();
+                });
+            });
+        }
+    }
+    
+    /**
+     * Initialize timeline item popup functionality
+     */
+    function initTimelinePopups() {
+        const timelineEvents = document.querySelectorAll('.timeline-event');
+        
+        timelineEvents.forEach(event => {
+            event.addEventListener('click', function() {
+                // Toggle expanded class
+                this.classList.toggle('expanded');
+                
+                // Find content wrapper
+                const content = this.querySelector('.timeline-content');
+                
+                if (this.classList.contains('expanded')) {
+                    // Expand content
+                    gsap.to(content, {
+                        height: 'auto',
+                        duration: 0.4,
+                        ease: "power1.out"
+                    });
+                    
+                    // Add "Read Less" button if it doesn't exist
+                    if (!this.querySelector('.timeline-read-less')) {
+                        const readLessBtn = document.createElement('button');
+                        readLessBtn.className = 'timeline-read-less';
+                        readLessBtn.textContent = 'Read Less';
+                        content.appendChild(readLessBtn);
+                        
+                        // Add event listener to the new button
+                        readLessBtn.addEventListener('click', function(e) {
+                            e.stopPropagation(); // Prevent triggering

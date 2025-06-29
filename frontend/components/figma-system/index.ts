@@ -8,7 +8,7 @@ export { ChatPreview } from './ChatPreview'
 export { ChatConversation } from './ChatConversation'
 
 export { IconButton } from './IconButton'
-export type { IconButtonVariant, IconButtonState } from './IconButton'
+export type { IconButtonState } from './IconButton'
 
 export { Icons } from './Icons'
 export type { IconVariant } from './Icons'

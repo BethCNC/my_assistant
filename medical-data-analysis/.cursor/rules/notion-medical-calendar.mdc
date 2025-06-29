@@ -1,0 +1,86 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Medical Data Processing Project - Cursor Rules
+
+## Project Overview
+This project integrates with Notion medical databases to extract, normalize, and analyze medical data across interconnected medical databases.
+
+## Notion Database Structure
+
+### Medical Calendar Database
+- **ID**: `17b86edc-ae2c-81c1-83e0-e0a19a035932`
+- Central timeline for all medical events and health tracking
+- Contains relations to providers, symptoms, conditions, and medications
+- Tracks daily metrics (energy, anxiety, pain, sleep)
+
+### Medical Team Database
+- **ID**: `17b86edc-ae2c-8155-8caa-fbb80647f6a9`
+- Stores healthcare provider information and specialties
+- Maps providers to conditions they treat and medications they prescribe
+
+### Medical Conditions Database
+- **ID**: `17b86edc-ae2c-8167-ba15-f9f03b49795e`
+- Catalogs diagnoses with symptom, provider, and medication relationships
+
+### Symptoms Database
+- **ID**: `17b86edc-ae2c-81c6-9077-e55a68cf2438`
+- Tracks symptoms, onset dates, and connections to conditions
+
+### Medications Database
+- **ID**: `17b86edc-ae2c-81a7-b28a-e9fbcc7e7b62`
+- Logs medication details, dosages, prescribers, and treatment targets
+
+## Integration Requirements
+
+### Database Access
+- Use Notion API for database queries
+- Store database IDs in `config/notion_config.json`
+- Maintain field mappings in `config/notion_field_mapping.json`
+- Implement proper error handling for API timeouts
+
+### Data Extraction
+- Extract structured data preserving relationships between databases
+- Normalize dates to ISO 8601 format (YYYY-MM-DD)
+- Convert rich text fields to plain text with formatting preservation
+- Handle multi-select and relation fields correctly
+
+### Medical Data Processing
+- Build chronological timeline from Medical Calendar events
+- Track symptom progression over time
+- Link medications to conditions and effectiveness ratings
+- Create provider-condition relationship maps
+
+### Security Requirements
+- Store Notion API tokens securely using environment variables
+- Never hardcode credentials in project files
+- Implement field-level encryption for sensitive medical data
+- Maintain local-only storage for PHI (Protected Health Information)
+
+## Coding Standards
+
+### Python
+- Use type hints for all function parameters and return values
+- Follow PEP 8 style guidelines
+- Document all Notion-related functions with clear docstrings
+- Implement proper error handling for API calls
+
+### Database Model
+- Create consistent entity models reflecting Notion database structure
+- Implement proper mapping between Notion fields and application models
+- Use SQLite for local storage with appropriate schema mapping
+- Maintain relationship integrity between entities
+
+### Data Pipeline
+- Create reusable pipeline components for extraction, transformation, and loading
+- Implement idempotent processing to prevent duplication
+- Add logging for all database operations
+- Support incremental updates from Notion
+
+## Testing Requirements
+- Test all database connections with mock API responses
+- Verify relationship integrity between medical entities
+- Test date normalization and formatting functions
+- Validate proper handling of all Notion field types

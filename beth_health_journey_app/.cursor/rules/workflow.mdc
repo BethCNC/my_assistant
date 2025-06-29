@@ -1,0 +1,156 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Workflow Processes
+
+## Design-to-Development Workflow
+
+### 1. Design in Figma
+- Create high-fidelity mockups for all screens and components
+- Document interactive states (hover, focus, active, disabled)
+- Build and maintain component library in Figma
+- Export design tokens as needed
+
+### 2. Design Token Processing
+- Extract tokens from Figma using Style Dictionary
+- Transform tokens into code-compatible formats:
+  - CSS variables
+  - TypeScript types
+  - Styled Components theme
+- Validate tokens against design system rules
+
+### 3. Component Development
+- Create components in isolation using Storybook
+- Implement all component states and variations
+- Document component props and usage
+- Write unit tests for component functionality
+- Review components against design specifications
+
+### 4. Page Assembly
+- Assemble pages using built components
+- Implement page-level layout and responsiveness
+- Connect to data sources and state management
+- Write integration tests for key user flows
+- Validate against designs and requirements
+
+## Content & Data Workflow
+
+### 1. Medical Data Management in Notion
+- Organize information in structured databases
+- Use consistent templates for all medical entries
+- Tag entries with relevant metadata
+- Maintain regular backup schedules
+
+### 2. Notion to Supabase Synchronization
+- Scheduled data pulls from Notion API
+- Transformation of data to match Supabase schema
+- Validation and error handling for data integrity
+- Incremental updates to minimize processing
+
+### 3. Supabase Schema Management
+- Use migrations for all schema changes
+- Implement proper indexing for query performance
+- Set up row-level security policies
+- Document data relationships and constraints
+
+### 4. Content Updates
+- Follow checklist for adding new medical information
+- Run validation on all new content
+- Preview changes in staging environment
+- Monitor data quality metrics
+
+## Feature Development Workflow
+
+### 1. Feature Planning
+- Create detailed requirements document
+- Design mockups and user flows
+- Identify technical dependencies
+- Estimate development effort
+
+### 2. Development Process
+1. **Create feature branch**
+   - Branch from main: `feature/feature-name`
+   - Set up local environment
+
+2. **Implementation**
+   - Build components & functionality
+   - Write tests (unit, integration)
+   - Document code and features
+   - Follow accessibility guidelines
+
+3. **Code Quality**
+   - Run linters and type checking
+   - Ensure test coverage meets standards
+   - Perform self-review before submission
+
+4. **Pull Request**
+   - Create detailed PR description
+   - Link to relevant issues or requirements
+   - Request review from appropriate team members
+
+### 3. Review & Deployment
+1. **Code Review**
+   - Verify implementation against requirements
+   - Check code style and best practices
+   - Ensure test coverage is adequate
+   - Verify accessibility compliance
+
+2. **Staging Deployment**
+   - Merge to staging branch
+   - Deploy to staging environment
+   - Perform manual testing
+   - Validate against requirements
+
+3. **Production Deployment**
+   - Merge to main branch
+   - Deploy to production
+   - Monitor application metrics
+   - Collect user feedback
+
+## Continuous Improvement Workflow
+
+### 1. Monitoring & Analytics
+- Track key performance metrics
+- Monitor error rates and user flows
+- Collect feedback from medical professionals
+- Identify pain points and opportunities
+
+### 2. Improvement Planning
+- Prioritize enhancements based on impact
+- Document requirements for improvements
+- Create mockups for UI/UX changes
+- Schedule work in development calendar
+
+### 3. Implementation & Validation
+- Follow feature development workflow
+- Perform A/B testing where appropriate
+- Validate improvements with user testing
+- Measure impact against baseline metrics
+
+## Medical Data Update Workflow
+
+### 1. Post-Appointment Updates
+- Record key information using structured template
+- Upload any documents or test results
+- Tag content with appropriate metadata
+- Link to related medical events
+
+### 2. Regular Health Monitoring
+- Record vital signs and symptoms
+- Track medication adherence and effects
+- Note any changes or trends
+- Update treatment response data
+
+### 3. Emergency Information Maintenance
+- Review emergency summary monthly
+- Update contact information as needed
+- Ensure critical information is current
+- Generate new printable emergency sheets
+
+### 4. Annual Review
+- Perform comprehensive review of all health data
+- Archive resolved conditions or outdated information
+- Update primary summary documents
+- Review data organization and structure 

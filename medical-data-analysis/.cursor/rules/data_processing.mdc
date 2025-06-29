@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Data Processing Standards
+
+## Data Cleaning
+- Normalize all dates to ISO 8601 format (YYYY-MM-DD)
+- Remove duplicate records based on content and context
+- Handle missing values using domain-appropriate strategies
+- Clean OCR artifacts and common extraction errors
+- Resolve inconsistencies between different document sources
+- Extract narrative elements from personal text files for symptom correlation
+
+## Medical Terminology Standardization
+- Map medical terms to standard vocabularies (UMLS/SNOMED CT)
+- Use ICD-10 codes for conditions where applicable
+- Standardize medication names using RxNorm
+- Normalize lab test names and units
+- Preserve original terminology alongside standardized versions
+- Implement specialized recognition for EDS, POTS, MCAS, and ASD terminology
+
+## Entity Recognition
+- Extract named entities (medications, conditions, procedures, symptoms)
+- Identify dates and create chronological relationships
+- Recognize healthcare providers and their specialties
+- Extract lab results and their reference ranges
+- Identify diagnostic criteria for specific conditions (ASD, EDS)
+- Tag confidence levels for extracted information
+
+## Symptom Analysis
+- Create consistent vocabulary for symptom descriptions
+- Correlate symptoms with medical diagnoses and events
+- Track symptom persistence, frequency, and severity over time
+- Identify co-occurring symptom clusters
+- Detect temporal patterns in symptom manifestation
+- Link symptoms to specific body systems and medical specialties
+
+## Document Categorization
+- Classify documents by source (medical provider, personal narrative)
+- Categorize by medical specialty (rheumatology, neurology, etc.)
+- Group by document type (lab report, imaging, doctor notes)
+- Separate diagnostic criteria from personal assessments
+- Tag documents by relevance to specific conditions
+- Preserve document relationships (follow-ups, referrals)

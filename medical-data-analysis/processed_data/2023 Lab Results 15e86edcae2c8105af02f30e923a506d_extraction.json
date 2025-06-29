@@ -1,0 +1,17 @@
+{
+  "source_file": "input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md",
+  "file_hash": "da21973f3c4e7d9626fd68f739760bb3043baa398169e33273f64d0597b2bf17",
+  "metadata": {
+    "creation_time": "2025-04-30T16:10:24.776645",
+    "modification_time": "2025-04-30T16:10:24.776159",
+    "file_size": 6818,
+    "file_type": "markdown",
+    "file_name": "2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md"
+  },
+  "extraction_date": "2025-04-30T16:15:47.882168",
+  "confidence_score": 1.0,
+  "extracted_dates": "set()",
+  "appointment_dates": [],
+  "providers": [],
+  "content_length": 6812
+}

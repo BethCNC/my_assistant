@@ -1,0 +1,282 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Notion Medical Calendar Database Report
+
+## Overview
+This report provides a detailed analysis of your Medical Calendar database and its relationships with other databases in your Notion workspace. The Medical Calendar serves as the central hub for tracking medical events, medication usage, symptom tracking, and healthcare provider information.
+
+## Main Database: Medical Calendar
+**Database ID**: 17b86edc-ae2c-81c1-83e0-e0a19a035932  
+**Last Edited**: April 22, 2025  
+**Icon**: Calendar (orange)
+
+### Properties
+
+#### Core Information
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Name | Title | The title of the medical event |
+| Date | Date | When the event occurred or is scheduled |
+| Type | Select | Category of the event (Surgery, Procedure, Daily Journal, Lab Result, etc.) |
+| Purpose | Rich Text | Reason for the appointment or event |
+
+#### Medication Tracking
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Medications | Relation | Links to the Medications database |
+| Adderall - AM | Checkbox | Morning Adderall dose taken |
+| Adderall - 1PM | Checkbox | Afternoon Adderall dose taken |
+| Adderall - PM | Checkbox | Evening Adderall dose taken |
+| Zrytec - AM | Checkbox | Morning Zrytec dose taken |
+| Zrytec - PM | Checkbox | Evening Zrytec dose taken |
+| Pepcid - AM | Checkbox | Morning Pepcid dose taken |
+| Pepcid - PM | Checkbox | Evening Pepcid dose taken |
+| Quercetin | Checkbox | 3 500mg quercetin daily |
+| Salt Tabs | Number | Number of salt tablets taken |
+
+#### Health Metrics
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Sleep | Number | Sleep duration out of 8 hours |
+| Energy | Number | Energy level on a scale of 1-5 |
+| Anxiety | Number | Anxiety level on a scale of 1-5 |
+| Shoulder Pain | Number | Shoulder pain level on a scale of 1-5 |
+| Walk | Checkbox | Walking activity completed |
+| Movement Work | Checkbox | Movement exercises completed |
+#### Notes & Documentation
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Doctor | Relation | Links to Medical Team database |
+| Doctors Notes | Rich Text | Notes from healthcare provider |
+| Personal Notes | Rich Text | Personal observations |
+| Lab Result | Rich Text | Lab test results |
+| Notes | Relation | Links to Notes database |
+| Glows | Rich Text | Daily positive experiences |
+| Grows | Rich Text | Daily areas for improvement |
+
+#### Condition Tracking
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Linked Symptoms | Relation | Links to Symptoms database |
+| Related Diagnoses | Relation | Links to Diagnoses database |
+
+### Type Options
+The "Type" property includes the following categories:
+- Surgery (purple)
+- Procedure (blue)
+- Daily Journal (green)
+- Lab Result (pink)
+- Doctor's Notes - Appt Notes (yellow)
+- Hospitalization (default)
+- Image/Scan (purple)
+- Patient Advocacy (gray)
+- Template (red)
+
+## Related Databases
+
+### 1. Medical Team Database
+**Database ID**: 17b86edc-ae2c-8155-8caa-fbb80647f6a9  
+**Last Edited**: April 24, 2025  
+**Icon**: Medical Team icon
+
+#### Properties
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Name | Title | Doctor or healthcare provider name |
+| Role | Select | Specialty (GP, Specialist, etc.) |
+| Active | Select | Provider status (Currently Treating, Previous Provider, Future Provider) |
+| Affiliation? | Select | Healthcare network affiliation |
+| Office Name | Rich Text | Name of the medical practice |
+| Email | Email | Provider's email address |
+| Phone | Phone Number | Provider's contact number |
+| Address | Rich Text | Provider's office address |
+| URL | URL | Website for the provider or practice |
+| Image | Files | Provider photo or logo |
+| Date Started Care | Date | When care began with this provider |
+| Notes | Rich Text | General notes about the provider |
+| Prescribing | Relation | Links to medications prescribed by this provider |
+| Treating | Relation | Links to diagnoses being treated by this provider |
+
+#### Role Options
+The "Role" property includes specialties such as:
+- General Practitioner
+- Physiotherapist
+- Rheumatologist
+- Endocrinologist
+- OBGYN
+- Neuro-Ophthalmology
+- Orthopedic Surgeon
+- Allergy Immunology
+- Neurology
+- Cardiology
+- Vascular Surgery
+- Spine
+- GI
+- Hand Specialist
+- Physiatrist
+- Gastroenterologist
+
+#### Affiliation Options
+The "Affiliation?" property includes networks such as:
+- CENTA
+- Atrium
+- Novant
+- Carolina Asthma & Allergy Center
+- UNC School of Medicine
+- Brown Neurosurgery
+- Charlotte Gastroenterology
+- UNC Health
+- Carolina Digestive Health Associates
+
+### 2. Medications Database
+**Database ID**: 17b86edc-ae2c-81a7-b28a-e9fbcc7e7b62  
+**Last Edited**: April 8, 2025  
+**Icon**: Medications icon
+
+#### Properties
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Name | Title | Medication name |
+| Generic Name | Rich Text | Generic medication name |
+| Dose (mg) | Number | Dosage in milligrams |
+| Frequency | Multi-select | When medication is taken (AM, Afternoon, PM, As Needed) |
+| Active | Select | Medication status (Currently Taking, Previous Medication) |
+| Prescribed by | Relation | Links to provider who prescribed the medication |
+| Prescribed Date | Date | When the medication was prescribed |
+| Date Commenced | Date | When medication was started |
+| Last Collected | Rollup | Date of most recent refill or collection |
+| Notes | Rich Text | Additional information about the medication |
+| To Treat | Relation | Links to diagnoses being treated by this medication |
+| Related Events | Relation | Links to Medical Calendar events for this medication |
+
+### 3. Diagnoses Database
+**Database ID**: 17b86edc-ae2c-8167-ba15-f9f03b49795e  
+**Last Edited**: April 8, 2025  
+**Icon**: Diagnoses icon
+
+#### Properties
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Name | Title | Name of the diagnosis |
+| Status | Status | Current status (Suspected, Active, Misdiagnosed, Remission) |
+| Long Form | Rich Text | Full name/description of the diagnosis |
+| Definition | Rich Text | Medical definition or explanation |
+| Diagnosed Date | Date | When the diagnosis was made |
+| Treated by | Relation | Links to healthcare providers treating this condition |
+| Relevant Meds | Relation | Links to medications used for this diagnosis |
+| Related Symptoms | Relation | Links to symptoms associated with this diagnosis |
+
+### 4. Symptoms Database
+**Database ID**: 17b86edc-ae2c-81c6-9077-e55a68cf2438  
+**Last Edited**: April 8, 2025  
+**Icon**: Symptoms (heart icon)
+
+#### Properties
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Name | Title | Name of the symptom |
+| Active | Checkbox | Whether the symptom is currently active |
+| First Onset | Rollup | Date when symptom was first recorded |
+| Related Diagnosis | Relation | Links to associated diagnoses |
+| Related Events | Relation | Links to Medical Calendar events where this symptom occurred |
+
+### 5. Notes Database
+**Database ID**: 654e1ddc-962f-4469-8b1d-f6697375a321  
+**Last Edited**: April 22, 2025  
+**Icon**: Notes (blue icon)
+
+#### Properties
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| Title | Title | Title of the note |
+| Type | Status | Category of note (Doctor's Notes, Health Doc, Medical Research, etc.) |
+| Summary | Rich Text | Brief summary of the note content |
+| URL | URL | Related website or resource |
+| Attachments | Files | Uploaded files related to the note |
+| Files & media | Files | Additional media files |
+| Image | Files | Images related to the note |
+| Life Area | Relation | Links to life area categories |
+| Special Indicators | Multi-select | Important flags (Special Interest, Favorites) |
+| AI Keywords | Multi-select | Keywords for AI processing |
+| Status | Status | Current status of the note |
+| Date Added | Created time | When the note was created |
+| 🗄️ Archive | Checkbox | Whether the note is archived |
+
+## Database Relationships
+
+```mermaid
+graph TD
+    A[Medical Calendar] --> B[Medical Team]
+    A --> C[Medications]
+    A --> D[Diagnoses]
+    A --> E[Symptoms]
+    A --> F[Notes]
+    
+    B -->|Prescribing| C
+    B -->|Treating| D
+    
+    C -->|To Treat| D
+    
+    D -->|Related Symptoms| E
+    
+    E -->|Related Events| A
+    
+    F -->|Life Area| G[Life Areas]
+```
+
+## Key Workflows
+
+### 1. Appointment Tracking
+1. Create a new entry in the Medical Calendar database
+2. Select the Type (e.g., "Doctor's Notes - Appt Notes")
+3. Link to the relevant Doctor from the Medical Team database
+4. Add appointment details and purpose
+5. Record any Doctors Notes after the appointment
+6. Link to any Related Diagnoses discussed
+7. Connect to any Medications prescribed or adjusted
+
+### 2. Medication Management
+1. Track daily medication use with checkbox properties
+2. Record medication changes in the Medications database
+3. Link medications to specific doctors who prescribed them
+4. Connect medications to the diagnoses they treat
+5. Track medication collection dates
+6. Monitor effectiveness through symptom and health metric tracking
+
+### 3. Symptom Tracking
+1. Record health metrics like Energy, Anxiety, and Pain levels
+2. Link to specific Symptoms from the Symptoms database
+3. Connect symptoms to Related Diagnoses
+4. Track symptom patterns over time
+5. Document personal observations in Personal Notes
+
+### 4. Health Documentation
+1. Store lab results and medical documentation
+2. Link notes to specific medical events
+3. Organize resources and medical research
+4. Track diagnoses status and treatment progress
+5. Maintain a comprehensive record of medical team contacts
+
+## Projects and Goals
+
+There appears to be a project related to your medical management:
+- "Add Medical History to Medical Calendar Database" (in progress)
+- Goal: "Clearly Define Medical Diagnosis and Establish Medical Team that knows how to treat such conditions"
+
+## API Integration
+
+A Notion API key for medical information integration exists (added on March 25, 2025):
+- API Token: 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
+- This could potentially be used for automating data entry or creating custom views of your medical data
+
+## Best Practices for Maintaining Your Medical Database
+
+1. **Consistent Daily Entries**: Create daily journal entries to track medications, symptoms, and health metrics consistently
+2. **Regular Doctor Updates**: Keep the Medical Team database current with new providers and contact information
+3. **Medication Management**: Update the Medications database promptly when prescriptions change
+4. **Preparation for Appointments**: Review recent entries before appointments to discuss trends with healthcare providers
+5. **Documentation**: Store all medical documentation, lab results, and research in the Notes database with clear categorization
+6. **Relationship Maintenance**: Ensure proper linking between databases to maintain the comprehensive nature of your medical tracking system

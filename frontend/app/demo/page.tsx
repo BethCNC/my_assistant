@@ -10,7 +10,7 @@ import ToolButton from '@/components/figma-system/ToolButton'
 import NewChatButton from '@/components/figma-system/NewChatButton'
 import ChatPreview from '@/components/figma-system/ChatPreview'
 import { SuggestionCard } from '@/components/figma-system/SuggestionCard'
-import { SuggestionShapes, getRandomShapes } from '@/components/figma-system/SuggestionShapes'
+import { SuggestionShapes, SuggestionShapeVariant, getRandomShapes } from '@/components/figma-system/SuggestionShapes'
 import { Sidebar } from '@/components/figma-system/Sidebar'
 import { ChatInput } from '@/components/figma-system/ChatInput'
 import Icons from '@/components/figma-system/Icons'
@@ -140,18 +140,18 @@ export default function ComponentDemo() {
           <h2 className="text-2xl font-bold mb-6 text-white">Icon Buttons (Using Actual SVGs)</h2>
           <div className="space-y-4">
             <div className="flex gap-4 items-center">
-              <IconButton variant="files" />
-              <IconButton variant="files" state="hover" />
-              <IconButton variant="files" state="attached" attachmentCount={3} />
+              <IconButton icon="files" />
+              <IconButton icon="files" state="hover" />
+              <IconButton icon="files" state="attached" count="3" />
             </div>
             <div className="flex gap-4 items-center">
-              <IconButton variant="images" />
-              <IconButton variant="images" state="hover" />
-              <IconButton variant="images" state="attached" attachmentCount={2} />
+              <IconButton icon="images" />
+              <IconButton icon="images" state="hover" />
+              <IconButton icon="images" state="attached" count="2" />
             </div>
             <div className="flex gap-4 items-center">
-              <IconButton variant="send" />
-              <IconButton variant="send" state="focus" />
+              <IconButton icon="send" />
+              <IconButton icon="send" state="focus" />
             </div>
           </div>
         </section>
@@ -227,9 +227,8 @@ export default function ComponentDemo() {
               <SuggestionCard 
                 key={`${text}-${index}`} // Key includes text to trigger re-render
                 text={text}
-                state={index === 1 ? 'state3' : index === 2 ? 'focus' : 'default'}
+                shapeVariant={(index % 7 + 1) as SuggestionShapeVariant}
                 onClick={() => console.log('Suggestion clicked:', text)}
-                randomizeShape={true} // Enable random shape changes
               />
             ))}
           </div>
@@ -268,24 +267,16 @@ export default function ComponentDemo() {
             <ChatInput
               value={inputValue}
               onChange={setInputValue}
-              onSend={(message) => {
-                console.log('Message sent:', message)
+              onSend={(message, attachments) => {
+                console.log('Message sent:', message, attachments)
                 setInputValue('')
               }}
-              onAttachFiles={() => console.log('Attach files clicked')}
-              onAttachImages={() => console.log('Attach images clicked')}
             />
             
-            {/* With attachments */}
+            {/* With forced variant */}
             <ChatInput
-              variant="attaching_files"
+              variant="attaching-files"
               value="Here's my message with attachments"
-              attachedFiles={attachedFiles}
-              onRemoveAttachment={(index) => {
-                const newFiles = [...attachedFiles]
-                newFiles.splice(index, 1)
-                setAttachedFiles(newFiles)
-              }}
             />
           </div>
         </section>

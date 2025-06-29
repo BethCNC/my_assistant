@@ -1,0 +1,53 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# AI Integration Requirements
+
+## Text Analysis
+- Extract semantic meaning from clinical notes and personal narratives
+- Identify key medical concepts not explicitly coded
+- Recognize contextual qualifiers (negation, uncertainty, severity)
+- Process temporal references to establish chronology
+- Identify cause-effect relationships in medical histories
+- Analyze symptom descriptions in personal narrative texts
+
+## Medical Knowledge Application
+- Apply medical domain knowledge to interpret findings
+- Identify condition progression patterns over time
+- Detect potential comorbidities and symptom correlations
+- Recognize standard treatment protocols and deviations
+- Generate timeline visualizations of medical history
+- Map relationships between hypermobility, neurodevelopmental, and autoimmune conditions
+
+## Contextual Understanding
+- Provide conversational access to medical history data
+- Understand and respond to queries about symptom timelines
+- Generate insights about condition relationships and interactions
+- Explain medical terminology in accessible language
+- Identify unexplored connections between symptoms and diagnoses
+- Adapt response complexity to user technical knowledge
+
+## Specialized Analysis
+- Apply specialized models for connective tissue disorders (EDS)
+- Implement autism spectrum disorder detection from narrative data
+- Track chronic pain patterns and correlations
+- Analyze sleep and dietary patterns from personal descriptions
+- Identify potential patterns in symptom clustering
+- Generate condition-specific insights based on latest research
+
+## Reporting & Visualization
+- Generate chronological summaries of medical history
+- Create visual timelines of symptoms and treatments
+- Produce specialty-specific views of medical data
+- Visualize correlation between different symptoms
+- Generate reports comparing symptoms against diagnostic criteria
+- Create personal health dashboards with key indicators
+
+## Ethical AI Guidelines
+- Prioritize transparency in AI-generated insights
+- Clearly distinguish between extracted facts and AI inferences
+- Implement safeguards against potentially harmful recommendations
+- Respect medical decision boundaries (no diagnosis or treatment advice)
+- Maintain audit trails for all AI-generated content

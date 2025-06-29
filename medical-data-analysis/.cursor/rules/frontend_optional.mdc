@@ -1,0 +1,59 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Frontend Technologies (Optional)
+
+## Next.js Framework
+- Use Next.js for server-side rendering capabilities
+- Implement API routes for backend communication
+- Create efficient routing for medical history navigation
+- Use static generation for content-heavy pages
+- Implement incremental static regeneration for dynamic content
+- Design efficient client-side state management
+
+## React Component Architecture
+- Create atomic design system for UI components
+- Implement specialized components for medical data display:
+  - Timeline visualization components
+  - Lab result comparison views
+  - Symptom tracking interfaces
+  - Document viewers with annotation support
+- Use React Context for shared medical state
+- Implement proper data fetching patterns with SWR or React Query
+
+## Data Visualization
+- Use D3.js for complex medical visualizations
+- Implement Plotly for interactive charts
+- Create specialized visualization components:
+  - Chronological medical timelines
+  - Symptom intensity heat maps
+  - Lab value trend charts
+  - Medication effectiveness visualizations
+- Design responsive visualizations for all device sizes
+- Implement accessible visualization alternatives
+
+## Accessibility
+- Follow WCAG 2.1 AA standards for all interfaces
+- Implement keyboard navigation for all interactions
+- Use semantic HTML for screen reader compatibility
+- Design proper color contrast for medical interfaces
+- Create accessible form components with proper validation
+- Implement ARIA attributes for complex UI components
+
+## Performance Optimization
+- Implement code splitting for large application bundles
+- Use efficient asset loading strategies
+- Create skeleton screens for loading states
+- Implement virtualization for long medical lists
+- Design offline-first capabilities where appropriate
+- Use proper caching strategies for medical data
+
+## State Management
+- Implement appropriate state management (Redux, Zustand, etc.)
+- Create efficient caching for medical queries
+- Design optimistic updates for better user experience
+- Use proper error handling with recovery options
+- Implement form state management with validation
+- Create persistence layer for offline capabilities

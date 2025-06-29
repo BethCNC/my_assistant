@@ -1,0 +1,403 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Data Model Documentation
+
+## Overview
+
+This document defines the data structure for the Health Journey Website, including the schema design for Supabase, data relationships, and synchronization with Notion.
+
+## Core Entities
+
+### Medical Conditions
+
+Central entity for diagnosed conditions and health issues.
+
+```typescript
+interface Condition {
+  id: string;                // UUID
+  name: string;              // Name of condition/diagnosis
+  description: string;       // Detailed description
+  date_diagnosed: Date;      // When condition was diagnosed
+  status: 'active' | 'resolved' | 'in_remission'; // Current status
+  severity: number;          // 1-10 severity scale
+  category: string;          // Category (e.g., "autoimmune", "neurological")
+  notes: string;             // Additional notes
+  provider_id: string;       // Doctor who diagnosed
+  created_at: Date;          // Record creation timestamp
+  updated_at: Date;          // Record update timestamp
+}
+```
+
+### Treatments
+
+Medications, procedures, and therapies.
+
+```typescript
+interface Treatment {
+  id: string;                // UUID
+  condition_id: string;      // Related condition (optional)
+  name: string;              // Name of treatment
+  type: 'medication' | 'procedure' | 'therapy' | 'lifestyle'; // Type
+  description: string;       // Description of treatment
+  start_date: Date;          // When treatment began
+  end_date: Date | null;     // When treatment ended (if applicable)
+  dosage: string;            // Dosage (for medications)
+  frequency: string;         // How often administered
+  effectiveness: number;     // 1-10 effectiveness scale
+  side_effects: string;      // Noted side effects
+  prescribed_by: string;     // Provider who prescribed
+  created_at: Date;          // Record creation timestamp
+  updated_at: Date;          // Record update timestamp
+}
+```
+
+### Symptoms
+
+Tracked symptoms associated with conditions.
+
+```typescript
+interface Symptom {
+  id: string;                // UUID
+  condition_id: string | null; // Related condition (optional)
+  name: string;              // Name of symptom
+  description: string;       // Detailed description
+  severity: number;          // 1-10 severity scale
+  frequency: string;         // How often experienced
+  duration: string;          // Typical duration
+  triggers: string[];        // Known triggers
+  alleviating_factors: string[]; // What helps
+  date_recorded: Date;       // When recorded
+  created_at: Date;          // Record creation timestamp
+  updated_at: Date;          // Record update timestamp
+}
+```
+
+### Medical Events
+
+Timeline events (appointments, hospitalizations, procedures).
+
+```typescript
+interface MedicalEvent {
+  id: string;                // UUID
+  title: string;             // Event title
+  description: string;       // Detailed description
+  event_type: 'appointment' | 'hospitalization' | 'procedure' | 'test' | 'other';
+  date: Date;                // When event occurred
+  location: string;          // Where event occurred
+  provider_id: string | null; // Related provider (optional)
+  condition_id: string | null; // Related condition (optional)
+  treatment_id: string | null; // Related treatment (optional)
+  notes: string;             // Additional notes
+  documents: string[];       // Related document IDs
+  created_at: Date;          // Record creation timestamp
+  updated_at: Date;          // Record update timestamp
+}
+```
+
+### Healthcare Providers
+
+Doctors, specialists, and other medical professionals.
+
+```typescript
+interface Provider {
+  id: string;                // UUID
+  name: string;              // Provider name
+  specialty: string;         // Medical specialty
+  facility: string;          // Practice/hospital name
+  address: string;           // Physical address
+  phone: string;             // Contact phone
+  email: string;             // Contact email
+  website: string;           // Website URL
+  notes: string;             // Additional notes
+  created_at: Date;          // Record creation timestamp
+  updated_at: Date;          // Record update timestamp
+}
+```
+
+### Lab Results
+
+Medical test results and reports.
+
+```typescript
+interface LabResult {
+  id: string;                // UUID
+  test_name: string;         // Name of the test
+  category: string;          // Category (e.g., "blood work", "imaging")
+  date: Date;                // When test was performed
+  result: string;            // Result value
+  unit: string;              // Unit of measurement
+  reference_range: string;   // Normal reference range
+  is_abnormal: boolean;      // Whether result is outside normal range
+  provider_id: string;       // Ordering provider
+  notes: string;             // Additional notes
+  file_url: string;          // Link to report file
+  created_at: Date;          // Record creation timestamp
+  updated_at: Date;          // Record update timestamp
+}
+```
+
+### Documents
+
+Medical documents and files.
+
+```typescript
+interface Document {
+  id: string;                // UUID
+  title: string;             // Document title
+  description: string;       // Document description
+  file_url: string;          // URL to file
+  file_type: string;         // File type/extension
+  category: string;          // Document category
+  date: Date;                // Document date
+  tags: string[];            // Categorization tags
+  related_entity_id: string; // ID of related entity
+  related_entity_type: 'condition' | 'treatment' | 'event' | 'provider';
+  created_at: Date;          // Record creation timestamp
+  updated_at: Date;          // Record update timestamp
+}
+```
+
+### Emergency Contacts
+
+Emergency contact information.
+
+```typescript
+interface EmergencyContact {
+  id: string;                // UUID
+  name: string;              // Contact name
+  relationship: string;      // Relationship to patient
+  primary_phone: string;     // Primary phone number
+  secondary_phone: string;   // Secondary phone number
+  email: string;             // Email address
+  address: string;           // Physical address
+  is_primary: boolean;       // Whether this is the primary contact
+  notes: string;             // Additional notes
+  created_at: Date;          // Record creation timestamp
+  updated_at: Date;          // Record update timestamp
+}
+```
+
+## Relationships
+
+1. **Condition to Treatments**: One-to-many (one condition can have multiple treatments)
+2. **Condition to Symptoms**: One-to-many (one condition can have multiple symptoms)
+3. **Provider to Conditions**: One-to-many (one provider can diagnose multiple conditions)
+4. **Provider to Treatments**: One-to-many (one provider can prescribe multiple treatments)
+5. **MedicalEvent to related entities**: Many-to-many relationships with conditions, treatments, and providers
+
+## Database Schema
+
+```sql
+-- Create conditions table
+CREATE TABLE conditions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  description TEXT,
+  date_diagnosed TIMESTAMP WITH TIME ZONE,
+  status TEXT CHECK (status IN ('active', 'resolved', 'in_remission')),
+  severity INTEGER CHECK (severity BETWEEN 1 AND 10),
+  category TEXT,
+  notes TEXT,
+  provider_id UUID REFERENCES providers(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create treatments table
+CREATE TABLE treatments (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  condition_id UUID REFERENCES conditions(id),
+  name TEXT NOT NULL,
+  type TEXT CHECK (type IN ('medication', 'procedure', 'therapy', 'lifestyle')),
+  description TEXT,
+  start_date TIMESTAMP WITH TIME ZONE,
+  end_date TIMESTAMP WITH TIME ZONE,
+  dosage TEXT,
+  frequency TEXT,
+  effectiveness INTEGER CHECK (effectiveness BETWEEN 1 AND 10),
+  side_effects TEXT,
+  prescribed_by UUID REFERENCES providers(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create symptoms table
+CREATE TABLE symptoms (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  condition_id UUID REFERENCES conditions(id),
+  name TEXT NOT NULL,
+  description TEXT,
+  severity INTEGER CHECK (severity BETWEEN 1 AND 10),
+  frequency TEXT,
+  duration TEXT,
+  triggers JSONB,
+  alleviating_factors JSONB,
+  date_recorded TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create medical_events table
+CREATE TABLE medical_events (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  description TEXT,
+  event_type TEXT CHECK (event_type IN ('appointment', 'hospitalization', 'procedure', 'test', 'other')),
+  date TIMESTAMP WITH TIME ZONE NOT NULL,
+  location TEXT,
+  provider_id UUID REFERENCES providers(id),
+  condition_id UUID REFERENCES conditions(id),
+  treatment_id UUID REFERENCES treatments(id),
+  notes TEXT,
+  documents JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create providers table
+CREATE TABLE providers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  specialty TEXT,
+  facility TEXT,
+  address TEXT,
+  phone TEXT,
+  email TEXT,
+  website TEXT,
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create lab_results table
+CREATE TABLE lab_results (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  test_name TEXT NOT NULL,
+  category TEXT,
+  date TIMESTAMP WITH TIME ZONE NOT NULL,
+  result TEXT NOT NULL,
+  unit TEXT,
+  reference_range TEXT,
+  is_abnormal BOOLEAN DEFAULT FALSE,
+  provider_id UUID REFERENCES providers(id),
+  notes TEXT,
+  file_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create documents table
+CREATE TABLE documents (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  description TEXT,
+  file_url TEXT NOT NULL,
+  file_type TEXT,
+  category TEXT,
+  date TIMESTAMP WITH TIME ZONE,
+  tags JSONB,
+  related_entity_id UUID,
+  related_entity_type TEXT CHECK (related_entity_type IN ('condition', 'treatment', 'event', 'provider')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create emergency_contacts table
+CREATE TABLE emergency_contacts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  relationship TEXT,
+  primary_phone TEXT,
+  secondary_phone TEXT,
+  email TEXT,
+  address TEXT,
+  is_primary BOOLEAN DEFAULT FALSE,
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+## Notion Sync Mapping
+
+This section outlines how Notion database fields map to the Supabase schema:
+
+### Conditions Mapping
+
+| Notion Field       | Supabase Field   | Transformation  |
+|--------------------|------------------|-----------------|
+| Name               | name             | Direct          |
+| Description        | description      | Direct          |
+| Date Diagnosed     | date_diagnosed   | ISO date format |
+| Status             | status           | Enum validation |
+| Severity           | severity         | Number 1-10     |
+| Category           | category         | Direct          |
+| Notes              | notes            | Direct          |
+| Provider           | provider_id      | Lookup by name  |
+
+### Treatments Mapping
+
+| Notion Field       | Supabase Field   | Transformation  |
+|--------------------|------------------|-----------------|
+| Name               | name             | Direct          |
+| Related Condition  | condition_id     | Lookup by name  |
+| Type               | type             | Enum validation |
+| Description        | description      | Direct          |
+| Start Date         | start_date       | ISO date format |
+| End Date           | end_date         | ISO date format |
+| Dosage             | dosage           | Direct          |
+| Frequency          | frequency        | Direct          |
+| Effectiveness      | effectiveness    | Number 1-10     |
+| Side Effects       | side_effects     | Direct          |
+| Prescribed By      | prescribed_by    | Lookup by name  |
+
+## Data Security
+
+1. **Row-Level Security Policies**:
+   - Admin (you) has full access to all tables
+   - Medical providers have read-only access to specific patient records
+   - Custom shared views for specific medical professionals
+
+2. **Authentication Requirements**:
+   - Strong password policy
+   - Two-factor authentication for admin access
+   - Session timeout after 30 minutes of inactivity
+   - Audit logging for all data access
+
+3. **Data Encryption**:
+   - All data encrypted at rest in Supabase
+   - All file storage uses encrypted S3 buckets
+   - Secure document sharing with expiring links
+
+## Data Validation Rules
+
+1. **All Entities**:
+   - Required fields must not be empty
+   - Dates must be valid and in the past (except for appointments)
+   - Numeric ratings (severity, effectiveness) must be between 1-10
+
+2. **Treatment-Specific**:
+   - Medication treatments must include dosage and frequency
+   - End dates must be after start dates
+
+3. **Event-Specific**:
+   - Appointments must have a provider and location
+   - Procedures must have a description and provider
+
+## Backup Strategy
+
+1. **Automated Backups**:
+   - Daily full database backups to secure storage
+   - Point-in-time recovery enabled in Supabase
+
+2. **Manual Exports**:
+   - Monthly export of all data to JSON format
+   - Quarterly export of emergency information to PDF
+
+3. **Sync Monitoring**:
+   - Scheduled checks for sync issues
+   - Notifications for sync failures
+   - Manual validation of critical information after major updates 

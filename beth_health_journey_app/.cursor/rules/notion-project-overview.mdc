@@ -1,0 +1,276 @@
+---
+description: Notion Project Overview Import Medical History
+globs: 
+alwaysApply: false
+---
+# Chronic Illness Tracking System Implementation Plan
+
+## Important Documentation Principles
+
+**CRITICAL: ALL medically relevant information must be preserved during this project. Never delete, summarize, or abbreviate any medical findings, test results, diagnoses, or treatment plans. Only non-medical filler text may be excluded during organization.**
+
+## Phase 1: Medical History Import Project
+
+### Objective
+Create a comprehensive medical history database by systematically importing past records from local folders into your Notion system while preserving all medically relevant information.
+
+### Preparation Tasks
+1. **Create an Import Template**
+   - Create a simplified template in your Medical Calendar for historical data entry
+   - Include only essential fields: Name, Date, Type, Doctor, Related Diagnoses, Key Information, File Attachment
+   - Add a "Historical Import" tag to track which entries have been migrated from archives
+
+2. **Organize Import Views**
+   - Create a dedicated view in your Medical Calendar called "Historical Import"
+   - Sort by date (oldest to newest) to maintain chronological organization
+   - Add filters to show only historical entries for easy tracking of progress
+
+3. **Set Up Staging Area**
+   - Create a simple table (could be in Notion or a spreadsheet) to track:
+     - Folder name/date
+     - Status (Not Started, In Progress, Completed)
+     - Number of documents
+     - Special notes/flagged items
+
+### Medical Document Processing Guidelines
+
+1. **Complete Information Preservation**
+   - ALL medically relevant information must be preserved during import
+   - Never summarize or abbreviate actual medical findings, test results, diagnoses, or treatment plans
+   - Maintain exact medical terminology as used by healthcare providers
+   - Preserve numerical values and units exactly as recorded (lab values, vital signs, etc.)
+   - Do not interpret or reword medical information in any way
+
+2. **Appropriate Summarization**
+   - Only summarize or remove non-medical filler text (e.g., standard form language, redundant headers)
+   - Never paraphrase or reinterpret medical findings or instructions
+   - When in doubt about relevance, include the information
+   - Keep all dates, times, and provider identification information intact
+
+3. **Document Attachment Protocol**
+   - Attach original document scans/images whenever possible
+   - Use the "Personal Notes" field for your own observations and context
+   - Keep "Doctors Notes" field for direct transcription of provider comments
+
+4. **Flagging System for Special Information**
+   - Flag any information about:
+     - Medication allergies or adverse reactions
+     - Surgical interventions or procedures
+     - New diagnoses or changes to existing diagnoses
+     - Treatment plan modifications
+     - Follow-up requirements
+
+### Implementation Steps
+
+1. **Initial Folder Assessment (1-2 hours)**
+   - Open the folder: `/Users/bethcartrette/REPOS/beth_health_journey_app/data/atrium-exports/all_import`
+   - List all year folders and count approximate number of documents
+   - Make initial priority decisions based on medical significance (not just chronology)
+
+2. **Chronological Import Process (Starting with Most Critical)**
+   - **Step 1: Major Events First**
+     - Identify and import surgeries, hospitalizations, major diagnoses
+     - Create entries in Medical Calendar with Type field appropriately set
+     - Attach scanned documents or photos of physical records
+     - Link to relevant doctors, diagnoses, and symptoms
+     - Preserve ALL medical details exactly as written in original documents
+
+   - **Step 2: Regular Medical Appointments**
+     - Import significant doctor visits and consultations
+     - Focus on visits that resulted in diagnosis changes, medication adjustments
+     - Complete Doctor field and Doctors Notes with verbatim medical information
+     - Link to Medical Team database members
+     - Include all medical recommendations and treatment plans exactly as written
+
+   - **Step 3: Lab Results & Imaging**
+     - Import significant lab work and diagnostic tests
+     - Record key values in the Lab Result field exactly as shown in documents
+     - Record all abnormal results with exact values and reference ranges
+     - Include all technical and clinical comments from providers
+     - Link to related diagnoses and symptoms
+
+   - **Step 4: Daily Health Records (if available)**
+     - Import any existing symptom tracking or daily health logs
+     - Focus on flare periods or significant symptom changes
+     - Use batch entry for similar consecutive days
+     - Preserve all symptom descriptions in their original detail
+
+3. **Folder Processing Protocol**
+   - Process one year folder at a time
+   - Within each year, follow priority order: major events → appointments → tests → daily logs
+   - Mark folder as "In Progress" while working, then "Completed" when finished
+   - Set session goals (e.g., "Complete 2022 folder this weekend")
+   - Create complete entries preserving all medical details
+
+4. **Quality Control**
+   - After completing each year folder, review entries for:
+     - Missing relations (unlinked doctors, diagnoses, etc.)
+     - Incomplete information that needs research
+     - Duplicate entries
+     - Chronological accuracy
+     - Verification that no medical information was omitted
+
+5. **Relation Validation**
+   - Ensure all imported historical records have appropriate connections:
+     - Every doctor's appointment is linked to a doctor in Medical Team
+     - Every diagnosis has a corresponding entry in Diagnoses
+     - Every medication mentioned has an entry in Medications
+     - Create missing database entries as needed
+
+### Time Allocation Guide
+- Schedule specific "import sessions" of 1-2 hours
+- Set realistic goals for each session (e.g., "Import 5 major events" or "Complete 1 month of records")
+- Alternate between recent (more relevant) and older (historical context) records to maintain engagement
+
+### Import Checklist for Each Document
+- [ ] Create appropriate entry in Medical Calendar
+- [ ] Set correct Type property
+- [ ] Enter accurate Date
+- [ ] Link to Doctor(s) involved
+- [ ] Link to relevant Diagnoses
+- [ ] Link to Medications discussed/prescribed
+- [ ] Link to Symptoms documented
+- [ ] Attach file or image of original document (if available)
+- [ ] Verify that ALL medical information has been preserved intact
+- [ ] Add any follow-up notes or context in Personal Notes field
+
+## Phase 2: Daily Tracking System Implementation
+
+### Objective
+Create an efficient daily tracking system with templated prompts and medication tracking.
+### Setup Tasks
+
+1. **Create Daily Journal Template**
+   - Navigate to your Medical Calendar database
+   - Click "..." menu → "Templates" → "New template"
+   - Name it "Daily Health Check-in"
+   - Configure with following properties:
+     - Name: "Daily Journal - {% now %}"
+     - Type: Daily Journal
+     - Date: {% now %}
+     - Empty fields for all symptom scores and medication checkboxes
+
+2. **Create Form-Like Experience**
+   - Add a dedicated page for your daily check-in process
+   - Use toggle blocks with prompts like:
+     - "How did you sleep last night? (Rate 1-8)"
+     - "What is your energy level today? (Rate 1-5)"
+     - "Rate your pain levels in these areas (1-10)"
+     - "Any new or unusual symptoms today?"
+     - "What medications have you taken so far?"
+     - "What activities helped or hindered your wellness today?"
+
+3. **Set Up Medication Tracking System**
+   - Create a "Medication Schedule" database with:
+     - Medication name
+     - Scheduled times
+     - Days of week
+     - Dosage
+     - Special instructions
+   - Link this to your daily template
+   - Add reminder properties for each medication time block
+
+4. **Implement Notification System**
+   - Set up Notion reminders for morning and evening check-ins
+   - Configure time-based reminders for specific medications
+   - Consider using a third-party app like HealthSync to send notifications
+
+### Implementation Steps
+
+1. **Morning Check-in Flow**
+   - Create bookmark to Daily Health Check-in page on mobile device
+   - Set up routine to complete morning section after first medication
+   - Include checklist of morning medications
+   - Rate sleep quality and morning symptoms
+
+2. **Evening Check-in Process**
+   - Complete remaining sections before bed
+   - Check off all medications taken throughout day
+   - Record any symptom changes or flare triggers
+   - Add "Glows & Grows" reflection
+
+3. **Weekly Review Implementation**
+   - Schedule 15-minute weekly review session (e.g., Sunday evening)
+   - Create weekly review template with prompts:
+     - "What patterns did you notice this week?"
+     - "Which medications seemed most/least effective?"
+     - "What symptom management strategies worked best?"
+     - "What questions should you ask at your next appointment?"
+     - "What adjustments would help next week?"
+
+4. **Test and Refine**
+   - Use the system for 2 weeks and note friction points
+   - Adjust template questions based on relevance
+   - Simplify any overly complex elements
+   - Add any missing tracking elements
+
+### Maintenance Plan
+
+1. **Daily Routine (10 minutes total)**
+   - Morning check-in (5 minutes)
+   - Evening completion (5 minutes)
+
+2. **Weekly Review (15 minutes)**
+   - Review the week's entries
+   - Identify patterns
+   - Plan for upcoming week
+
+3. **Monthly Assessment (30 minutes)**
+   - Review monthly trends
+   - Update Dashboard if needed
+   - Adjust tracking parameters based on changing symptoms
+
+4. **Quarterly Doctor Preparation (1 hour)**
+   - Generate reports for upcoming appointments
+   - Compile questions and concerns
+   - Export relevant data for healthcare providers
+
+## Implementation Timeline
+
+### Week 1: Historical Import Setup
+- Create import template
+- Set up staging area
+- Complete initial folder assessment
+- Import 5 major medical events
+- Ensure ALL medical details are preserved verbatim
+
+### Week 2: Major Historical Events
+- Import all surgeries, hospitalizations, major diagnoses
+- Link to relevant database entries
+- Quality check all major event entries
+- Verify no medical information has been lost or altered
+
+### Weeks 3-4: Regular Appointments & Tests
+- Import significant doctor visits
+- Import important lab results and imaging
+- Ensure all are properly linked to doctors and diagnoses
+- Maintain exact medical terminology and values throughout
+
+### Weeks 5-6: Complete Historical Import
+- Finish remaining historical documents
+- Perform final quality control
+- Generate timeline view of medical history
+- Conduct final review to ensure all medical details are preserved
+
+### Week 7: Daily Tracking Setup
+- Create daily journal template with form-like prompts
+- Set up medication tracking system
+- Implement notification system
+
+### Week 8: System Testing & Refinement
+- Test daily tracking for one full week
+- Refine questions and format based on usability
+- Finalize the system for ongoing use
+
+## Success Metrics
+- [ ] 100% of major medical events imported and properly linked
+- [ ] 90%+ of doctor visits and tests imported
+- [ ] All current medications and diagnoses properly documented
+- [ ] All medical details preserved exactly as written in original documentation
+- [ ] Daily template created with all necessary tracking fields
+- [ ] Medication tracking system implemented and tested
+- [ ] Daily logging process takes less than 5 minutes per session
+- [ ] System provides useful insights during weekly review
+
+## Final Reminder
+**Remember: ALL medically relevant information must be preserved during this project. Never delete, summarize, or abbreviate any medical findings, test results, diagnoses, or treatment plans. Only non-medical filler text may be excluded during organization.**

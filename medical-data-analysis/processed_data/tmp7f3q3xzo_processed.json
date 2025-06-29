@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "creation_time": "2025-04-30T20:42:27.519177",
+    "modification_time": "2025-04-30T20:42:27.519177",
+    "file_size": 1138,
+    "file_type": "text",
+    "file_name": "tmp7f3q3xzo.txt",
+    "file_path": "/var/folders/qf/jb7tfdf11vx119p1k3hkt1rw0000gn/T/tmp7f3q3xzo.txt",
+    "document_type": "assessment"
+  },
+  "text": "",
+  "ai_analysis": {
+    "providers": [
+      {
+        "name": "Sarah Johnson",
+        "specialty": "rheumatology",
+        "confidence": 0.7
+      },
+      {
+        "name": "Rheumatology Consultation",
+        "specialty": "rheumatology",
+        "confidence": 0.7
+      }
+    ],
+    "appointment_dates": [],
+    "doctor_notes": [],
+    "clinical_sections": {},
+    "clinical_observations": [],
+    "diagnoses": [],
+    "treatment_plan": [],
+    "medications": [],
+    "clinical_summary": {
+      "appointment_info": null,
+      "providers": [
+        {
+          "name": "Sarah Johnson",
+          "specialty": "rheumatology",
+          "confidence": 0.7
+        },
+        {
+          "name": "Rheumatology Consultation",
+          "specialty": "rheumatology",
+          "confidence": 0.7
+        }
+      ],
+      "diagnoses": [],
+      "treatment_plan": [],
+      "medications": [],
+      "key_observations": []
+    }
+  }
+}

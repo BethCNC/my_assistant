@@ -7,13 +7,35 @@
   ],
   "scripts": {
     "dev": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build",
+    "dev:health": "cd beth_health_journey_app && npm run dev",
+    "dev:desktop": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "build": "npm run build:frontend && npm run build:health",
+    "build:frontend": "cd frontend && npm run build && npm run export",
+    "build:health": "cd beth_health_journey_app && npm run build && npm run export",
+    "build:desktop": "npm run build:frontend && npm run package:mac",
+    "predeploy": "npm run setup:production && npm run build",
+    "deploy:backend": "cd backend && gcloud builds submit --config cloudbuild.yaml",
+    "deploy:web": "firebase deploy --only hosting",
+    "deploy:all": "npm run predeploy && npm run deploy:backend && npm run deploy:web",
+    "setup:production": "./setup-production.sh",
     "start": "cd frontend && npm run start",
     "backend": "cd backend && python main.py",
-    "deploy:frontend": "cd frontend && npm run build",
-    "deploy:backend": "cd backend && gcloud run deploy"
+    "package:mac": "electron-packager . BethAssistant --platform=darwin --arch=arm64 --icon=frontend/public/assets/smiley.png --overwrite --out=dist",
+    "package:mac-universal": "electron-packager . BethAssistant --platform=darwin --arch=universal --icon=frontend/public/assets/smiley.png --overwrite --out=dist",
+    "clean": "rm -rf dist && rm -rf frontend/.next && rm -rf frontend/out && rm -rf beth_health_journey_app/.next && rm -rf beth_health_journey_app/out"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^37.1.0",
+    "electron-packager": "^17.1.2",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.0.0",
+    "firebase-functions": "^3.23.0"
+  },
+  "main": "main.js"
 }

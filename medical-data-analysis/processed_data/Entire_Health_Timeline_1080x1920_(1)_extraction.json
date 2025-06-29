@@ -1,0 +1,23 @@
+{
+  "source_file": "input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf",
+  "file_hash": "ab50fa925cda2337b3cec2f735b0d9fe90418f38cc3d972c48cb96d31274fb53",
+  "metadata": {
+    "creation_time": "2025-04-30T16:09:21.745439",
+    "modification_time": "2025-04-30T16:09:21.745155",
+    "file_size": 101317,
+    "file_type": "pdf",
+    "file_name": "Entire_Health_Timeline_1080x1920_(1).pdf",
+    "page_count": 1,
+    "creator": "Adobe InDesign 20.0 (Macintosh)",
+    "producer": "Adobe PDF Library 17.0",
+    "pdf_creation_date": "2024-12-04T02:20:12-05:00"
+  },
+  "extraction_date": "2025-04-30T16:18:00.781231",
+  "confidence_score": 1.0,
+  "extracted_dates": [],
+  "appointment_dates": [],
+  "providers": [
+    "Baker"
+  ],
+  "content_length": 9122
+}

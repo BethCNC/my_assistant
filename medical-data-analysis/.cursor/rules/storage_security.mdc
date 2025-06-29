@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Storage and Security Technologies
+
+## MinIO Object Storage
+- Use MinIO for original medical document storage
+- Implement bucket organization by document type and source
+- Apply content-based hashing for document deduplication
+- Create versioning for document updates
+- Implement lifecycle policies for archival storage
+- Use server-side encryption for sensitive documents
+
+## Storage Strategy
+- Store original documents with immutable object storage
+- Use relational database for structured medical data
+- Implement vector database for semantic search capabilities
+- Create appropriate caching layers for frequent access patterns
+- Use compression strategies for large medical documents
+- Implement efficient backup and recovery mechanisms
+
+## Authentication Implementation
+- Use OAuth 2.0 / OpenID Connect for authentication flows
+- Implement PKCE for improved security with SPA clients
+- Create proper token management with appropriate lifetimes
+- Design password policies compliant with healthcare standards
+- Implement MFA for administrative access
+- Use secure cookie handling for web applications
+
+## Data Security
+- Implement field-level encryption for PHI/sensitive data
+- Create audit logs for all data access and modifications
+- Use TLS 1.3+ for all data in transit
+- Implement proper key management for encrypted data
+- Create data classification system for sensitivity levels
+- Design secure deletion workflows for data retention policies
+
+## Access Control
+- Implement RBAC (Role-Based Access Control) for all resources
+- Create attribute-based policies for fine-grained permissions
+- Use principle of least privilege for all service accounts
+- Implement contextual access rules (time, location, device)
+- Create delegation mechanisms for healthcare provider access
+- Design emergency access protocols with proper auditing
+
+## Security Monitoring
+- Implement logging for security-relevant events
+- Create anomaly detection for unusual access patterns
+- Design incident response procedures for security events
+- Use OWASP security standards for web interfaces
+- Implement regular security scanning and testing
+- Create secure update mechanisms for all components

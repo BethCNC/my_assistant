@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Data Processing Technologies
+
+## Document Extraction Tools
+- Apache Tika for unified content extraction interface
+- PyPDF2/pdf.js for PDF text extraction with layout preservation
+- html2text for HTML medical record conversion
+- Use pandoc for converting RTF clinical notes
+- regex-based extractors for structured text formats
+- Custom extractors for provider-specific formats (Novant, Atrium)
+
+## OCR Implementation
+- Tesseract OCR with medical document training
+- OCRmyPDF for optimization of scanned medical records
+- Implement confidence scoring for OCR extraction
+- Create post-processing for medical terminology correction
+- Use layout analysis for structured medical forms
+- Apply medical dictionary validation for OCR output
+
+## Apache Airflow Orchestration
+- Implement DAGs for medical document processing workflows
+- Create specialized operators for medical data extraction
+- Design sensor tasks for new document detection
+- Implement XComs for passing medical context between tasks
+- Use branching for document-type specific processing
+- Create SLAs for critical processing steps
+
+## Data Transformation
+- Implement pandas for tabular medical data processing
+- Use JSONPath for structured extraction from complex documents
+- Apply regular expressions for pattern-based extraction
+- Implement medical text normalization pipelines
+- Create specialized processors for each document type
+- Implement validation rules for transformed data
+
+## Data Quality Framework
+- Create data quality checks for medical value ranges
+- Implement schema validation for extracted structures
+- Use anomaly detection for unusual medical values
+- Create logging framework for extraction metrics
+- Implement data lineage tracking for provenance
+- Design rejection workflows for problematic documents
+
+## Batch Processing
+- Design incremental processing for new documents
+- Implement parallelization for independent document processing
+- Create checkpointing for long-running extraction tasks
+- Use idempotent processing to prevent duplication
+- Implement resource throttling for large document batches
+- Design monitoring dashboards for extraction progress

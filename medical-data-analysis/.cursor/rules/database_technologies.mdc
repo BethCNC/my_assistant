@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Database Technologies
+
+## PostgreSQL with TimescaleDB
+- Use PostgreSQL 14+ as the primary relational database
+- Implement TimescaleDB extension for time-series medical data
+- Utilize JSONB columns for flexible schema components
+- Create hypertables for chronological medical events
+- Implement proper indexing for temporal queries
+- Use database partitioning for efficient historical data management
+
+## Vector Database (Milvus/Pinecone)
+- Use vector database for semantic search capabilities
+- Store embeddings of medical text data for similarity search
+- Apply cosine similarity for symptom pattern matching
+- Implement efficient vector indexing for large text corpus
+- Use dimension reduction techniques for embedding optimization
+- Keep vector database synchronized with primary database
+
+## Schema Patterns
+- Follow strict normalization for core medical entities
+- Use JSON for semi-structured medical data elements
+- Implement inheritance patterns for medical event types
+- Create materialized views for common medical queries
+- Use database functions for complex medical calculations
+- Implement proper constraint management for data integrity
+
+## Database Access Patterns
+- Implement connection pooling for performance optimization
+- Use prepared statements for all parameterized queries
+- Create appropriate roles with least privilege principles
+- Implement row-level security for sensitive medical data
+- Use advisory locks for concurrent medical record updates
+- Create efficient query patterns for time-range operations
+
+## Data Migration Strategy
+- Use Alembic for database migration management
+- Implement blue-green deployment for schema changes
+- Create data validation steps in migration scripts
+- Maintain backward compatibility during transitions
+- Implement proper rollback procedures for failed migrations
+- Document all schema changes with clinical justification

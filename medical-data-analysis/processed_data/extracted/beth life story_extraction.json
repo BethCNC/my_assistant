@@ -1,0 +1,280 @@
+{
+  "metadata": {
+    "filetype": "text",
+    "filename": "beth life story.txt",
+    "extension": ".txt",
+    "date_from_filename": null
+  },
+  "confidence_score": 1.0,
+  "dates": [],
+  "appointment_dates": [],
+  "providers": [
+    {
+      "name": "ctors suggested",
+      "specialty": "psychiatry",
+      "context": "c relationship with food. The doctors suggested stress and anxiety were the causes of my hair loss. My parents were getting separated and I never f",
+      "confidence": 0.7
+    },
+    {
+      "name": "ing my",
+      "specialty": null,
+      "context": " never felt like I could stop doing my job, which was to make sure everyone was happy all the time. I struggled to make friends and was al",
+      "confidence": 0.7
+    },
+    {
+      "name": "anything that",
+      "specialty": null,
+      "context": "le day, every time I tried to do anything that required energy. I would carry grocery bags as vomit bags in my car for the ride to and from work a",
+      "confidence": 0.7
+    },
+    {
+      "name": "ing something",
+      "specialty": "rheumatology",
+      "context": " know how to function if I am doing something someone wants or needs from me. I truly have no idea how to think for myself and make decisions bas",
+      "confidence": 0.7
+    },
+    {
+      "name": "ne so",
+      "specialty": null,
+      "context": "o know what is supposed to be done so I can achieve it. Without a set of clear instructions, I am absolutely clueless.\nTransitioning to W",
+      "confidence": 0.7
+    },
+    {
+      "name": "for work",
+      "specialty": null,
+      "context": "cluded that the best thing to do for work and income would be to work from home. I have spent the past three years teaching myself everything",
+      "confidence": 0.7
+    },
+    {
+      "name": "es not",
+      "specialty": null,
+      "context": "ys in pain or don't feel well does not convey the extent of my suffering. Instead, it often prompts people to dismiss my complaints as mer",
+      "confidence": 0.7
+    },
+    {
+      "name": "not engage",
+      "specialty": null,
+      "context": "ne outside of my boyfriend. I do not engage in texting, calling, emailing, or any form of communication with other human beings. This lack of i",
+      "confidence": 0.7
+    },
+    {
+      "name": "ctors to",
+      "specialty": null,
+      "context": "for not eating, I used to beg doctors to leave feeding tubes in. Food disgusts me, and I have absolutely no appetite. On top of that, I am n",
+      "confidence": 0.7
+    },
+    {
+      "name": "ctors are",
+      "specialty": null,
+      "context": "st 5 years of being sick are \nDoctors are not all there to help you and will not have all the answers. \nMedical gaslighting is unfortunately ",
+      "confidence": 0.7
+    },
+    {
+      "name": "not have",
+      "specialty": "neurology",
+      "context": "r solution.\nPeople in general do not have any desire to listen to someone with  chronic pain or health issues because to them it seems like c",
+      "confidence": 0.7
+    },
+    {
+      "name": "to help",
+      "specialty": null,
+      "context": " special shoe insert from the doctor to help with the pain. This key life lesson has plagued me and is one of the main reasons I suffer so much ",
+      "confidence": 0.7
+    },
+    {
+      "name": "obsessive and",
+      "specialty": null,
+      "context": "n the middle of the night and do obsessive and repetitive sets of push-ups, sit-ups, and all kinds of other exercises. In college, I stayed up all",
+      "confidence": 0.7
+    },
+    {
+      "name": "it all",
+      "specialty": null,
+      "context": "\u20135 hours, and then get up and do it all over again.\nTough Life Lessons\nSome difficult life lessons I learned just in the past 5 years of be",
+      "confidence": 0.7
+    }
+  ],
+  "specialties": {
+    "cardiology": 2,
+    "neurology": 40,
+    "rheumatology": 16,
+    "gastroenterology": 3,
+    "psychiatry": 40
+  },
+  "medical_events": [],
+  "clinical_sections": {},
+  "doctor_notes": [],
+  "ai_analysis": {
+    "processed": true,
+    "entities": {
+      "conditions": [],
+      "medications": [],
+      "symptoms": [
+        {
+          "name": "pain",
+          "text": "pain",
+          "start": 2193,
+          "end": 2197,
+          "confidence": 0.95,
+          "type": "symptom"
+        }
+      ],
+      "procedures": [],
+      "lab_values": []
+    },
+    "entity_counts": {
+      "conditions": 0,
+      "medications": 0,
+      "symptoms": 1,
+      "procedures": 0,
+      "lab_values": 0
+    },
+    "text_analysis": {
+      "length": 42783,
+      "sentiment": {
+        "positive": 0.6666666666666666,
+        "negative": 0.3333333333333333,
+        "neutral": 0.9995953601294848
+      },
+      "topics": [
+        "cardiology",
+        "neurology",
+        "rheumatology",
+        "gastroenterology",
+        "pulmonology"
+      ],
+      "clinical_impression": "Includes diagnostic information"
+    },
+    "embedding": [
+      0.029695166350409283,
+      0.2236592323382244,
+      0.0843797011269152,
+      -0.030870229914857415,
+      -0.13949833597802064,
+      0.07872426915283878,
+      -0.0039263928654555665,
+      -0.039441964879726406,
+      0.11898368646144329,
+      0.0326843560728818,
+      0.1126601477899546,
+      -0.013808193272964262,
+      0.03408184198131702,
+      -0.0481473921938564,
+      0.01793474871654477,
+      0.09867788356328032,
+      0.1082221142008519,
+      -0.14340107922306816,
+      0.0642235814950615,
+      -0.011501073843166048,
+      0.06520367765266727,
+      0.12939391060837777,
+      0.09903392537977726,
+      -0.055765698200390505,
+      -0.051650468787640756,
+      0.05755697450076188,
+      0.06055171910449904,
+      0.027169345685627,
+      -0.13998674933815208,
+      -0.0319369635619498,
+      0.09991262867693629,
+      -0.009433435717916038,
+      0.06839301257732264,
+      0.0097304655798108,
+      0.11853296010205695,
+      -0.009485329869987255,
+      -0.019265269013569144,
+      0.11409341294560993,
+      0.01773223415500736,
+      0.1658146587008838,
+      0.025260643536094127,
+      -0.05472181391868768,
+      -0.1479066236098342,
+      -0.0525123363734577,
+      0.048525229837303924,
+      0.01749584627360933,
+      0.031976248992619465,
+      -0.07725662928825457,
+      -0.03450020665396564,
+      0.027688982814317427,
+      -0.018790470914893147,
+      -0.015022228525472147,
+      -0.09963490943165146,
+      0.06984838230637483,
+      0.0021274193663050264,
+      0.01140051758259071,
+      -0.07668077443555646,
+      0.08842814592041902,
+      0.14859177087040937,
+      0.023497625091620587,
+      -0.07316319187592746,
+      0.03942407160937445,
+      0.10492133045317201,
+      0.06799832896563131,
+      -0.14939763815632168,
+      -0.08379958596628698,
+      0.021836010433589077,
+      -0.2185892169156028,
+      -0.09044938905658352,
+      0.046239683803150924,
+      -0.0751627177802769,
+      0.03416198919480986,
+      -0.12570137283865604,
+      0.01738442025875684,
+      -0.11208327423828417,
+      -0.07277203045685246,
+      0.07457795921732778,
+      0.0314347478450654,
+      0.02945254216453925,
+      -0.006504544918605465,
+      0.061313909725850615,
+      0.017104812677434997,
+      -0.22043012307771087,
+      -0.016929868258604916,
+      0.007829666902734296,
+      -0.06533675947932485,
+      0.028035547609242394,
+      0.14829941528595164,
+      -0.16158619951715128,
+      -0.06721555041055993,
+      -0.1260412720873241,
+      -0.06568516785042317,
+      -0.013235066821037846,
+      0.13273329464297387,
+      -0.0032624284976275394,
+      0.08115385292830599,
+      0.03890420125085353,
+      0.0973294691400664,
+      0.04946081264274002,
+      0.08588216655380915,
+      0.052391532877473244,
+      0.13903594715287862,
+      -0.02520763405376892,
+      -0.24011342123307164,
+      -0.10815396428472253,
+      0.0355776371185969,
+      -0.004237855260021638,
+      0.13139181739016378,
+      -0.053268949508594655,
+      0.10027200874478646,
+      0.07590382713585886,
+      0.14226373540353232,
+      0.025507684083915065,
+      -0.007800371109378487,
+      0.1966860954194158,
+      0.08948010486029016,
+      -0.08298750059647711,
+      0.018911636087569524,
+      -0.06594530167103245,
+      -0.05052833488420605,
+      0.04551440836954919,
+      0.1832832711010638,
+      0.05794166172273978,
+      0.042658326005818537,
+      0.000694379075370989,
+      0.06693370323204319,
+      -0.09940061394670822,
+      -0.08818769735868878
+    ]
+  },
+  "content_length": 42783
+}

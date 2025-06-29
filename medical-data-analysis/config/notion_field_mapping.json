@@ -1,0 +1,181 @@
+{
+  "appointments": {
+    "notion_database": "medical_calendar",
+    "fields": {
+      "name": "title",
+      "date": "Date",
+      "purpose": "Purpose",
+      "provider": {
+        "relation": "Doctor",
+        "target_database": "medical_team"
+      },
+      "notes": "Doctors Notes",
+      "type": "Type",
+      "symptoms": {
+        "relation": "Linked Symptoms",
+        "target_database": "symptoms"
+      },
+      "conditions": {
+        "relation": "Related Diagnoses",
+        "target_database": "medical_conditions"
+      },
+      "medications": {
+        "relation": "Medications",
+        "target_database": "medications"
+      }
+    }
+  },
+  "providers": {
+    "notion_database": "medical_team",
+    "fields": {
+      "name": "title",
+      "role": "Role",
+      "office_name": "Office Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "url": "URL",
+      "active": "Active",
+      "affiliation": "Affiliation?",
+      "date_started_care": "Date Started Care",
+      "notes": "Notes"
+    }
+  },
+  "conditions": {
+    "notion_database": "medical_conditions",
+    "fields": {
+      "name": "title",
+      "status": "Status",
+      "diagnosed_date": "Diagnosed Date",
+      "long_form": "Long Form",
+      "definition": "Definition",
+      "treated_by": {
+        "relation": "Treated by",
+        "target_database": "medical_team"
+      },
+      "related_symptoms": {
+        "relation": "Related Symptoms",
+        "target_database": "symptoms"
+      },
+      "relevant_medications": {
+        "relation": "Relevant Meds ",
+        "target_database": "medications"
+      }
+    }
+  },
+  "medications": {
+    "notion_database": "medications",
+    "fields": {
+      "name": "title",
+      "generic_name": "Generic Name",
+      "dose_mg": "Dose (mg)",
+      "frequency": "Frequency",
+      "active": "Active",
+      "prescribed_date": "Prescribed Date",
+      "date_commenced": "Date Commenced",
+      "notes": "Notes",
+      "prescribed_by": {
+        "relation": "Prescribed by",
+        "target_database": "medical_team"
+      },
+      "to_treat": {
+        "relation": "To Treat",
+        "target_database": "medical_conditions"
+      },
+      "related_events": {
+        "relation": "Related Events",
+        "target_database": "medical_calendar"
+      }
+    }
+  },
+  "symptoms": {
+    "notion_database": "symptoms",
+    "fields": {
+      "name": "title",
+      "active": "Active",
+      "related_diagnosis": {
+        "relation": "Related Diagnosis",
+        "target_database": "medical_conditions"
+      },
+      "related_events": {
+        "relation": "Related Events",
+        "target_database": "medical_calendar"
+      }
+    }
+  },
+  "medical_calendar": {
+    "name": "Name",
+    "date": "Date",
+    "type": "Type",
+    "doctor": "Doctor",
+    "related_diagnoses": "Related Diagnoses",
+    "linked_symptoms": "Linked Symptoms",
+    "medications": "Medications",
+    "purpose": "Purpose",
+    "personal_notes": "Personal Notes",
+    "doctors_notes": "Doctors Notes",
+    "lab_result": "Lab Result",
+    "energy": "Energy",
+    "anxiety": "Anxiety",
+    "shoulder_pain": "Shoulder Pain",
+    "sleep": "Sleep",
+    "salt_tabs": "Salt Tabs",
+    "glows": "Glows",
+    "grows": "Grows",
+    "notes": "Notes",
+    "movement_work": "Movement Work",
+    "walk": "Walk",
+    "adderall_am": "Adderall - AM",
+    "adderall_1pm": "Adderall - 1PM",
+    "adderall_pm": "Adderall - PM",
+    "pepcid_am": "Pepcid - AM",
+    "pepcid_pm": "Pepcid - PM",
+    "zyrtec_am": "Zrytec - AM",
+    "zyrtec_pm": "Zrytec - PM",
+    "quercetin": "Quercetin"
+  },
+  "medical_team": {
+    "name": "Name",
+    "role": "Role",
+    "active": "Active",
+    "office_name": "Office Name",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "url": "URL",
+    "treating": "Treating",
+    "prescribing": "Prescribing",
+    "date_started_care": "Date Started Care",
+    "notes": "Notes",
+    "affiliation": "Affiliation",
+    "image": "Image"
+  },
+  "medical_conditions": {
+    "name": "Name",
+    "symptoms": "Related Symptoms",
+    "providers": "Treating Physicians",
+    "medications": "Relevant Medications",
+    "events": "Related Medical Events"
+  },
+  "symptoms": {
+    "name": "Name",
+    "active": "Active",
+    "related_diagnosis": "Related Diagnosis",
+    "related_events": "Related Events",
+    "first_onset": "First Onset"
+  },
+  "medications": {
+    "name": "Name",
+    "generic_name": "Generic Name",
+    "dose_mg": "Dose (mg)",
+    "frequency": "Frequency",
+    "active": "Active",
+    "date_commenced": "Date Commenced",
+    "prescribed_date": "Prescribed Date",
+    "prescribed_by": "Prescribed by",
+    "to_treat": "To Treat",
+    "related_events": "Related Events",
+    "last_collected": "Last Collected",
+    "notes": "Notes"
+  }
+} 

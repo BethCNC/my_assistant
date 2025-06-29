@@ -16,23 +16,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/assets/smiley.svg" type="image/svg+xml" />
+      </head>
       <body>
-        {/* Navigation */}
-        <nav className="fixed top-4 left-4 z-50 flex gap-2">
-          <Link 
-            href="/" 
-            className="px-3 py-1 bg-black/50 backdrop-blur-md text-white rounded-md text-sm hover:bg-black/70 transition-all"
-          >
-            Main App
-          </Link>
-          <Link 
-            href="/demo" 
-            className="px-3 py-1 bg-black/50 backdrop-blur-md text-white rounded-md text-sm hover:bg-black/70 transition-all"
-          >
-            Component Demo
-          </Link>
-        </nav>
-        {children}
+        <div className="flex flex-col md:flex-row min-h-screen w-full">
+          {/* Navigation - removed all nav links */}
+          <div className="flex-1 flex flex-col pt-14 md:pt-0">{children}</div>
+        </div>
       </body>
     </html>
   )

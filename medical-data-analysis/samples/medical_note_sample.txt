@@ -1,0 +1,50 @@
+PATIENT RECORD
+-------------------
+Date: 2023-03-15
+Patient: Jane Doe
+Date of Birth: 1980-05-12
+Medical Record #: MRN12345
+Gender: Female
+
+PROVIDER INFORMATION
+-------------------
+Doctor: Dr. Sarah Johnson
+Specialty: Rheumatology
+Facility: Memorial Medical Center
+Phone: (555) 123-4567
+
+ASSESSMENT NOTE
+-------------------
+Patient presents with joint hypermobility in multiple joints with a Beighton score of 8/9. The patient experiences chronic pain in shoulders, knees, and lower back. She reports frequent joint subluxations and dislocations, particularly in the shoulders. Patient also experiences chronic fatigue and poor sleep quality.
+
+CURRENT MEDICATIONS:
+1. Acetaminophen 500mg - PRN for pain
+2. Cymbalta 30mg - Daily for pain management
+3. Vitamin D 2000 IU - Daily
+4. Magnesium 250mg - Twice daily
+
+PAST MEDICAL HISTORY:
+- Diagnosed with hypermobile Ehlers-Danlos Syndrome (hEDS) in 2020
+- Postural Orthostatic Tachycardia Syndrome (POTS) diagnosed 2021
+- Recurring migraines since adolescence
+- ADHD diagnosed in adulthood (2018)
+- Irritable Bowel Syndrome
+
+ASSESSMENT:
+Patient's joint hypermobility continues to cause significant pain and functional limitations. Stabilization exercises provided by physical therapy show moderate improvement in shoulder stability. Patient continues to experience symptoms consistent with POTS, including orthostatic tachycardia and lightheadedness upon standing.
+
+The patient's ADHD symptoms are reasonably controlled with current management strategies, but she reports increased difficulty with focus during pain flares. Patient shows signs of sensory processing difficulties consistent with neurodivergent traits.
+
+PLAN:
+1. Continue current medication regimen
+2. Increase physical therapy to twice weekly focusing on joint stabilization
+3. Schedule follow-up with cardiology for POTS management
+4. Consider referral to pain management specialist for multimodal approach
+5. Recommend compression garments for POTS symptom management
+6. Return for follow-up in 3 months
+
+LABORATORY RESULTS (2023-02-28):
+- Complete Blood Count: Within normal limits
+- Vitamin D: 28 ng/mL (Low normal, continue supplementation)
+- Inflammatory markers (ESR, CRP): Normal
+- Thyroid function: TSH 2.3 mIU/L (Normal) 

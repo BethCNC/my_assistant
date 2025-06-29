@@ -1,0 +1,150 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 📋 Health Journey Website — Chatbot Integration Plan
+
+## 🧠 Project Goal
+Build a chatbot integrated into your Health Journey Website that:
+- Allows you to log symptoms and medications conversationally.
+- Organizes the data into a structured database.
+- Optionally prompts you daily for updates (journal or health entries).
+- Centralizes your medical data for easier tracking, analysis, and care management.
+
+---
+
+## 🏛️ Website Architecture Overview
+
+| Layer         | Tool/Platform             | Purpose                                    |
+|:--------------|:---------------------------|:-------------------------------------------|
+| Frontend      | React (with Tailwind)       | Website Interface                         |
+| Bot Interface | Chat input + chat display   | Conversation with AI assistant            |
+| Bot Engine    | OpenAI API (or custom model)| Natural Language Understanding and parsing|
+| Database      | Notion API (starting)       | Storing logs of symptoms/medications       |
+| Future Backend| Supabase (optional)         | Advanced database management              |
+| Automation    | Make Automations (optional) | Trigger workflows from entries             |
+
+---
+
+## 💬 Chatbot Functional Requirements
+
+### 1. Symptom and Medication Logging
+- **Trigger**: User manually tells the bot something about their health.
+- **Bot Action**:
+  - Parse message.
+  - Extract symptoms, medications, doses, and times.
+  - Format into structured JSON.
+  - Save the log into the database.
+
+### 2. Daily Health Prompts (Optional Extension)
+- **Trigger**: Bot sends a daily prompt: "How are you feeling today? Any new symptoms or medications to log?"
+- **Bot Action**:
+  - Wait for user reply.
+  - Follow the same logging process as manual entries.
+
+---
+
+## 🔧 How the Chatbot Will Work
+
+### Step-by-Step Flow
+
+1. **User Input**
+   - User types a freeform message (ex: "I felt nauseous this morning and took Zofran 4mg at 10 AM.")
+
+2. **Bot Parsing**
+   - Bot uses a designed prompt to extract:
+     - Symptoms: nauseous
+     - Medication: Zofran
+     - Dose: 4mg
+     - Time: 10 AM
+
+3. **Data Structuring**
+   - Format data into structured JSON:
+```json
+{
+  "symptoms": ["nauseous"],
+  "medications": [{
+    "name": "Zofran",
+    "dose": "4mg",
+    "time": "10:00 AM"
+  }],
+  "date": "April 27, 2025"
+}
+```
+
+4. **Database Saving**
+   - Send JSON to the Notion API (or later Supabase).
+   - Save into a Health Log database with appropriate properties (Symptoms, Medications, Dose, Time, Date).
+
+5. **Bot Confirmation**
+   - Bot replies to user: "Logged your nausea and Zofran 4mg at 10:00 AM."
+
+---
+
+## ⚙️ Technology Setup Details
+
+### Frontend (React)
+- Chat input field
+- Display chat conversation
+- Simple API call to send user messages to backend bot service
+
+### Bot Backend
+- Using OpenAI's GPT-4o (or lighter model if necessary)
+- System Prompt Example:
+```
+You are a health assistant helping log symptoms and medications. Extract the following from user messages: symptoms[], medications[], dose, time, and today's date. Respond with a confirmation after logging.
+```
+
+### Database (Starting with Notion)
+- Notion Database: `Health Log`
+  - **Properties:**
+    - Symptoms (multi-select)
+    - Medication Name (multi-select)
+    - Dose (text)
+    - Time Taken (time)
+    - Date (date)
+- Use Notion API to create new entries based on chatbot extraction.
+
+### Middleware (Optional if using Make)
+- Make Automation Scenario:
+  - Receive webhook from chatbot
+  - Format JSON if needed
+  - Send to Notion database
+
+---
+
+## 🚀 Future Expansion Ideas
+- Add voice input using Web Speech API.
+- Use Supabase instead of Notion for more complex relational tracking.
+- Train a smaller local model for complete data privacy.
+- Build analytics dashboards to visualize symptom trends over time.
+- Trigger health reminders based on recent logs (example: "You haven't logged taking antihistamines today.")
+
+---
+
+## ❓ Open Questions for Clarification
+- Do you want the bot to *proactively* check in daily or only *passively* record when you tell it?
+- Would you want a voice-to-text option from the start?
+- Should the database also track mood, stress, or energy levels each day?
+- How soon do you want Supabase involved, or stick with Notion for the first version?
+
+---
+
+# ✅ Immediate Next Steps
+
+1. Set up a simple chatbot chatbox in your React frontend.
+2. Connect to OpenAI with the system prompt defined above.
+3. Create the Notion database (Health Log) with basic properties.
+4. Test sending a few sample logs through chatbot into Notion.
+
+---
+
+_This file is a living document and can evolve with your project updates._
+
+---
+
+**Created for:** Beth's Health Journey Application 🌱
+
+**Date:** April 27, 2025
+

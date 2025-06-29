@@ -1,0 +1,280 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Medical Records Organization Project Rules
+
+## Project Overview
+
+This project aims to organize all past medical records, lab results, and health information from multiple sources into a structured Notion system to better track and manage multiple chronic illnesses.
+
+## Current Notion Structure
+
+The system currently consists of 5 main databases with relational properties:
+
+1. **Medical Calendar Database** (ID: 17b86edcae2c81c183e0e0a19a035932)
+   - Primary container for all medical history
+   - Chronological record of appointments, lab results, and medical events
+   - Links to other databases via relations
+
+2. **Symptoms Database** (ID: 18a86edcae2c805a9ea1000c82df6d90)
+   - Tracks symptoms associated with conditions
+   - Properties include active status, related diagnoses, first onset tracking
+
+3. **Medical Team Database** (ID: 17b86edcae2c81558caafbb80647f6a9)
+   - Information about healthcare providers
+   - Specialties, contact information, date care began
+
+4. **Medications Database** (ID: 17b86edcae2c81a7b28ae9fbcc7e7b62)
+   - Tracks medications, dosages, and prescription details
+   - Links to conditions and providers
+
+5. **Notes Database** (ID: 654e1ddc962f44698b1df6697375a321)
+   - Stores medical documentation, research, prescriptions, scans
+   - Health-specific resources and references
+
+## Data Sources
+
+- Existing data in Notion databases
+- Atrium Health summary folder (`data/atrium_summary`)
+- Novant Health summary folder (`data/novant_summary`)
+
+## Organization Rules
+
+### Medical Calendar Entries
+
+1. **Standardized Titling**
+   - For appointments: "[Specialty Type] Visit - [Date]" (e.g., "GP Visit - Jan 29 2025")
+   - For lab results: "[Test Name] - [Date]" (e.g., "TSH - Apr 10 2018")
+   - Always include the date in the title for chronological sorting
+
+2. **Chronological Order**
+   - All entries must include the proper date property
+   - Date format should be consistent across all entries
+
+3. **Duplicate Prevention**
+   - Before creating a new entry, check for existing entries with:
+     - Similar date
+     - Similar provider/facility
+     - Similar test type or appointment type
+
+4. **Required Properties**
+   - **Type**: Categorize as "Doctor's Notes - Appt Notes", "Lab Result", "Surgery", etc.
+   - **Date**: When the appointment/test occurred
+   - **Doctor**: Relation to the provider in Medical Team database
+   - **Related Diagnoses**: Linked conditions relevant to the entry
+   - **Linked Symptoms**: Symptoms discussed or related to the entry
+   - **Medications**: Any medications discussed, prescribed, or relevant
+   - **Visit Summary/Lab Result**: Formatted summary of key information
+
+### Content Organization
+
+1. **Lab Results Format**
+   - Test name and type clearly identified
+   - Reference ranges included
+   - Actual values highlighted
+   - Abnormal values clearly marked
+   - Provider's interpretation included when available
+
+2. **Visit Notes Format**
+   - Patient info section (standard header with DOB, MRN, provider)
+   - Chief complaint/purpose
+   - Assessment and findings
+   - Plan and follow-up
+   - Medication changes
+   - Next steps clearly defined
+
+## AI Integration
+
+### Data Extraction System
+
+1. **Document Processing Pipeline**
+   - PDF extraction using a PDF parsing library
+   - OCR for scanned documents
+   - Text preprocessing to clean and normalize medical text
+   - Named entity recognition to identify medical terms
+
+2. **Implementation Plan**
+   - Use OpenAI's API for document analysis
+   - Create Node.js/Python scripts for bulk processing 
+   - Implement a UI for manual review and validation
+   - Build integration with Notion API for data insertion
+
+### AI Processing Rules
+
+1. **Data Extraction**
+   - Extract key data points from uploaded medical records
+   - Identify test names, results, reference ranges from lab reports
+   - Identify diagnoses, symptoms, and medications from visit notes
+   - Map extracted entities to appropriate database fields
+
+2. **Data Summarization**
+   - Create concise summaries focusing on abnormal/significant findings
+   - Maintain all clinically relevant details
+   - Format in easy-to-scan bullet points when appropriate
+   - Include a "Key Takeaways" section at the top of each entry
+
+3. **Relationship Mapping**
+   - Identify and link to relevant entries in other databases
+   - Connect new symptoms to existing condition entries
+   - Link medications mentioned to the medications database
+   - Connect to the correct provider in the medical team database
+
+4. **AI Prompts and Templates**
+   - Use consistent prompting strategy for medical record analysis
+   - Implement specialized templates for different document types:
+     - Lab result extraction template
+     - Visit notes extraction template
+     - Medication change tracking template
+   - Review and refine output structure for consistency
+
+## Implementation Process
+
+1. **For Each New Record**
+   - Check for duplicates in the system
+   - Create new Medical Calendar entry with proper title and date
+   - Extract and format key information following the rules above
+   - Create proper relationships to other databases
+   - Add any new entities to appropriate databases (new symptoms, medications, etc.)
+
+2. **For Existing Records**
+   - Review current structure and formatting
+   - Standardize titles and formatting
+   - Ensure all appropriate relationships are established
+   - Complete missing information where possible
+
+3. **Bulk Processing Strategy**
+   - Process files in chronological order
+   - Group similar document types for batch processing
+   - Create temporary staging area for review before final import
+   - Track processing status to avoid duplication
+
+## Examples
+
+### Lab Result Entry Example
+```
+Title: TSH - Apr 10 2018
+Type: Lab Result
+Date: April 10, 2018
+Doctor: Dr. Yousuf Khan
+Related Diagnoses: Graves Disease
+Lab Result:
+- TSH: 1.340 uIU/mL (Normal range: 0.450 - 4.500 uIU/mL)
+Result Interpretation: Thyroid antibody levels high, consistent with Graves disease.
+However, thyroid hormone levels have returned to normal range, suggesting remission.
+No thyroid medication indicated at this point.
+```
+
+### Visit Note Entry Example
+```
+Title: GP Visit - Jan 29 2025
+Type: Doctor's Notes - Appt Notes
+Date: January 29, 2025
+Doctor: Dr. Timothy Kennard
+Related Diagnoses: PTSD, EDS
+Linked Symptoms: Shoulder Pain
+Visit Summary: Evaluation of shoulder pain. Patient reports persistent shoulder pain, 
+severe over past 8 weeks, with sensation of arm turning blue and cold.
+Suspects structural abnormality or dislocation, possibly related to EDS diagnosis.
+```
+
+## AI Integration Technical Implementation
+
+### Setup Requirements
+
+1. **API Access**
+   - Notion API access with integration token (stored in .env)
+   - OpenAI API key for AI analysis
+   - OAuth setup for Notion workspace connection
+
+2. **Development Stack**
+   - Node.js or Python for backend processing
+   - Next.js for frontend if building a custom UI
+   - Database for tracking processing status and history
+
+### Processing Flow
+
+1. **Document Ingestion**
+   - Upload/select medical document
+   - Convert to machine-readable text
+   - Preprocess for AI analysis
+
+2. **AI Analysis**
+   - Send preprocessed text to OpenAI with specialized prompt
+   - Extract structured information (dates, tests, values, diagnoses)
+   - Generate summary and key takeaways
+   - Format according to templates
+
+3. **Notion Integration**
+   - Check for duplicates using Notion database query
+   - Create new page in Medical Calendar with formatted content
+   - Establish relationships to other databases
+   - Add new entities to other databases as needed
+
+4. **Review and Verification**
+   - Present processed entry for human review
+   - Allow manual adjustments before final commit
+   - Track confidence scores for extracted information
+   - Flag low-confidence extractions for careful review
+
+### AI Prompt Engineering
+
+**General Medical Record Analysis Prompt**
+```
+You are a medical record analyzer assistant. Extract the following information from this medical document:
+1. Document type (lab result, visit note, procedure report, etc.)
+2. Date of service
+3. Provider name and specialty
+4. Primary complaint or purpose
+5. Diagnoses mentioned
+6. Medications mentioned (including dosages and changes)
+7. Test results with reference ranges
+8. Treatment plan and follow-up
+9. Key medical findings
+
+Format the extraction as follows:
+[Document Type]: 
+[Date]: 
+[Provider]: 
+[Purpose]: 
+[Diagnoses]: 
+[Medications]: 
+[Results]: 
+[Plan]: 
+[Key Findings]:
+```
+
+**Lab Results Specialized Prompt**
+```
+You are a lab results analyzer. Extract the following information from this lab report:
+1. Test name(s)
+2. Collection date
+3. Result date
+4. Ordering provider
+5. For each test:
+   - Result value
+   - Units
+   - Reference range
+   - Flag if abnormal
+
+Format abnormal results with ** around them.
+Provide a one-paragraph interpretation of the results focusing on clinical significance.
+```
+
+### Regular Maintenance
+
+1. **Periodic Review**
+   - Review database organization monthly
+   - Check for incomplete entries
+   - Update relationship links as needed
+
+2. **AI Model Refinement**
+   - Track extraction accuracy and errors
+   - Refine prompts based on performance
+   - Consider fine-tuning models for specific medical document types
+
+3. **Data Consistency**
+   - Run periodic checks for orphaned records
+   - Standardize names and terminology
+   - Consolidate duplicate entries 

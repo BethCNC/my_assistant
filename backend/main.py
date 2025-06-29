@@ -435,12 +435,14 @@ async def analyze_figma_variables():
     except Exception as e:
         return {"error": str(e), "status": "error"}
 
-# For local development
+# For local development and Cloud Run
 if __name__ == "__main__":
     import uvicorn
+    # Use PORT environment variable for Cloud Run, default to 8000 for local
+    port = int(os.getenv("PORT", 8000))
     print("🚀 Starting Beth's Assistant Backend with RAG...")
     print("🧠 RAG Learning: ENABLED" if RAG_AVAILABLE else "🧠 RAG Learning: DISABLED")
-    print("📍 Health check: http://localhost:8000/health")
-    print("📖 API docs: http://localhost:8000/docs")
-    print("🔍 RAG insights: http://localhost:8000/api/rag/stats")
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    print(f"📍 Health check: http://localhost:{port}/health")
+    print(f"📖 API docs: http://localhost:{port}/docs")
+    print(f"🔍 RAG insights: http://localhost:{port}/api/rag/stats")
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)

@@ -1,0 +1,120 @@
+{
+  "total_files": 7,
+  "successful": 7,
+  "failed": 0,
+  "processing_date": "2025-05-01T00:39:34.356547",
+  "file_results": [
+    {
+      "file": "input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md",
+      "extractor": "MarkdownExtractor",
+      "confidence": 1.0,
+      "output_path": "processed_data/extracted/2023 Lab Results 15e86edcae2c8105af02f30e923a506d_extraction.json",
+      "extracted_entities": {
+        "dates": 0,
+        "providers": 0,
+        "conditions": 0,
+        "medications": 0,
+        "symptoms": 0,
+        "procedures": 0,
+        "lab_values": 0
+      },
+      "ai_processing": "success"
+    },
+    {
+      "file": "input/text_documents/beth life story.txt",
+      "extractor": "TextExtractor",
+      "confidence": 1.0,
+      "output_path": "processed_data/extracted/beth life story_extraction.json",
+      "extracted_entities": {
+        "dates": 0,
+        "providers": 14,
+        "conditions": 0,
+        "medications": 0,
+        "symptoms": 1,
+        "procedures": 0,
+        "lab_values": 0
+      },
+      "ai_processing": "success"
+    },
+    {
+      "file": "input/csv_data/labs_novant.csv",
+      "extractor": "CSVExtractor",
+      "confidence": 1.0,
+      "output_path": "processed_data/extracted/labs_novant_extraction.json",
+      "extracted_entities": {
+        "dates": 0,
+        "providers": 0,
+        "conditions": 0,
+        "medications": 0,
+        "symptoms": 0,
+        "procedures": 0,
+        "lab_values": 0
+      },
+      "ai_processing": "success"
+    },
+    {
+      "file": "input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf",
+      "extractor": "RTFExtractor",
+      "confidence": 1.0,
+      "output_path": "processed_data/extracted/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z_extraction.json",
+      "extracted_entities": {
+        "dates": 1,
+        "providers": 1,
+        "conditions": 0,
+        "medications": 0,
+        "symptoms": 1,
+        "procedures": 0,
+        "lab_values": 0
+      },
+      "ai_processing": "success"
+    },
+    {
+      "file": "input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv",
+      "extractor": "CSVExtractor",
+      "confidence": 1.0,
+      "output_path": "processed_data/extracted/Symptoms 17b86edcae2c81c69077e55a68cf2438_extraction.json",
+      "extracted_entities": {
+        "dates": 0,
+        "providers": 0,
+        "conditions": 0,
+        "medications": 0,
+        "symptoms": 1,
+        "procedures": 0,
+        "lab_values": 0
+      },
+      "ai_processing": "success"
+    },
+    {
+      "file": "input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf",
+      "extractor": "PDFExtractor",
+      "confidence": 1.0,
+      "output_path": "processed_data/extracted/Entire_Health_Timeline_1080x1920_(1)_extraction.json",
+      "extracted_entities": {
+        "dates": 0,
+        "providers": 1,
+        "conditions": 0,
+        "medications": 0,
+        "symptoms": 1,
+        "procedures": 0,
+        "lab_values": 0
+      },
+      "ai_processing": "success"
+    },
+    {
+      "file": "input/html_documents/Atrium Patient Health Summary.html",
+      "extractor": "HTMLExtractor",
+      "confidence": 1.0,
+      "output_path": "processed_data/extracted/Atrium Patient Health Summary_extraction.json",
+      "extracted_entities": {
+        "dates": 51,
+        "providers": 0,
+        "conditions": 1,
+        "medications": 0,
+        "symptoms": 1,
+        "procedures": 0,
+        "lab_values": 0
+      },
+      "ai_processing": "success"
+    }
+  ]
+}

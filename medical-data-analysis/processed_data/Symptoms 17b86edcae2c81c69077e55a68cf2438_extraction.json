@@ -1,0 +1,17 @@
+{
+  "source_file": "input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv",
+  "file_hash": "d02dfbcea7febf6a7874378234226fc96acd8caff344ddd0f40a7ef1b2ed6c63",
+  "metadata": {
+    "creation_time": "2025-04-30T16:09:51.096325",
+    "modification_time": "2025-04-30T16:09:51.096074",
+    "file_size": 2198,
+    "file_type": "csv",
+    "file_name": "Symptoms 17b86edcae2c81c69077e55a68cf2438.csv"
+  },
+  "extraction_date": "2025-04-30T16:14:30.024638",
+  "confidence_score": 1.0,
+  "extracted_dates": "set()",
+  "appointment_dates": [],
+  "providers": [],
+  "content_length": 3746
+}

@@ -1,0 +1,316 @@
+---
+description: Chatbot Integration
+globs: 
+alwaysApply: false
+---
+# Medical Chatbot Integration
+
+## Overview
+
+The Health Journey Website includes an AI-powered chatbot specifically trained on your personal medical information. This document outlines the chatbot architecture, data security considerations, and implementation details.
+
+## Purpose & Goals
+
+1. **Quick Information Access**: Allow doctors to retrieve specific medical details without navigating the full interface
+2. **Contextual Understanding**: Provide responses that understand the relationships between conditions, treatments, and symptoms
+3. **Data Synthesis**: Summarize complex medical history into concise, relevant answers
+4. **Timesaving Tool**: Reduce the time medical professionals need to spend reviewing your history
+
+## Technical Architecture
+
+### AI Foundation
+
+1. **Model Selection**
+   - Base Model: OpenAI GPT-4 or similar large language model
+   - Fine-tuning: Custom tuning on medical vocabulary and contexts
+   - Retrieval-Augmented Generation (RAG): For accurate information retrieval
+
+2. **Knowledge Base**
+   - Supabase database as primary data source
+   - Vector embeddings of medical records for semantic search
+   - Structured medical knowledge graph
+   - Regular updates synchronized with main database
+
+3. **Integration Points**
+   - API Gateway for handling requests
+   - Authentication service for access control
+   - Logging service for conversation tracking
+   - Feedback mechanism for response quality
+
+## Implementation Approach
+
+### Data Preparation
+
+1. **Medical Data Processing**
+   - Convert structured data to training examples
+   - Create embeddings for semantic search
+   - Generate Q&A pairs for common medical queries
+   - Structure timeline data for temporal reasoning
+
+2. **Conversational Patterns**
+   - Define common medical query patterns
+   - Create response templates for different information categories
+   - Implement fallback strategies for unknown questions
+   - Design clarification flows for ambiguous queries
+
+3. **Context Management**
+   - Maintain conversation history for contextual understanding
+   - Track referenced medical entities across conversation
+   - Implement memory for managing long conversations
+   - Support follow-up questions and clarifications
+
+### Integration with Website
+
+1. **UI Components**
+   - Persistent chat button in corner of interface
+   - Expandable chat window with conversation history
+   - Option to share conversation with you or export results
+   - Accessibility-compliant interface
+
+2. **User Experience Flow**
+   - Initial greeting explaining capabilities
+   - Suggested question prompts for new users
+   - Type-ahead suggestions for medical terms
+   - Visual indicators for sources of information
+
+3. **Response Format**
+   - Structured information cards for medical data
+   - Citations to specific medical records
+   - Timestamps for temporal information
+   - Visual aids for complex relationships
+
+## Data Security & Privacy
+
+1. **Access Controls**
+   - Authentication required for chatbot access
+   - Same permissions model as main application
+   - Session-based access with timeout
+   - Audit logging of all interactions
+
+2. **Data Handling**
+   - No personal data sent to external AI services when possible
+   - Local processing of sensitive information
+   - Minimized data sharing with cloud services
+   - Secure token management for API requests
+
+3. **Compliance Considerations**
+   - Adherence to healthcare privacy standards
+   - Explicit user consent for AI processing
+   - Right to access and delete conversation history
+   - Transparency about AI capabilities and limitations
+
+## Conversation Guidelines
+
+1. **Query Types Supported**
+   - Factual medical history questions
+   - Timeline queries and chronology
+   - Relationship questions between conditions and treatments
+   - Symptom pattern recognition
+   - Medication history and interactions
+
+2. **Response Quality Standards**
+   - Accuracy: Information must match medical records
+   - Completeness: Relevant context must be included
+   - Clarity: Medical terms explained when needed
+   - Conciseness: Focused answers without unnecessary detail
+   - Citations: Sources of information clearly indicated
+
+3. **Ethical Guardrails**
+   - No medical advice or diagnosis
+   - No treatment recommendations
+   - Clear disclosure of AI limitations
+   - Transparent handling of uncertainty
+   - Referral to healthcare providers for medical decisions
+
+## Chatbot Training & Improvement
+
+1. **Initial Training Process**
+   - Seed with structured medical data
+   - Fine-tune on synthetic medical conversations
+   - Test with common medical queries
+   - Validate against known medical records
+
+2. **Continuous Improvement**
+   - Feedback collection after conversations
+   - Regular retraining with new medical data
+   - Performance monitoring based on user interactions
+   - Manual review of failed or problematic interactions
+
+3. **Evaluation Metrics**
+   - Response accuracy against known information
+   - Query understanding success rate
+   - Conversation completion rate
+   - User satisfaction ratings
+   - Time saved for medical professionals
+
+## Implementation Details
+
+### Vector Database Setup
+
+```typescript
+// Example pgvector setup for Supabase
+const setupVectorStore = async () => {
+  // Create extension if it doesn't exist
+  await supabase.rpc('create_pg_vector_extension');
+  
+  // Create embeddings table
+  await supabase.query(`
+    CREATE TABLE medical_embeddings (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+      content TEXT NOT NULL,
+      embedding VECTOR(1536) NOT NULL,
+      entity_type TEXT NOT NULL,
+      entity_id UUID NOT NULL,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    );
+    
+    CREATE INDEX ON medical_embeddings 
+    USING ivfflat (embedding vector_cosine_ops)
+    WITH (lists = 100);
+  `);
+};
+```
+
+### Embedding Generation
+
+```typescript
+// Example function to generate embeddings for medical data
+const generateEmbeddings = async (medicalData: MedicalEntity[]) => {
+  for (const entity of medicalData) {
+    // Generate text representation of entity
+    const textContent = generateEntityText(entity);
+    
+    // Get embedding from OpenAI
+    const embedding = await openai.embeddings.create({
+      model: 'text-embedding-ada-002',
+      input: textContent,
+    });
+    
+    // Store in Supabase
+    await supabase.from('medical_embeddings').insert({
+      content: textContent,
+      embedding: embedding.data[0].embedding,
+      entity_type: entity.type,
+      entity_id: entity.id
+    });
+  }
+};
+```
+
+### Query Processing
+
+```typescript
+// Example query processing function
+const processMedicalQuery = async (query: string, conversation: Conversation) => {
+  // Step 1: Generate embedding for query
+  const queryEmbedding = await openai.embeddings.create({
+    model: 'text-embedding-ada-002',
+    input: query,
+  });
+  
+  // Step 2: Search for relevant context
+  const { data: relevantContext } = await supabase.rpc('match_medical_documents', {
+    query_embedding: queryEmbedding.data[0].embedding,
+    match_threshold: 0.78,
+    match_count: 10
+  });
+  
+  // Step 3: Generate AI response with context
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4',
+    messages: [
+      { role: 'system', content: MEDICAL_CHATBOT_PROMPT },
+      ...conversation.history,
+      { role: 'user', content: query },
+      { role: 'system', content: `Relevant medical context: ${JSON.stringify(relevantContext)}` }
+    ],
+    temperature: 0.3,
+    max_tokens: 500
+  });
+  
+  // Step 4: Post-process and return response
+  return postProcessMedicalResponse(response.choices[0].message.content, relevantContext);
+};
+```
+
+### React Component Integration
+
+```tsx
+// Example React component for chatbot
+const MedicalChatbot: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState('');
+  const { user } = useAuth();
+  
+  const handleSendMessage = async () => {
+    if (!input.trim()) return;
+    
+    // Add user message to chat
+    const userMessage = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    
+    try {
+      // Process query
+      const response = await processMedicalQuery(
+        input, 
+        { history: messages }
+      );
+      
+      // Add AI response to chat
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: response.text,
+        citations: response.citations
+      }]);
+      
+      // Log interaction
+      await logChatInteraction(user.id, userMessage, response);
+      
+    } catch (error) {
+      console.error('Chatbot error:', error);
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'I apologize, but I encountered an error processing your request. Please try again.'
+      }]);
+    }
+  };
+  
+  return (
+    <div className="medical-chatbot">
+      {isOpen ? (
+        <ChatWindow 
+          messages={messages}
+          input={input}
+          onInputChange={setInput}
+          onSendMessage={handleSendMessage}
+          onClose={() => setIsOpen(false)}
+        />
+      ) : (
+        <ChatButton onClick={() => setIsOpen(true)} />
+      )}
+    </div>
+  );
+};
+```
+
+## Implementation Phases
+
+1. **Phase 1: Proof of Concept**
+   - Basic RAG implementation with limited scope
+   - Simple chat interface with core functionality
+   - Focus on accuracy for a subset of medical information
+   - Manual validation of responses
+
+2. **Phase 2: Full Integration**
+   - Complete knowledge base with all medical data
+   - Enhanced context understanding and temporal reasoning
+   - Improved conversational flow with follow-up handling
+   - Integration with authentication and permissions
+
+3. **Phase 3: Advanced Features**
+   - Proactive information suggestions
+   - Visual information presentation (charts, timelines)
+   - Comparison capabilities for lab results and treatments
+   - PDF export functionality for medical discussions 

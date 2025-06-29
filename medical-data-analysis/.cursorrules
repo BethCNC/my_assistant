@@ -1,0 +1,119 @@
+# Medical Data Processing Project - Cursor Rules
+
+## Project Overview
+This project implements a medical data processing pipeline to extract, normalize, and analyze medical data from various formats.
+
+## Code Style Guidelines
+
+### Python Standards
+- Follow PEP 8 style guide for Python code
+- Use type hints for all function parameters and return values
+- Document all public methods with docstrings
+- Keep line length to a maximum of 100 characters
+- Use descriptive variable names relevant to the medical domain
+
+### File Organization
+- `/src/pipeline`: Core pipeline components
+- `/src/ai`: AI and NLP components
+- `/src/database`: Database models and access layer
+- `/src/extraction`: Document extraction components
+- `/tests`: Test suites for all components
+
+### Medical Domain-Specific Rules
+- Use standardized medical terminology when possible
+- Document all domain-specific algorithms with references
+- Track data provenance throughout the pipeline
+- Handle PHI (Protected Health Information) with appropriate security measures
+
+## Implementation Status
+
+### Complete Components
+- Ingestion pipeline architecture
+- Vector database integration
+- Basic database models
+- Document extraction framework
+
+### In Progress
+- Testing infrastructure
+- Error handling and recovery
+- Documentation improvements
+- Performance optimization
+
+### Not Started
+- Apache Airflow integration
+- Frontend components
+- Security enhancements
+
+## Vector Database Components
+- Use consistent method naming between components
+- Generate embeddings using the `embed_text` method
+- Ensure proper numpy array serialization with NumpyEncoder
+- Process both dictionary and list entity formats
+
+## Database Interactions
+- Use the transaction context manager for all database operations
+- Implement proper error handling for database exceptions
+- Follow the DAO pattern for entity access
+- Maintain consistent entity models across the application
+
+## Testing Requirements
+- Create unit tests for all pipeline components
+- Implement integration tests for the complete pipeline
+- Test with various medical document formats
+- Verify error recovery mechanisms
+
+## AI Components
+- Implement medical entity extraction
+- Use domain-specific models for medical terminology
+- Process temporal data for chronological organization
+- Extract relationships between medical entities
+
+## Project Goals
+- Extract and normalize medical data from multiple formats (PDF, text, etc.)
+- Process and analyze medical history using AI integration
+- Create a comprehensive, chronologically sorted medical database
+- Enable backend integration with a personal health website
+- Support an interactive chatbot with comprehensive medical history understanding
+
+## Workflow Stages
+1. **Data Extraction**
+   - Convert all document formats to processable text
+   - Preserve metadata and document structure
+   - Maintain data provenance for each record
+
+2. **Data Cleaning**
+   - Normalize dates to ISO 8601 (YYYY-MM-DD)
+   - Standardize medical terminology
+   - Resolve inconsistencies and duplications
+   - Flag ambiguous data for review
+
+3. **AI Processing**
+   - Extract key medical entities (conditions, medications, procedures)
+   - Identify relationships between medical events
+   - Categorize information by medical specialty
+   - Generate temporal understanding of medical history
+
+4. **Database Construction**
+   - Implement chronological event timeline
+   - Create relationships between medical entities
+   - Store both raw and processed data
+   - Enable efficient querying for frontend applications
+
+5. **API Development**
+   - Create endpoints for website integration
+   - Build conversational interfaces for chatbot
+   - Implement secure access protocols
+   - Enable contextual medical history queries
+
+## Technical Standards
+- Use medical coding standards (ICD-10, SNOMED CT, etc.)
+- Implement HIPAA-compliant data security measures
+- Apply NLP best practices for medical text processing
+- Follow database design patterns for medical record systems
+
+## Success Criteria
+- 95%+ extraction accuracy from all document formats
+- Complete chronological ordering of all medical events
+- Accurate categorization of medical information
+- Contextually aware chatbot responses
+- Performant API endpoints for frontend integration 

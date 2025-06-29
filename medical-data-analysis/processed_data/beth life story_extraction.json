@@ -1,0 +1,109 @@
+{
+  "metadata": {
+    "creation_time": "2025-04-30T16:09:31.484647",
+    "modification_time": "2025-04-30T16:09:31.484153",
+    "file_size": 42937,
+    "file_type": "text",
+    "file_name": "beth life story.txt"
+  },
+  "confidence_score": 1.0,
+  "dates": [],
+  "appointment_dates": [],
+  "providers": [
+    {
+      "name": "ctors suggested",
+      "specialty": "psychiatry",
+      "context": "c relationship with food. The doctors suggested stress and anxiety were the causes of my hair loss. My parents were getting separated and I never f",
+      "confidence": 0.7
+    },
+    {
+      "name": "ing my",
+      "specialty": null,
+      "context": " never felt like I could stop doing my job, which was to make sure everyone was happy all the time. I struggled to make friends and was al",
+      "confidence": 0.7
+    },
+    {
+      "name": "anything that",
+      "specialty": null,
+      "context": "le day, every time I tried to do anything that required energy. I would carry grocery bags as vomit bags in my car for the ride to and from work a",
+      "confidence": 0.7
+    },
+    {
+      "name": "ing something",
+      "specialty": "rheumatology",
+      "context": " know how to function if I am doing something someone wants or needs from me. I truly have no idea how to think for myself and make decisions bas",
+      "confidence": 0.7
+    },
+    {
+      "name": "ne so",
+      "specialty": null,
+      "context": "o know what is supposed to be done so I can achieve it. Without a set of clear instructions, I am absolutely clueless.\nTransitioning to W",
+      "confidence": 0.7
+    },
+    {
+      "name": "for work",
+      "specialty": null,
+      "context": "cluded that the best thing to do for work and income would be to work from home. I have spent the past three years teaching myself everything",
+      "confidence": 0.7
+    },
+    {
+      "name": "es not",
+      "specialty": null,
+      "context": "ys in pain or don't feel well does not convey the extent of my suffering. Instead, it often prompts people to dismiss my complaints as mer",
+      "confidence": 0.7
+    },
+    {
+      "name": "not engage",
+      "specialty": null,
+      "context": "ne outside of my boyfriend. I do not engage in texting, calling, emailing, or any form of communication with other human beings. This lack of i",
+      "confidence": 0.7
+    },
+    {
+      "name": "ctors to",
+      "specialty": null,
+      "context": "for not eating, I used to beg doctors to leave feeding tubes in. Food disgusts me, and I have absolutely no appetite. On top of that, I am n",
+      "confidence": 0.7
+    },
+    {
+      "name": "ctors are",
+      "specialty": null,
+      "context": "st 5 years of being sick are \nDoctors are not all there to help you and will not have all the answers. \nMedical gaslighting is unfortunately ",
+      "confidence": 0.7
+    },
+    {
+      "name": "not have",
+      "specialty": "neurology",
+      "context": "r solution.\nPeople in general do not have any desire to listen to someone with  chronic pain or health issues because to them it seems like c",
+      "confidence": 0.7
+    },
+    {
+      "name": "to help",
+      "specialty": null,
+      "context": " special shoe insert from the doctor to help with the pain. This key life lesson has plagued me and is one of the main reasons I suffer so much ",
+      "confidence": 0.7
+    },
+    {
+      "name": "obsessive and",
+      "specialty": null,
+      "context": "n the middle of the night and do obsessive and repetitive sets of push-ups, sit-ups, and all kinds of other exercises. In college, I stayed up all",
+      "confidence": 0.7
+    },
+    {
+      "name": "it all",
+      "specialty": null,
+      "context": "\u20135 hours, and then get up and do it all over again.\nTough Life Lessons\nSome difficult life lessons I learned just in the past 5 years of be",
+      "confidence": 0.7
+    }
+  ],
+  "specialties": {
+    "cardiology": 2,
+    "neurology": 40,
+    "rheumatology": 16,
+    "gastroenterology": 3,
+    "psychiatry": 40
+  },
+  "medical_events": [],
+  "clinical_sections": {},
+  "doctor_notes": [],
+  "content_length": 42783
+}

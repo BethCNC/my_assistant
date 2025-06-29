@@ -1,0 +1,5 @@
+This is a test medical document.
+Date: 2023-05-15
+Dr. Smith, Cardiology
+Diagnosis: Hypertension
+Medication: Lisinopril 10mg

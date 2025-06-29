@@ -1,0 +1,212 @@
+# Design System Rules
+
+## Core Principles
+1. **Consistency**: All visual elements must follow design token system
+2. **Accessibility**: Design must be usable by everyone, including those with disabilities
+3. **Simplicity**: Clear, straightforward UI for medical professionals with limited time
+4. **Hierarchy**: Information architecture must prioritize critical medical information
+5. **Flexibility**: Components must adapt to various content types and screen sizes
+
+## Token Usage
+
+### Colors
+- Use semantic color tokens from `tokens.json`
+- **NEVER** hardcode color values
+- Always use mapped tokens from light/dark themes:
+  - `text.primary`, `text.secondary`, `text.accent`
+  - `surface.primary`, `surface.secondary`, `surface.accent`
+  - `border.subtle`, `border.standard`, `border.strong`
+  - `status.error`, `status.warning`, `status.success`, `status.info`
+
+### Typography
+- Use type scale tokens for all text elements:
+  - `type.font-size.*`
+  - `type.line-height.*`
+  - `type.font-weight.*`
+  - `type.font-family`
+- Heading hierarchies must be consistent:
+  - H1: Page titles only
+  - H2: Major section dividers
+  - H3: Subsections
+  - H4-H6: Reserved for deeply nested content
+
+### Spacing
+- Use spacing tokens for all layout measurements:
+  - `dimensions.spacing.*`
+- Never use arbitrary pixel values for:
+  - Margins
+  - Padding
+  - Gaps
+  - Component spacing
+
+### Component Specific
+- Buttons must use size and variant tokens
+- Cards must use standard padding and border radius
+- Form elements must maintain consistent height and spacing
+
+## Accessibility Requirements
+
+### Color Contrast
+- All text must have a contrast ratio of at least:
+  - 4.5:1 for normal text
+  - 3:1 for large text (18pt+ or 14pt+ bold)
+- Interactive elements must have 3:1 contrast against adjacent colors
+- Verify all color combinations with token values
+
+### Focus States
+- All interactive elements must have visible focus states
+- Focus indicators must have 3:1 contrast
+- Focus order must follow logical document structure
+- Focus must not be trapped in components
+
+### Text Requirements
+- Minimum font size of 16px for body text
+- Line heights of at least 1.5 for body text
+- Maximum width of 66 characters for optimal readability
+- Adjustable text size without breaking layouts
+
+## Component Guidelines
+
+### Medical Timeline
+- Events must be clearly delineated
+- Time periods must be visually distinct
+- Interactive elements must be obvious
+- Filter controls must be persistent
+
+### Medical Cards
+- Critical information positioned at top
+- Clear categorization through visual cues
+- Expandable details for secondary information
+- Consistent information hierarchy
+
+### Form Elements
+- Clear labels above input fields
+- Validation messages inline with fields
+- Required fields clearly indicated
+- Grouping related fields with semantic fieldsets
+
+### Navigation
+- Primary nav must be consistent across all pages
+- Secondary nav must reflect information hierarchy
+- Current section must be visually emphasized
+- Breadcrumbs required for deep navigation paths
+
+## Responsive Design Rules
+
+- Mobile-first approach for all components
+- Breakpoints must follow token system:
+  - `breakpoints.small`: 480px
+  - `breakpoints.medium`: 768px
+  - `breakpoints.large`: 1024px
+  - `breakpoints.xlarge`: 1440px
+- Stack vertical at small breakpoints
+- Logical tab/reading order at all sizes
+
+## Medical Information Styling
+
+### Severity Indicators
+- Use consistent visual styling for:
+  - Critical (red)
+  - Urgent (orange)
+  - Important (yellow)
+  - Informational (blue)
+  - Resolved (green)
+
+### Temporal Indicators
+- Recent events: Bold styling
+- Current conditions: Emphasized border
+- Historical/resolved: Subdued styling
+- Future appointments: Distinct section
+
+### Medical Categories
+- Diagnoses: Primary color family
+- Treatments: Secondary color family
+- Symptoms: Tertiary color family
+- Providers: Neutral color family
+
+## Implementation Details
+
+### CSS Implementation
+```css
+:root {
+  /* Use generated CSS variables from tokens */
+  --text-primary: var(--colors-neutral-900);
+  --text-secondary: var(--colors-neutral-700);
+  --surface-primary: var(--colors-white);
+  /* Additional variables here */
+}
+
+/* Dark mode implementation */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary: var(--colors-neutral-50);
+    --text-secondary: var(--colors-neutral-300);
+    --surface-primary: var(--colors-neutral-900);
+    /* Additional dark mode variables */
+  }
+}
+
+/* Usage example */
+.medical-card {
+  color: var(--text-primary);
+  background-color: var(--surface-primary);
+  padding: var(--dimensions-spacing-md);
+  border-radius: var(--dimensions-radius-md);
+  border: 1px solid var(--border-subtle);
+}
+```
+
+### React Implementation with Styled Components
+```tsx
+import styled from 'styled-components';
+
+// Example component using design tokens
+const MedicalCard = styled.div`
+  color: ${props => props.theme.colors.text.primary};
+  background-color: ${props => props.theme.colors.surface.primary};
+  padding: ${props => props.theme.spacing.md};
+  border-radius: ${props => props.theme.radius.md};
+  border: 1px solid ${props => props.theme.colors.border.subtle};
+`;
+
+// Example usage
+const DiagnosisCard: React.FC<{ diagnosis: Diagnosis }> = ({ diagnosis }) => {
+  const severity = diagnosis.severity;
+  
+  return (
+    <MedicalCard severity={severity}>
+      <h3>{diagnosis.name}</h3>
+      <DiagnosisDetail>{diagnosis.description}</DiagnosisDetail>
+      {/* Additional content */}
+    </MedicalCard>
+  );
+};
+```
+
+## Design Review Checklist
+
+Before submitting or implementing any design:
+
+1. **Token Compliance**
+   - [ ] All colors use semantic tokens
+   - [ ] All spacing uses spacing tokens
+   - [ ] All typography uses type tokens
+   - [ ] All breakpoints follow token system
+
+2. **Accessibility**
+   - [ ] Color contrast meets WCAG AA standards
+   - [ ] All interactive elements have focus states
+   - [ ] Touch targets are at least 44x44px
+   - [ ] Information is not conveyed by color alone
+
+3. **Responsive Design**
+   - [ ] Layout works at all breakpoints
+   - [ ] No horizontal scrolling on mobile
+   - [ ] Text remains readable at all sizes
+   - [ ] Touch interactions prioritized on mobile
+
+4. **Information Hierarchy**
+   - [ ] Critical information is most prominent
+   - [ ] Related information is visually grouped
+   - [ ] Visual weight matches information importance
+   - [ ] Secondary information is accessible but not distracting 

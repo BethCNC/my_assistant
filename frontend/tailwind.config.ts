@@ -75,20 +75,26 @@ const config: Config = {
         }
       },
       
-      // Figma spacing scale
-      spacing: designTokens.spacing,
+      // Figma spacing scale - convert numbers to strings with px
+      spacing: Object.fromEntries(
+        Object.entries(designTokens.spacing).map(([key, value]) => [key, `${value}px`])
+      ),
       
-      // Figma border radius
+      // Figma border radius - convert numbers to strings with px
       borderRadius: {
-        ...designTokens.radii,
+        ...Object.fromEntries(
+          Object.entries(designTokens.radii).map(([key, value]) => [key, `${value}px`])
+        ),
         // Keep shadcn/ui radius for compatibility
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
       },
       
-      // Figma font sizes
-      fontSize: designTokens.fontSizes,
+      // Figma font sizes - convert numbers to strings with px
+      fontSize: Object.fromEntries(
+        Object.entries(designTokens.fontSizes).map(([key, value]) => [key, `${value}px`])
+      ),
       
       // Figma font families
       fontFamily: {

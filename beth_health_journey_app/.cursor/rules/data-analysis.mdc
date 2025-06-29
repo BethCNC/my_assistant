@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+I want to focus on one specific portion of the project. I want to focus only on collecting all the meidcal history data and then doing some data analysis, data cleaning, and data streamlining. I would like to incorportae open ai to help read and organize the data by date. The original data comes in several forms. The majority of the data is pdf files sorted by year. The text has been extracted from each pdf but this needs to be verified to make sure all text has been extracted. 
+
+**CRITICAL: ALL medically relevant information must be preserved during this project. Never delete, summarize, or abbreviate any medical findings, test results, diagnoses, or treatment plans. Only non-medical filler text may be excluded during organization.**
+
+The original pdf files are in thie folder  /Users/bethcartrette/REPOS/beth_health_journey_app/data
+
+There is extracted text data in the folder /Users/bethcartrette/REPOS/beth_health_journey_app/data/extracted_text
+We need to perform a full data analysis on all the content and data in the /data folder and do a detailed thourough analysis with AI integration to get a full chronological timeline of the medical history including all tests, appointments, etc. 

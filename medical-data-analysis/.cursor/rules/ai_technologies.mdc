@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# AI and NLP Technologies
+
+## Hugging Face Transformers
+- Use pre-trained medical models (BioBERT, ClinicalBERT, PubMedBERT)
+- Implement fine-tuning for EDS and ASD-specific terminology
+- Apply model distillation for production deployment
+- Utilize Transformers pipelines for standardized text processing
+- Implement proper token management for cost efficiency
+- Use model quantization for performance optimization
+
+## Custom NER with spaCy
+- Train custom NER models for specialized medical entities
+- Implement medical dictionary integration for entity resolution
+- Create specialized entity recognizers for:
+  - EDS-specific terminology and symptoms
+  - Autism spectrum indicators
+  - Medication dosing patterns
+  - Treatment protocols
+- Use rule-based components for structured medical data
+- Implement ensemble approach for complex medical entity extraction
+
+## LangChain + RAG Implementation
+- Use LangChain for structured interactions with LLMs
+- Implement Retrieval Augmented Generation for medical data grounding
+- Create specialized document retrievers for different medical contexts
+- Apply re-ranking based on medical relevance
+- Implement hybrid search (vector + keyword) for medical queries
+- Use prompt engineering techniques for medical context boundaries
+
+## Vector Embedding Strategy
+- Select specialized embedding models for medical text
+- Implement separate embeddings for:
+  - Condition descriptions
+  - Symptom narratives
+  - Treatment notes
+  - Lab result interpretations
+- Apply dimension reduction for operational efficiency
+- Create chunking strategies optimized for medical documents
+
+## Medical Entity Extraction
+- Implement terminology mapping to UMLS/SNOMED CT
+- Create specialized extractors for lab value normalization
+- Apply temporal relationship extraction between medical events
+- Implement medical negation detection (rule-based + ML)
+- Create symptom severity classifiers
+- Design medical relation extraction models

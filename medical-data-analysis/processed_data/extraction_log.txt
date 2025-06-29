@@ -1,0 +1,204 @@
+2025-04-30 16:19:12,078 - __main__ - INFO - Found 7 medical files to process
+2025-04-30 16:19:12,685 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 16:19:13,328 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 16:19:13,387 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 16:19:13,454 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 16:19:13,470 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 16:19:13,534 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 16:19:13,547 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 16:19:13,700 - __mp_main__ - INFO - Processing file: input/csv_data/labs_novant.csv
+2025-04-30 16:19:13,747 - __main__ - INFO - Completed processing input/csv_data/labs_novant.csv
+2025-04-30 16:19:14,164 - __mp_main__ - INFO - Processing file: input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf
+2025-04-30 16:19:14,244 - __mp_main__ - INFO - Processing file: input/html_documents/Atrium Patient Health Summary.html
+2025-04-30 16:19:14,289 - __mp_main__ - INFO - Processing file: input/text_documents/beth life story.txt
+2025-04-30 16:19:14,310 - __mp_main__ - INFO - Processing file: input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md
+2025-04-30 16:19:14,329 - __main__ - INFO - Completed processing input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md
+2025-04-30 16:19:14,432 - __mp_main__ - INFO - Processing file: input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf
+2025-04-30 16:19:14,432 - __main__ - INFO - Completed processing input/text_documents/beth life story.txt
+2025-04-30 16:19:14,444 - __mp_main__ - INFO - Processing file: input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv
+2025-04-30 16:19:14,455 - __main__ - INFO - Completed processing input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf
+2025-04-30 16:19:14,464 - __main__ - INFO - Completed processing input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv
+2025-04-30 16:19:14,525 - __main__ - INFO - Completed processing input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf
+2025-04-30 16:19:15,251 - __main__ - INFO - Completed processing input/html_documents/Atrium Patient Health Summary.html
+2025-04-30 16:19:15,541 - __main__ - INFO - Processing complete. 7 files processed successfully, 0 failed.
+2025-04-30 20:23:45,511 - __main__ - INFO - Found 7 medical files to process
+2025-04-30 20:23:46,102 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 20:23:46,196 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 20:23:46,225 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 20:23:46,229 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 20:23:46,235 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 20:23:46,243 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 20:23:46,243 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-04-30 20:23:46,603 - __mp_main__ - INFO - Processing file: input/csv_data/labs_novant.csv
+2025-04-30 20:23:46,605 - __mp_main__ - INFO - Processing file: input/html_documents/Atrium Patient Health Summary.html
+2025-04-30 20:23:46,608 - __mp_main__ - INFO - Processing file: input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv
+2025-04-30 20:23:46,609 - __mp_main__ - INFO - Processing file: input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf
+2025-04-30 20:23:46,623 - __main__ - INFO - Completed processing input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv
+2025-04-30 20:23:46,626 - __main__ - INFO - Completed processing input/csv_data/labs_novant.csv
+2025-04-30 20:23:46,632 - __mp_main__ - INFO - Processing file: input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf
+2025-04-30 20:23:46,646 - __main__ - INFO - Completed processing input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf
+2025-04-30 20:23:46,646 - __mp_main__ - INFO - Processing file: input/text_documents/beth life story.txt
+2025-04-30 20:23:46,652 - __mp_main__ - INFO - Processing file: input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md
+2025-04-30 20:23:46,657 - __main__ - INFO - Completed processing input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md
+2025-04-30 20:23:46,670 - __main__ - INFO - Completed processing input/text_documents/beth life story.txt
+2025-04-30 20:23:46,725 - __main__ - INFO - Completed processing input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf
+2025-04-30 20:23:47,074 - __main__ - INFO - Completed processing input/html_documents/Atrium Patient Health Summary.html
+2025-04-30 20:23:47,244 - __main__ - INFO - Processing complete. 7 files processed successfully, 0 failed.
+2025-05-01 00:18:14,417 - __main__ - INFO - Found 7 medical files to process
+2025-05-01 00:18:14,941 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:18:15,033 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:18:15,045 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:18:15,057 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:18:15,087 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:18:15,088 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:18:15,106 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:18:19,822 - __mp_main__ - INFO - Processing file: input/text_documents/beth life story.txt
+2025-05-01 00:18:19,822 - __mp_main__ - INFO - Processing file: input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf
+2025-05-01 00:18:19,840 - __mp_main__ - INFO - Processing file: input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md
+2025-05-01 00:18:19,844 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:18:19,844 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:18:19,844 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:18:19,844 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:18:19,844 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:18:19,844 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:18:19,844 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:18:19,844 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:18:19,845 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:18:19,845 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:18:19,845 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:18:19,845 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:18:19,845 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:18:19,845 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:18:19,845 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:18:19,846 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:18:19,853 - __main__ - INFO - Completed processing input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md
+2025-05-01 00:18:19,855 - __main__ - INFO - Completed processing input/text_documents/beth life story.txt
+2025-05-01 00:18:19,858 - __mp_main__ - INFO - Processing file: input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf
+2025-05-01 00:18:19,863 - __mp_main__ - INFO - Processing file: input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv
+2025-05-01 00:18:19,863 - __mp_main__ - INFO - Processing file: input/html_documents/Atrium Patient Health Summary.html
+2025-05-01 00:18:19,865 - __mp_main__ - INFO - Processing file: input/csv_data/labs_novant.csv
+2025-05-01 00:18:19,868 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:18:19,869 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:18:19,869 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:18:19,869 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:18:19,869 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:18:19,869 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:18:19,869 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:18:19,869 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:18:19,873 - __main__ - INFO - Completed processing input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf
+2025-05-01 00:18:19,880 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:18:19,880 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:18:19,882 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:18:19,882 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:18:19,883 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:18:19,883 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:18:19,884 - __main__ - INFO - Completed processing input/csv_data/labs_novant.csv
+2025-05-01 00:18:19,884 - __main__ - INFO - Completed processing input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv
+2025-05-01 00:18:19,924 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:18:19,924 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:18:19,924 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:18:19,924 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:18:19,924 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:18:19,924 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:18:19,924 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:18:19,924 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:18:19,925 - __main__ - INFO - Completed processing input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf
+2025-05-01 00:18:20,435 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:18:20,435 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:18:20,435 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:18:20,435 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:18:20,435 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:18:20,435 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:18:20,435 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:18:20,435 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:18:20,446 - __main__ - INFO - Completed processing input/html_documents/Atrium Patient Health Summary.html
+2025-05-01 00:18:21,504 - __main__ - INFO - Processing complete. 7 files processed successfully, 0 failed.
+2025-05-01 00:39:28,290 - __main__ - INFO - Found 7 medical files to process
+2025-05-01 00:39:28,796 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:39:28,888 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:39:28,936 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:39:28,959 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:39:28,969 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:39:28,969 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:39:28,990 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2025-05-01 00:39:32,670 - __mp_main__ - INFO - Processing file: input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md
+2025-05-01 00:39:32,672 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:39:32,672 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:39:32,672 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:39:32,672 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:39:32,672 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:39:32,672 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:39:32,672 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:39:32,673 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:39:32,675 - __main__ - INFO - Completed processing input/md_documents/2023 Lab Results 15e86edcae2c8105af02f30e923a506d.md
+2025-05-01 00:39:32,838 - __mp_main__ - INFO - Processing file: input/text_documents/beth life story.txt
+2025-05-01 00:39:32,851 - __mp_main__ - INFO - Processing file: input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf
+2025-05-01 00:39:32,861 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:39:32,861 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:39:32,861 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:39:32,861 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:39:32,861 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:39:32,861 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:39:32,861 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:39:32,861 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:39:32,868 - __main__ - INFO - Completed processing input/text_documents/beth life story.txt
+2025-05-01 00:39:32,870 - __mp_main__ - INFO - Processing file: input/csv_data/labs_novant.csv
+2025-05-01 00:39:32,887 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:39:32,887 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:39:32,887 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:39:32,887 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:39:32,887 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:39:32,887 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:39:32,887 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:39:32,887 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:39:32,888 - __main__ - INFO - Completed processing input/csv_data/labs_novant.csv
+2025-05-01 00:39:32,904 - __mp_main__ - INFO - Processing file: input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf
+2025-05-01 00:39:32,906 - __mp_main__ - INFO - Processing file: input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv
+2025-05-01 00:39:32,912 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:39:32,912 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:39:32,912 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:39:32,912 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:39:32,912 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:39:32,912 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:39:32,912 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:39:32,912 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:39:32,913 - __main__ - INFO - Completed processing input/rtf_documents/Note-Eric_Starr__PA-C-2021-04-13T16_31_21Z.rtf
+2025-05-01 00:39:32,914 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:39:32,914 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:39:32,914 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:39:32,914 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:39:32,914 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:39:32,914 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:39:32,914 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:39:32,914 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:39:32,915 - __main__ - INFO - Completed processing input/csv_data/Symptoms 17b86edcae2c81c69077e55a68cf2438.csv
+2025-05-01 00:39:32,924 - __mp_main__ - INFO - Processing file: input/html_documents/Atrium Patient Health Summary.html
+2025-05-01 00:39:32,943 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:39:32,943 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:39:32,943 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:39:32,943 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:39:32,943 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:39:32,943 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:39:32,943 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:39:32,943 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:39:32,944 - __main__ - INFO - Completed processing input/pdf_documents/Entire_Health_Timeline_1080x1920_(1).pdf
+2025-05-01 00:39:33,328 - src.ai.model_integration - INFO - Initializing medical entity extractor with model medical-entity-default
+2025-05-01 00:39:33,328 - src.ai.model_integration - INFO - Initializing Medical Entity Extractor with model medical-entity-default
+2025-05-01 00:39:33,328 - src.ai.model_integration - INFO - Loading NLP model: medical-entity-default
+2025-05-01 00:39:33,328 - src.ai.model_integration - INFO - Transformer models loaded successfully for entity extraction
+2025-05-01 00:39:33,328 - src.ai.model_integration - INFO - Initializing medical text analyzer with model medical-text-default
+2025-05-01 00:39:33,328 - src.ai.model_integration - INFO - Initializing Text Analyzer with model medical-text-default
+2025-05-01 00:39:33,328 - src.ai.model_integration - INFO - Initializing medical embedding model medical-embedding-default
+2025-05-01 00:39:33,329 - src.ai.embedding - INFO - Initializing Medical Embedding model medical-embedding-default with dimension 128
+2025-05-01 00:39:33,339 - __main__ - INFO - Completed processing input/html_documents/Atrium Patient Health Summary.html
+2025-05-01 00:39:34,358 - __main__ - INFO - Processing complete. 7 files processed successfully, 0 failed.

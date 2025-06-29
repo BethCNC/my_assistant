@@ -110,7 +110,7 @@ export default function BethAssistantMain() {
       >
         <Sidebar
           variant={sidebarCollapsed ? 'collapsed' : 'default'}
-          recentChats={recentChats}
+          recentChats={recentChats.map(chat => chat.title)}
           onNewChat={handleNewChat}
           onChatSelect={handleChatSelect}
           onToggleCollapse={handleToggleCollapse}
@@ -221,7 +221,7 @@ export default function BethAssistantMain() {
               key={index}
               text={text}
               onClick={() => handleSuggestionClick(text)}
-              randomizeShape={true}
+              shapeVariant={(index % 7 + 1) as any}
             />
           ))}
         </div>
@@ -237,18 +237,12 @@ export default function BethAssistantMain() {
           <ChatInput
             value={chatInput}
             onChange={setChatInput}
-            onSend={handleSendMessage}
-            onAttachFiles={() => console.log('Attach files')}
-            onAttachImages={() => console.log('Attach images')}
-            attachedFiles={attachedFiles}
-            onRemoveAttachment={(id) => {
-              setAttachedFiles(files => files.filter(f => f.id !== id))
+            onSend={(message, attachments) => {
+              console.log('Sending message:', message, attachments)
+              setChatInput('')
             }}
             placeholder="Ask me a question..."
             maxLength={1000}
-            style={{
-              width: '800px', // Fixed width from Figma measurements
-            }}
           />
         </div>
       </div>

@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Backend Technologies
+
+## FastAPI Framework
+- Implement FastAPI for high-performance REST endpoints
+- Use Pydantic models for strict medical data validation
+- Create OpenAPI documentation for all endpoints
+- Implement dependency injection for service modularity
+- Use async endpoints for long-running medical queries
+- Create middleware for security and audit logging
+
+## GraphQL with Strawberry
+- Implement Strawberry GraphQL for complex medical data queries
+- Create specialized types for medical entities
+- Design resolvers optimized for medical relationship traversal
+- Implement dataloaders for efficient database access
+- Use GraphQL subscriptions for real-time updates
+- Create schema directives for access control
+
+## API Design Patterns
+- Follow RESTful conventions for resource endpoints
+- Implement hypermedia controls for API navigation
+- Use proper HTTP status codes for medical context
+- Create consistent error handling with detailed messages
+- Implement pagination for large medical data sets
+- Design consistent versioning strategy
+
+## Authentication and Security
+- Use Auth0 or Keycloak for identity management
+- Implement HIPAA-compliant authentication flows
+- Create role-based access control for medical data
+- Use JWTs with appropriate session management
+- Implement audit logging for all data access
+- Create proper CORS policies for frontend integration
+
+## Caching Strategy
+- Implement Redis for API response caching
+- Use cache invalidation based on data updates
+- Create cache hierarchies for different data types
+- Implement ETags for efficient client caching
+- Design time-based expiration for volatile data
+- Use cache warming for common medical queries
+
+## Backend Services
+- Design microservices for specialized medical functions
+- Implement message queues for asynchronous processing
+- Create health check endpoints for all services
+- Use circuit breakers for external service dependencies
+- Implement proper error recovery mechanisms
+- Design efficient serialization for medical data transfer

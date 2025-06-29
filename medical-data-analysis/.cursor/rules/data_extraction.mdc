@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Data Extraction Guidelines
+
+## Document Processing
+- Create specialized extractors for each identified format:
+  - PDF medical records and timelines
+  - HTML patient health summaries
+  - CSV symptom and lab tracking data
+  - MD/Markdown formatted lab results
+  - Plain text doctor's notes and personal narratives
+  - RTF clinical notes with formatting
+- PDF processing should use OCR when text extraction fails
+- Extract both content and metadata (dates, sources, document types)
+- Preserve document structure including sections and hierarchies
+- Tag unrecognized or ambiguous data for human review
+
+## Source-Specific Processing
+- Extract structured data from Novant Health text files using consistent naming patterns
+- Process Atrium and Novant Health HTML files for complete patient summaries
+- Extract data from Notion-formatted medical notes with proper link resolution
+- Process personal narrative text for symptom descriptions and onset dates
+- Implement specialized extraction for diagnostic criteria documents
+- Handle medical imaging report formats with impression vs. narrative sections
+
+## Metadata Extraction
+- Extract document creation and event dates from filenames (e.g., YYYY-MM-DDThh_mm_ssZ format)
+- Identify healthcare providers from document headers and signatures
+- Extract medical specialties from document context or directory structure
+- Identify test types and result values with their reference ranges
+- Recognize document relationships and sequencing
+- Preserve provider-specific reference numbers and identifiers
+
+## Quality Assurance
+- Maintain audit trail of extraction process with provenance tracking
+- Store original document hash for future validation
+- Record confidence scores for extracted information
+- Implement validation rules for common medical data patterns
+- Flag potential extraction errors for human review
+- Verify chronological consistency across multiple documents
+
+## Technical Implementation
+- Implement fault-tolerant processing to handle partially corrupted files
+- Batch process documents with similar formats
+- Report extraction statistics by document type and source
+- Support incremental processing as new documents are added
+- Implement format detection for unlabeled files
+- Provide debugging tools for extraction verification

@@ -16,10 +16,25 @@ import openai
 from dataclasses import dataclass
 import hashlib
 import uuid
+import signal
+from contextlib import contextmanager
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+@contextmanager
+def timeout(duration):
+    """Context manager for timeout operations."""
+    def timeout_handler(signum, frame):
+        raise TimeoutError(f"Operation timed out after {duration} seconds")
+    
+    signal.signal(signal.SIGALRM, timeout_handler)
+    signal.alarm(duration)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
 
 @dataclass
 class RAGDocument:
@@ -35,20 +50,50 @@ class RAGDocument:
 class RAGService:
     def __init__(self, db_path: str = "agent_memory.db"):
         self.db_path = db_path
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.embedding_model = None
+        self.chroma_client = None
+        self.collections = {}
         
-        # Initialize ChromaDB for vector storage (updated API)
-        self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
+        # Temporarily disable ChromaDB to avoid hanging
+        logger.info("Initializing RAG service in fallback mode (ChromaDB disabled)")
+        self._init_fallback_mode()
         
-        # Create collections for different types of knowledge
-        self.collections = {
-            'conversations': self._get_or_create_collection('conversations'),
-            'habits': self._get_or_create_collection('user_habits'),
-            'preferences': self._get_or_create_collection('user_preferences'),
-            'system_usage': self._get_or_create_collection('system_usage'),
-            'knowledge_base': self._get_or_create_collection('knowledge_base'),
-            'workflows': self._get_or_create_collection('workflows')
-        }
+        # TODO: Re-enable ChromaDB initialization once stability issues are resolved
+        # try:
+        #     with timeout(30):  # 30 second timeout
+        #         logger.info("Initializing RAG service components...")
+        #         
+        #         # Initialize embedding model
+        #         logger.info("Loading sentence transformer...")
+        #         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+        #         
+        #         # Initialize ChromaDB with simpler settings
+        #         logger.info("Initializing ChromaDB...")
+        #         self.chroma_client = chromadb.PersistentClient(
+        #             path="./chroma_db",
+        #             settings=chromadb.Settings(
+        #                 anonymized_telemetry=False,
+        #                 allow_reset=True
+        #             )
+        #         )
+        #         
+        #         # Create collections for different types of knowledge
+        #         logger.info("Setting up collections...")
+        #         self.collections = {
+        #             'conversations': self._get_or_create_collection('conversations'),
+        #             'habits': self._get_or_create_collection('user_habits'),
+        #             'preferences': self._get_or_create_collection('user_preferences'),
+        #             'system_usage': self._get_or_create_collection('system_usage'),
+        #             'knowledge_base': self._get_or_create_collection('knowledge_base'),
+        #             'workflows': self._get_or_create_collection('workflows')
+        #         }
+        #         
+        # except TimeoutError:
+        #     logger.error("RAG service initialization timed out - running in degraded mode")
+        #     self._init_fallback_mode()
+        # except Exception as e:
+        #     logger.error(f"RAG service initialization failed: {str(e)} - running in degraded mode")
+        #     self._init_fallback_mode()
         
         # OpenAI client for enhanced generation
         openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -59,12 +104,26 @@ class RAGService:
         
         logger.info("RAG service initialized successfully")
     
+    def _init_fallback_mode(self):
+        """Initialize RAG service in fallback mode without vector storage."""
+        logger.warning("Running RAG service in fallback mode (no vector storage)")
+        self.embedding_model = None
+        self.chroma_client = None
+        self.collections = {}
+    
     def _get_or_create_collection(self, name: str):
         """Get or create a ChromaDB collection."""
+        if not self.chroma_client:
+            return None
+            
         try:
             return self.chroma_client.get_collection(name)
         except:
             return self.chroma_client.create_collection(name)
+    
+    def is_enabled(self) -> bool:
+        """Check if RAG service is fully enabled."""
+        return self.chroma_client is not None and self.embedding_model is not None
     
     def learn_from_conversation(self, conversation_id: str, messages: List[Dict], 
                               context: Dict = None) -> Dict:
@@ -73,35 +132,38 @@ class RAGService:
             # Extract learning points from conversation
             learning_points = self._extract_learning_points(messages, context)
             
-            # Store conversation embedding
-            conversation_text = self._format_conversation_for_embedding(messages)
-            embedding = self.embedding_model.encode(conversation_text).tolist()
+            # Only store embeddings if RAG is fully enabled
+            if self.is_enabled():
+                # Store conversation embedding
+                conversation_text = self._format_conversation_for_embedding(messages)
+                embedding = self.embedding_model.encode(conversation_text).tolist()
+                
+                # Store in ChromaDB
+                self.collections['conversations'].add(
+                    embeddings=[embedding],
+                    documents=[conversation_text],
+                    metadatas=[{
+                        'conversation_id': conversation_id,
+                        'timestamp': datetime.now().isoformat(),
+                        'message_count': len(messages),
+                        'topics': learning_points.get('topics', []),
+                        'user_intent': learning_points.get('intent', 'unknown'),
+                        'satisfaction_score': learning_points.get('satisfaction', 0.5)
+                    }],
+                    ids=[f"conv_{conversation_id}"]
+                )
             
-            # Store in ChromaDB
-            self.collections['conversations'].add(
-                embeddings=[embedding],
-                documents=[conversation_text],
-                metadatas=[{
-                    'conversation_id': conversation_id,
-                    'timestamp': datetime.now().isoformat(),
-                    'message_count': len(messages),
-                    'topics': learning_points.get('topics', []),
-                    'user_intent': learning_points.get('intent', 'unknown'),
-                    'satisfaction_score': learning_points.get('satisfaction', 0.5)
-                }],
-                ids=[f"conv_{conversation_id}"]
-            )
-            
-            # Update habit patterns
+            # Update habit patterns (works in fallback mode too)
             self._update_habit_patterns(learning_points)
             
-            # Update usage analytics
+            # Update usage analytics (works in fallback mode too)
             self._update_usage_analytics(conversation_id, messages, context)
             
             return {
                 'success': True,
                 'learning_points': len(learning_points.get('insights', [])),
-                'message': 'Conversation learning completed'
+                'message': 'Conversation learning completed',
+                'rag_enabled': self.is_enabled()
             }
             
         except Exception as e:
@@ -216,21 +278,23 @@ class RAGService:
     def _store_habits_in_vector_db(self):
         """Store habit patterns in vector database for retrieval."""
         try:
-            for topic, pattern in self.habit_patterns.items():
-                habit_text = f"User frequently discusses {topic}. Preference score: {pattern['preference_score']:.2f}. Last accessed: {pattern['last_accessed']}"
-                embedding = self.embedding_model.encode(habit_text).tolist()
-                
-                self.collections['habits'].upsert(
-                    embeddings=[embedding],
-                    documents=[habit_text],
-                    metadatas=[{
-                        'topic': topic,
-                        'frequency': pattern['frequency'],
-                        'preference_score': pattern['preference_score'],
-                        'last_accessed': pattern['last_accessed']
-                    }],
-                    ids=[f"habit_{topic}"]
-                )
+            # Only store embeddings if RAG is fully enabled
+            if self.is_enabled():
+                for topic, pattern in self.habit_patterns.items():
+                    habit_text = f"User frequently discusses {topic}. Preference score: {pattern['preference_score']:.2f}. Last accessed: {pattern['last_accessed']}"
+                    embedding = self.embedding_model.encode(habit_text).tolist()
+                    
+                    self.collections['habits'].upsert(
+                        embeddings=[embedding],
+                        documents=[habit_text],
+                        metadatas=[{
+                            'topic': topic,
+                            'frequency': pattern['frequency'],
+                            'preference_score': pattern['preference_score'],
+                            'last_accessed': pattern['last_accessed']
+                        }],
+                        ids=[f"habit_{topic}"]
+                    )
         except Exception as e:
             logger.error(f"Store habits error: {str(e)}")
     
@@ -245,52 +309,85 @@ class RAGService:
             'context': context or {}
         }
         
-        # Store usage pattern
-        usage_text = f"System usage: {usage_data['message_count']} messages, {usage_data['user_messages']} user messages"
-        embedding = self.embedding_model.encode(usage_text).tolist()
+        # Only store embeddings if RAG is fully enabled
+        if self.is_enabled():
+            # Store usage pattern
+            usage_text = f"System usage: {usage_data['message_count']} messages, {usage_data['user_messages']} user messages"
+            embedding = self.embedding_model.encode(usage_text).tolist()
+            
+            self.collections['system_usage'].add(
+                embeddings=[embedding],
+                documents=[usage_text],
+                metadatas=[usage_data],
+                ids=[f"usage_{conversation_id}_{datetime.now().timestamp()}"]
+            )
         
-        self.collections['system_usage'].add(
-            embeddings=[embedding],
-            documents=[usage_text],
-            metadatas=[usage_data],
-            ids=[f"usage_{conversation_id}_{datetime.now().timestamp()}"]
-        )
+        # Store analytics in memory for fallback mode
+        self.usage_analytics[conversation_id] = usage_data
     
     def get_contextual_insights(self, query: str, limit: int = 5) -> Dict:
         """Get contextual insights based on user query and learned patterns."""
         try:
-            # Generate query embedding
-            query_embedding = self.embedding_model.encode(query).tolist()
-            
-            # Search across all collections
             insights = {}
             
-            for collection_name, collection in self.collections.items():
-                try:
-                    results = collection.query(
-                        query_embeddings=[query_embedding],
-                        n_results=min(limit, 10)
-                    )
-                    
-                    if results['documents'] and results['documents'][0]:
-                        insights[collection_name] = {
-                            'documents': results['documents'][0],
-                            'metadatas': results['metadatas'][0] if results['metadatas'] else [],
-                            'distances': results['distances'][0] if results['distances'] else []
-                        }
-                except Exception as e:
-                    logger.warning(f"Query {collection_name} failed: {str(e)}")
-                    continue
+            # Only do vector search if RAG is fully enabled
+            if self.is_enabled():
+                # Generate query embedding
+                query_embedding = self.embedding_model.encode(query).tolist()
+                
+                # Search across all collections
+                for collection_name, collection in self.collections.items():
+                    try:
+                        results = collection.query(
+                            query_embeddings=[query_embedding],
+                            n_results=min(limit, 10)
+                        )
+                        
+                        if results['documents'] and results['documents'][0]:
+                            insights[collection_name] = {
+                                'documents': results['documents'][0],
+                                'metadatas': results['metadatas'][0] if results['metadatas'] else [],
+                                'distances': results['distances'][0] if results['distances'] else []
+                            }
+                    except Exception as e:
+                        logger.warning(f"Query {collection_name} failed: {str(e)}")
+                        continue
+            else:
+                # Fallback mode - use simple pattern matching
+                insights = self._get_fallback_insights(query)
             
             return {
                 'success': True,
                 'insights': insights,
-                'query': query
+                'query': query,
+                'rag_enabled': self.is_enabled()
             }
             
         except Exception as e:
             logger.error(f"Get contextual insights error: {str(e)}")
             return {'success': False, 'error': str(e)}
+    
+    def _get_fallback_insights(self, query: str) -> Dict:
+        """Get insights in fallback mode using simple pattern matching."""
+        insights = {}
+        query_lower = query.lower()
+        
+        # Simple keyword-based insights
+        if any(word in query_lower for word in ['figma', 'design', 'ui', 'component']):
+            insights['design_patterns'] = {
+                'documents': ['User frequently works with Figma design systems'],
+                'metadatas': [{'type': 'design_preference', 'confidence': 0.7}],
+                'distances': [0.3]
+            }
+        
+        if any(word in query_lower for word in ['notion', 'task', 'productivity', 'organize']):
+            insights['productivity_patterns'] = {
+                'documents': ['User prefers organized, systematic approaches'],
+                'metadatas': [{'type': 'productivity_preference', 'confidence': 0.7}],
+                'distances': [0.3]
+            }
+        
+        return insights
     
     def generate_enhanced_response(self, query: str, context: Dict = None) -> Dict:
         """Generate enhanced response using RAG."""

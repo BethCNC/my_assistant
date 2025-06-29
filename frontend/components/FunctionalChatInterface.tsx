@@ -101,8 +101,8 @@ const FunctionalChatInterface = () => {
     const loadConversations = async () => {
       try {
         const response = await apiClient.getConversations();
-        if (response.data && response.data.chats) {
-          setConversations(response.data.chats);
+        if (response.data && (response.data as any).chats) {
+          setConversations((response.data as any).chats);
         } else if (response.data && Array.isArray(response.data)) {
           setConversations(response.data);
         }
@@ -140,8 +140,8 @@ const FunctionalChatInterface = () => {
     // Try to reload conversations, but don't fail if offline
     try {
       const response = await apiClient.getConversations();
-      if (response.data && response.data.chats) {
-        setConversations(response.data.chats);
+      if (response.data && (response.data as any).chats) {
+        setConversations((response.data as any).chats);
       }
     } catch (error) {
       // Silently handle offline mode
@@ -156,8 +156,8 @@ const FunctionalChatInterface = () => {
     // Try to reload conversations, but don't fail if offline
     try {
       const response = await apiClient.getConversations();
-      if (response.data && response.data.chats) {
-        setConversations(response.data.chats);
+      if (response.data && (response.data as any).chats) {
+        setConversations((response.data as any).chats);
       }
     } catch (error) {
       // Silently handle offline mode
