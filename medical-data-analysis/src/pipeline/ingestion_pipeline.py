@@ -44,6 +44,11 @@ from src.ai.vectordb.pipeline_integration import VectorDBPostProcessor, VectorDB
 from src.ai.entity_standardization import standardize_entities
 from src.extraction.utils import is_supported_file_type
 
+# Add import for Firestore upload utility
+try:
+    from src.firestore_upload import upload_health_events
+except ImportError:
+    upload_health_events = None
 
 # Configure logging
 logging.basicConfig(
@@ -240,6 +245,28 @@ class IngestionPipeline:
                 processed_data.get("metadata", {})
             )
             processed_data["ai_analysis"] = ai_result
+
+            # --- Firestore upload integration ---
+            upload_enabled = os.getenv("UPLOAD_TO_FIRESTORE", "0") == "1"
+            user_id = os.getenv("FIRESTORE_USER_ID", "default")
+            if upload_enabled and upload_health_events:
+                # Try to upload medical events if present
+                events = []
+                # Try both ai_result and processed_data["ai_analysis"] for compatibility
+                for result in [ai_result, processed_data.get("ai_analysis", {})]:
+                    if result and "medical_events" in result:
+                        events = result["medical_events"]
+                        break
+                if events:
+                    print(f"[Firestore] Uploading {len(events)} health events for user {user_id}...")
+                    try:
+                        uploaded = upload_health_events(user_id, events)
+                        print(f"[Firestore] Uploaded {uploaded} health events.")
+                    except Exception as e:
+                        print(f"[Firestore] Upload failed: {e}")
+                else:
+                    print("[Firestore] No medical events found to upload.")
+            # --- End Firestore upload integration ---
             
             # Store in database
             self._store_in_database(processed_data)

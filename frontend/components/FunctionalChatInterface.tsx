@@ -3,13 +3,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useChat } from '@/hooks/use-chat';
-import { apiClient } from '@/lib/api';
+import { db } from '../utils/firebase';
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query as firestoreQuery
+} from 'firebase/firestore';
 import { SuggestionCard } from './figma-system/SuggestionCard';
 import { SuggestionShapeVariant } from './figma-system/SuggestionShapes';
 import styles from './ChatInterface.module.css';
 
 const FunctionalChatInterface = () => {
-  const { messages, isLoading, error, sendMessage, clearMessages } = useChat();
+  const { messages, isLoading, error, sendMessage, clearMessages, chatId, memory, tasks, healthEvents, routines, personalization } = useChat();
   const [inputValue, setInputValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [conversations, setConversations] = useState<any[]>([]);
@@ -27,63 +33,51 @@ const FunctionalChatInterface = () => {
     return 'Untitled Chat';
   };
 
-  // Enhanced dynamic suggestions based on context
+  // Context-aware suggestions
   const getContextualSuggestions = () => {
-    // If we have chat history, generate suggestions based on recent topics
-    if (conversations.length > 0) {
-      const recentTopics = conversations.slice(0, 5).map(conv => {
-        const title = formatChatTitle(conv);
-        // Extract key topics from chat titles to generate follow-up suggestions
-        if (title.toLowerCase().includes('design')) {
-          return 'Continue discussing design system improvements';
-        } else if (title.toLowerCase().includes('notion') || title.toLowerCase().includes('organize')) {
-          return 'Help me organize more projects in Notion';
-        } else if (title.toLowerCase().includes('github') || title.toLowerCase().includes('code')) {
-          return 'Show me recent GitHub activity and updates';
-        } else if (title.toLowerCase().includes('calendar') || title.toLowerCase().includes('schedule')) {
-          return 'Review my upcoming calendar events';
-        } else if (title.toLowerCase().includes('task') || title.toLowerCase().includes('todo')) {
-          return 'Help me create and manage new tasks';
-        } else if (title.toLowerCase().includes('figma') || title.toLowerCase().includes('file')) {
-          return 'Find and organize my Figma files';
-        } else {
-          // Generic follow-up based on the conversation
-          return `Continue our conversation about ${title.toLowerCase().replace(/^how can i better /, '').replace(/\?$/, '')}`;
+    const suggestions: string[] = [];
+    // Urgent tasks
+    if (tasks && tasks.length > 0) {
+      tasks.slice(0, 2).forEach(t => {
+        suggestions.push(`Help me complete: ${t.title || t.text || 'a task'}`);
+      });
+    }
+    // Upcoming health events
+    if (healthEvents && healthEvents.length > 0) {
+      healthEvents.slice(0, 2).forEach(e => {
+        suggestions.push(`Remind me about: ${e.title || e.text || 'an event'}`);
+      });
+    }
+    // Memory notes mentioning energy/focus
+    if (memory && memory.length > 0) {
+      memory.forEach(m => {
+        if ((m.text || '').toLowerCase().includes('energy') || (m.text || '').toLowerCase().includes('focus')) {
+          suggestions.push('Summarize my recent energy and focus');
         }
       });
-
-      // Add some general contextual suggestions
-      const contextualSuggestions = [
-        'Summarize my recent chat topics',
-        'What were we discussing last time?',
-        ...recentTopics
-      ];
-
-      // Fill remaining slots with general suggestions if needed
-      const generalSuggestions = [
-        'Tell me about my upcoming appointments',
-        'Show me my recent GitHub commits',
-        'Help me plan my day',
-        'What tasks do I have pending?',
-        'Check my Notion workspace updates',
-        'Review my calendar for this week'
-      ];
-
-      const allSuggestions = [...contextualSuggestions, ...generalSuggestions];
-      return allSuggestions.slice(0, 6);
     }
-
-    // Default suggestions when no chat history exists
-    const defaultSuggestions = [
-      'Tell me about design tokens and system components',
-      'Show me information about organizing projects',
-      'Can you explain recent GitHub activity',
-      'Can you explain calendar events and meetings',
-      'I need assistance with creating new tasks',
-      'Can you explain searching and managing files'
-    ];
-    
-    return defaultSuggestions;
+    // Routines
+    if (routines && routines.length > 0) {
+      routines.slice(0, 1).forEach(r => {
+        suggestions.push(`Help me stick to my routine: ${r.title || r.text || 'a routine'}`);
+      });
+    }
+    // Personalization
+    if (personalization && personalization.energyLevel) {
+      suggestions.push(`Give me advice for my current energy: ${personalization.energyLevel}`);
+    }
+    // Fallback
+    if (suggestions.length === 0) {
+      suggestions.push(
+        'Tell me about design tokens and system components',
+        'Show me information about organizing projects',
+        'Can you explain recent GitHub activity',
+        'Can you explain calendar events and meetings',
+        'I need assistance with creating new tasks',
+        'Can you explain searching and managing files'
+      );
+    }
+    return suggestions.slice(0, 6);
   };
 
   const [suggestions, setSuggestions] = useState(getContextualSuggestions());
@@ -91,78 +85,41 @@ const FunctionalChatInterface = () => {
   // Use fixed shapes to prevent hydration mismatch (server vs client random differences)
   const suggestionShapes: SuggestionShapeVariant[] = [3, 1, 2, 7, 4, 6];
 
+  // Fetch conversations from Firestore
+  useEffect(() => {
+    const fetchConversations = async () => {
+      const q = firestoreQuery(collection(db, 'chats'));
+      const snapshot = await getDocs(q);
+      const chats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setConversations(chats);
+    };
+    fetchConversations();
+  }, []);
+
   // Update suggestions when conversations change
   useEffect(() => {
     setSuggestions(getContextualSuggestions());
-  }, [conversations]);
+  }, [memory, tasks, healthEvents, routines, personalization]);
 
-  // Load conversations on mount
-  useEffect(() => {
-    const loadConversations = async () => {
-      try {
-        const response = await apiClient.getConversations();
-        if (response.data && (response.data as any).chats) {
-          setConversations((response.data as any).chats);
-        } else if (response.data && Array.isArray(response.data)) {
-          setConversations(response.data);
-        }
-      } catch (error) {
-        // Silently handle offline mode - conversations will show placeholders
-        console.log('API offline, using placeholder conversations');
-      }
-    };
-    loadConversations();
-  }, []);
-
-  // Function to load a specific chat
-  const handleChatClick = async (chatId: string) => {
-    try {
-      const response = await apiClient.getChatHistory(chatId);
-      if (response.data && response.data.chat) {
-        // Load the chat messages and switch to chat view
-        const chatData = response.data.chat;
-        // You can implement message loading here if needed
-        setShowSuggestions(false);
-      }
-    } catch (error) {
-      // Silently handle offline mode
-      console.log('API offline, cannot load chat history');
-    }
+  // Function to load a specific chat (switch chatId)
+  const handleChatClick = async (newChatId: string) => {
+    setShowSuggestions(false);
+    // Not implemented: switching chatId in useChat (could be added)
+    // For now, just show a toast or log
+    alert('Multi-chat switching coming soon!');
   };
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
-    
     setShowSuggestions(false);
     await sendMessage(inputValue.trim());
     setInputValue('');
-    
-    // Try to reload conversations, but don't fail if offline
-    try {
-      const response = await apiClient.getConversations();
-      if (response.data && (response.data as any).chats) {
-        setConversations((response.data as any).chats);
-      }
-    } catch (error) {
-      // Silently handle offline mode
-      console.log('API offline, conversations not updated');
-    }
   };
 
   const handleSuggestionClick = async (suggestion: string) => {
     setShowSuggestions(false);
     await sendMessage(suggestion);
-    
-    // Try to reload conversations, but don't fail if offline
-    try {
-      const response = await apiClient.getConversations();
-      if (response.data && (response.data as any).chats) {
-        setConversations((response.data as any).chats);
-      }
-    } catch (error) {
-      // Silently handle offline mode
-      console.log('API offline, conversations not updated');
-    }
+    setInputValue('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -229,7 +186,7 @@ const FunctionalChatInterface = () => {
           </div>
         </div>
         <div className={styles.mainContainer}>
-          {/* Sidebar */}
+          {/* Sidebar: Recent Chats and Context */}
           <div className={`${styles.sidebar} ${isSidebarCollapsed ? styles.sidebarCollapsed : ''}`}>
             <div className={styles.recentChats}>
               <div className={styles.labelText}>
@@ -284,6 +241,20 @@ const FunctionalChatInterface = () => {
                           </div>
                         </div>
                       ))
+                    )}
+                  </div>
+                  {/* Context Panel */}
+                  <div style={{marginTop: 24, padding: 16, background: '#f8f9fa', borderRadius: 8, fontSize: 14}}>
+                    <div><b>Memory:</b></div>
+                    {memory.length === 0 ? <div style={{color:'#aaa'}}>No memory notes</div> : memory.map(m => <div key={m.id}>{m.text || m.content || JSON.stringify(m)}</div>)}
+                    <div style={{marginTop: 12}}><b>Tasks:</b></div>
+                    {tasks.length === 0 ? <div style={{color:'#aaa'}}>No tasks</div> : tasks.map(t => <div key={t.id}>{t.title || t.text || JSON.stringify(t)}</div>)}
+                    <div style={{marginTop: 12}}><b>Health Events:</b></div>
+                    {healthEvents.length === 0 ? <div style={{color:'#aaa'}}>No health events</div> : healthEvents.map(e => <div key={e.id}>{e.title || e.text || JSON.stringify(e)}</div>)}
+                    <div style={{marginTop: 12}}><b>Routines:</b></div>
+                    {routines.length === 0 ? <div style={{color:'#aaa'}}>No routines</div> : routines.map(r => <div key={r.id}>{r.title || r.text || JSON.stringify(r)}</div>)}
+                    {personalization && (
+                      <div style={{marginTop: 12}}><b>Personalization:</b> {JSON.stringify(personalization)}</div>
                     )}
                   </div>
                 </div>
@@ -494,6 +465,14 @@ const FunctionalChatInterface = () => {
                 </div>
               </div>
             </div>
+            {/* Suggestions */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div style={{margin: '24px 0', display: 'flex', flexWrap: 'wrap', gap: 12}}>
+                {suggestions.map((s, i) => (
+                  <button key={i} onClick={() => handleSuggestionClick(s)} style={{padding: '8px 16px', borderRadius: 8, background: '#e0e7ef', border: 'none', cursor: 'pointer', fontSize: 14}}>{s}</button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

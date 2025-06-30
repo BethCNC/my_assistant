@@ -37,11 +37,36 @@ async function getChatHistory(chatId: string) {
   return messagesSnap.docs.map((doc) => doc.data() as {sender: string; text: string; createdAt: any});
 }
 
-// Helper: (Optional) RAG/Memory logic placeholder
-async function getRagContext(chatHistory: Array<{sender: string; text: string; createdAt: any}>) {
-  // TODO: Add your retrieval logic here (e.g., search docs, vector db, etc.)
-  console.log("Chat history length:", chatHistory.length);
-  return "";
+// Helper: Fetch RAG context from Firestore (updated for full schema)
+async function getRagContextFirestore(userId: string) {
+  // Fetch recent memory/notes
+  const memorySnap = await db.collection(`users/${userId}/memory`).orderBy("createdAt", "desc").limit(5).get();
+  const memory = memorySnap.docs.map((doc) => doc.data());
+
+  // Fetch active/urgent tasks
+  const tasksSnap = await db.collection(`users/${userId}/tasks`).where("status", "in", ["inbox", "next"]).orderBy("dueDate", "asc").limit(5).get();
+  const tasks = tasksSnap.docs.map((doc) => doc.data());
+
+  // Fetch recent/upcoming health events
+  const now = new Date();
+  const healthSnap = await db.collection(`users/${userId}/healthEvents`).where("date", ">=", now).orderBy("date", "asc").limit(5).get();
+  const healthEvents = healthSnap.docs.map((doc) => doc.data());
+
+  // Fetch due/active routines
+  const routinesSnap = await db.collection(`users/${userId}/routines`).orderBy("lastCompleted", "asc").limit(3).get();
+  const routines = routinesSnap.docs.map((doc) => doc.data());
+
+  // Fetch personalization data
+  const personalizationDoc = await db.collection(`users/${userId}/personalization`).doc("main").get();
+  const personalization = personalizationDoc.exists ? personalizationDoc.data() : {};
+
+  return {
+    memory,
+    tasks,
+    healthEvents,
+    routines,
+    personalization
+  };
 }
 
 // Main function: Respond to new user messages (using v1 API)
@@ -59,18 +84,30 @@ export const processUserMessage = functions.firestore
       }
 
       const chatId = context.params.chatId;
+      // Assume userId is the same as chatId for now (customize as needed)
+      const userId = chatId;
 
       // Get chat history for context
       const chatHistory = await getChatHistory(chatId);
 
-      // (Optional) Get extra context for RAG
-      const ragContext = await getRagContext(chatHistory);
+      // Get extra context for RAG from Firestore
+      const ragContext = await getRagContextFirestore(userId);
+
+      // Build system prompt with context (ADHD/autism-friendly, actionable, non-overwhelming)
+      const systemPrompt = `You are Beth's personal assistant. Here is her current context:\n
+Recent chat: ${chatHistory.length ? chatHistory.slice(-5).map(m => m.text).join(" | ") : "(none)"}\n
+Memory/notes: ${ragContext.memory.length ? ragContext.memory.map(m => m.content).join(" | ") : "(none)"}\n
+Tasks: ${ragContext.tasks.length ? ragContext.tasks.map(t => t.title).join(", ") : "(none)"}\n
+Health: ${ragContext.healthEvents.length ? ragContext.healthEvents.map(e => e.description).join(", ") : "(none)"}\n
+Routines: ${ragContext.routines.length ? ragContext.routines.map(r => r.name).join(", ") : "(none)"}\n
+Energy/focus: ${ragContext.personalization && ragContext.personalization.energyProfile ? JSON.stringify(ragContext.personalization.energyProfile) : "(none)"}\n
+Respond in a way that is ADHD/autism-friendly: be clear, actionable, and never overwhelming. Prioritize next steps, gentle reminders, and adapt to the user's current energy and focus.`;
 
       // Build messages for OpenAI Chat API
       const messages = [
         {
           role: "system",
-          content: ragContext ? `Context: ${ragContext}` : "You are a helpful assistant.",
+          content: systemPrompt,
         },
         ...chatHistory.slice(-10).map((m: {sender: string; text: string; createdAt: any}) => ({
           role: m.sender === "user" ? "user" : "assistant",
