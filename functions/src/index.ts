@@ -29,7 +29,7 @@ admin.initializeApp();
 const db = admin.firestore();
 
 // Get OpenAI API key from environment variable
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY || functions.config()?.openai?.key;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // Helper: Get chat history for context
 async function getChatHistory(chatId: string) {
@@ -65,7 +65,7 @@ async function getRagContextFirestore(userId: string) {
     tasks,
     healthEvents,
     routines,
-    personalization
+    personalization,
   };
 }
 
@@ -95,11 +95,11 @@ export const processUserMessage = functions.firestore
 
       // Build system prompt with context (ADHD/autism-friendly, actionable, non-overwhelming)
       const systemPrompt = `You are Beth's personal assistant. Here is her current context:\n
-Recent chat: ${chatHistory.length ? chatHistory.slice(-5).map(m => m.text).join(" | ") : "(none)"}\n
-Memory/notes: ${ragContext.memory.length ? ragContext.memory.map(m => m.content).join(" | ") : "(none)"}\n
-Tasks: ${ragContext.tasks.length ? ragContext.tasks.map(t => t.title).join(", ") : "(none)"}\n
-Health: ${ragContext.healthEvents.length ? ragContext.healthEvents.map(e => e.description).join(", ") : "(none)"}\n
-Routines: ${ragContext.routines.length ? ragContext.routines.map(r => r.name).join(", ") : "(none)"}\n
+Recent chat: ${chatHistory.length ? chatHistory.slice(-5).map((m) => m.text).join(" | ") : "(none)"}\n
+Memory/notes: ${ragContext.memory.length ? ragContext.memory.map((m) => m.content).join(" | ") : "(none)"}\n
+Tasks: ${ragContext.tasks.length ? ragContext.tasks.map((t) => t.title).join(", ") : "(none)"}\n
+Health: ${ragContext.healthEvents.length ? ragContext.healthEvents.map((e) => e.description).join(", ") : "(none)"}\n
+Routines: ${ragContext.routines.length ? ragContext.routines.map((r) => r.name).join(", ") : "(none)"}\n
 Energy/focus: ${ragContext.personalization && ragContext.personalization.energyProfile ? JSON.stringify(ragContext.personalization.energyProfile) : "(none)"}\n
 Respond in a way that is ADHD/autism-friendly: be clear, actionable, and never overwhelming. Prioritize next steps, gentle reminders, and adapt to the user's current energy and focus.`;
 
@@ -110,7 +110,7 @@ Respond in a way that is ADHD/autism-friendly: be clear, actionable, and never o
           content: systemPrompt,
         },
         ...chatHistory.slice(-10).map((m: {sender: string; text: string; createdAt: any}) => ({
-          role: m.sender === "user" ? "user" : "assistant",
+          role: (m.sender === "user") ? "user" : "assistant",
           content: m.text,
         })),
       ];

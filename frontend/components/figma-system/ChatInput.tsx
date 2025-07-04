@@ -3,6 +3,8 @@ import { cn } from '@/lib/utils'
 import { designTokens } from '@/lib/design-tokens'
 import { ThumbnailImages } from './ThumbnailImages'
 import { Icons } from './Icons'
+import Image from 'next/image'
+import styles from './ChatInput.module.css'
 
 interface AttachedFile {
   id: string
@@ -131,129 +133,76 @@ export function ChatInput({
     }
   }
 
+  // Figma: attached dropdown
+  const showImagesDropdown = isAttachingImages || (attachedImages.length > 0 && !isAttachingImages)
+  const showFilesDropdown = isAttachingFiles || (attachedFiles.length > 0 && !isAttachingFiles)
+
   return (
-    <div className={cn('w-full flex flex-col', className)}>
-      {/* Main input container */}
-      <div
-        style={{
-          width: '100%',
-          backgroundColor: designTokens.colors.neutral[10], // #F7F7F7 background
-          border: `1px solid ${designTokens.colors.black}`,
-          borderRadius: '8px',
-          padding: '16px',
-          marginBottom: '8px', // Gap between input and button row
-        }}
-      >
-        {/* Text input area */}
-        <textarea
-          ref={textareaRef}
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder={placeholder}
-          disabled={disabled}
-          rows={1}
-          style={{
-            width: '100%',
-            backgroundColor: designTokens.colors.white,
-            border: `1px solid ${getBorderColor()}`,
-            borderRadius: '8px',
-            padding: '12px 16px',
-            fontFamily: designTokens.fonts.primary,
-            fontSize: '16px',
-            fontWeight: '500',
-            color: designTokens.colors.black,
-            outline: 'none',
-            resize: 'none',
-            minHeight: '48px',
-            maxHeight: '120px',
-            overflow: 'auto',
-            transition: 'border-color 0.2s ease',
-          }}
-        />
+    <div
+      className={styles.container}
+      style={{borderColor: getBorderColor(), background: designTokens.colors.neutral[10]}}
+      onMouseEnter={() => setHoverBtn('send')}
+      onMouseLeave={() => setHoverBtn('')}
+    >
+      <textarea
+        ref={textareaRef}
+        className={styles.textarea}
+        placeholder={placeholder}
+        value={inputValue}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        maxLength={maxLength}
+        rows={3}
+        style={{fontFamily: designTokens.fonts.primary}}
+      />
+      <div className={styles.controls}>
+        <button type="button" className={styles.iconBtn} onClick={() => {
+          setIsAttachingFiles(!isAttachingFiles)
+          setIsAttachingImages(false)
+        }}>
+          <Image src="/assets/icons/files.svg" width={24} height={24} alt="Attach files" />
+        </button>
+        <button type="button" className={styles.iconBtn} onClick={() => {
+          setIsAttachingImages(!isAttachingImages)
+          setIsAttachingFiles(false)
+        }}>
+          <Image src="/assets/icons/images.svg" width={24} height={20} alt="Attach images" />
+        </button>
+        <span className={styles.charCount}>{inputValue.length}/{maxLength}</span>
+        <button type="button" className={styles.iconBtnSend} onClick={handleSend}>
+          <Image src="/assets/icons/send.svg" width={24} height={22} alt="Send" />
+        </button>
       </div>
-
-      {/* Button row - positioned BELOW input */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-        }}
-      >
-        {/* Left side - attachment buttons */}
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          {/* Files/paperclip button */}
-          <button
-            type="button"
-            style={getButtonStyle('files')}
-            onClick={() => {
-              setIsAttachingFiles(!isAttachingFiles)
-              setIsAttachingImages(false)
-            }}
-            onMouseEnter={() => setHoverBtn('files')}
-            onMouseLeave={() => setHoverBtn('')}
-          >
-            <Icons 
-              icon="paperclip" 
-              size={24} 
-              color={designTokens.colors.white}
-            />
-          </button>
-
-          {/* Images/camera button */}
-          <button
-            type="button"
-            style={getButtonStyle('images')}
-            onClick={() => {
-              setIsAttachingImages(!isAttachingImages)
-              setIsAttachingFiles(false)
-            }}
-            onMouseEnter={() => setHoverBtn('images')}
-            onMouseLeave={() => setHoverBtn('')}
-          >
-            <Icons 
-              icon="camera" 
-              size={24} 
-              color={designTokens.colors.white}
-            />
-          </button>
+      {/* Attached Images Dropdown */}
+      {showImagesDropdown && (
+        <div className={styles.dropdown}>
+          <div className={styles.dropdownHeader}>Attached Images</div>
+          {attachedImages.map((img, i) => (
+            <div className={styles.dropdownItem} key={i}>
+              <div className={styles.thumb}><Image src={img.src} width={21} height={21} alt={img.name} /></div>
+              <div className={styles.fileName}>{img.name}</div>
+              {img.progress && <div className={styles.progress}>{img.progress}%</div>}
+              <button className={styles.removeBtn}>&minus;</button>
+            </div>
+          ))}
         </div>
-
-        {/* Right side - character count and send button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {/* Character count */}
-          <span
-            style={{
-              fontFamily: designTokens.fonts.primary,
-              fontSize: '16px',
-              fontWeight: '400',
-              color: designTokens.colors.neutral[40], // #404040
-            }}
-          >
-            {inputValue.length}/{maxLength}
-          </span>
-
-          {/* Send button */}
-          <button
-            type="button"
-            style={getButtonStyle('send')}
-            onClick={handleSend}
-            disabled={!inputValue.trim() && attachedImages.length === 0 && attachedFiles.length === 0}
-            onMouseEnter={() => setHoverBtn('send')}
-            onMouseLeave={() => setHoverBtn('')}
-          >
-            <Icons 
-              icon="send" 
-              size={24} 
-              color={designTokens.colors.white}
-            />
-          </button>
+      )}
+      {/* Attached Files Dropdown */}
+      {showFilesDropdown && (
+        <div className={styles.dropdown}>
+          <div className={styles.dropdownHeader}>Attached Files</div>
+          {attachedFiles.map((file, i) => (
+            <div className={styles.dropdownItem} key={i}>
+              <div className={styles.fileIcon}><Image src="/assets/icons/files.svg" width={21} height={21} alt="file" /></div>
+              <div className={styles.fileName}>{file.name}</div>
+              {file.progress && <div className={styles.progress}>{file.progress}%</div>}
+              <button className={styles.removeBtn}>&minus;</button>
+            </div>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   )
 }

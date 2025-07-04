@@ -100,34 +100,35 @@ export function SuggestionCard({
         className
       )}
       style={{
-        width: '433px', // Fill (433px) from Figma
-        height: '64px', // 64px height from CSS
+        width: '433px', // Fixed width
+        height: '64px', // Fixed height
+        display: 'flex',
+        alignItems: 'center',
         borderRadius: styles.borderRadius || '4px',
-        padding: '0px 12px 0px 0px', // Exact padding from CSS
+        padding: '0px 12px 0px 0px',
         background: styles.background,
         border: styles.border,
         boxShadow: styles.boxShadow,
-        fontSize: '18px', // 18px from CSS
+        fontSize: '18px',
         fontFamily: 'Mabry Pro',
         fontWeight: 500,
         color: styles.textColor,
-        gap: '12px', // 12px gap from CSS
-        alignItems: 'center',
+        gap: '12px',
         justifyContent: 'flex-start',
         boxSizing: 'border-box',
-        transform: currentState === 'hover' ? 'translateY(-1px)' : 'none', // Subtle lift on hover
+        transform: currentState === 'hover' ? 'translateY(-1px)' : 'none',
       }}
       {...props}
     >
-      {/* Shape wrapper - exact from CSS */}
+      {/* Shape wrapper - fixed size */}
       <div
         className="flex-shrink-0 flex items-center justify-center overflow-hidden"
         style={{
-          alignSelf: 'stretch', // Full height
+          width: '60px',
+          height: '100%',
           backgroundColor: styles.shapeColor,
           borderRight: styles.shapeBorder,
           padding: '12px',
-          width: currentState === 'focus' ? '60px' : 'auto', // 60px width on focus from CSS
         }}
       >
         <div style={{ width: '32px', height: '32px' }}>
@@ -138,24 +139,25 @@ export function SuggestionCard({
           />
         </div>
       </div>
-
-      {/* Text content - exact from CSS */}
+      {/* Text content - fixed, centered, truncated */}
       <div
         style={{
           flex: 1,
+          display: 'flex',
+          alignItems: 'center',
           position: 'relative',
-          lineHeight: '22px', // 22px line height from CSS
+          lineHeight: '22px',
           fontWeight: 500,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
           color: styles.textColor,
+          height: '100%',
         }}
       >
         {text}
       </div>
-
-      {/* Arrow icon - exact from CSS */}
+      {/* Arrow icon - fixed */}
       <div 
         style={{
           width: '32px',
@@ -166,7 +168,7 @@ export function SuggestionCard({
         <div
           style={{
             position: 'absolute',
-            height: '66.56%', // From CSS
+            height: '66.56%',
             top: '16.67%',
             bottom: '16.77%',
             left: 'calc(50% - 15.24px)',
@@ -179,7 +181,7 @@ export function SuggestionCard({
         >
           <Icons 
             icon="arrow" 
-            size={30.5} // 30.5 × 21.3 from CSS
+            size={30.5}
             color={styles.iconColor}
           />
         </div>

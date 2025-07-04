@@ -760,3 +760,17 @@
   line-height: 16px;
   font-size: 12px;
 }
+
+.recentChatItem {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  transition: background 0.15s;
+}
+
+.activeChat {
+  background: #F0F4FF; /* Figma: subtle blue highlight */
+  border-left: 4px solid #4F8CFF; /* Figma: accent blue */
+  font-weight: 600;
+}

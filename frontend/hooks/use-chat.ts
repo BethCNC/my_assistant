@@ -35,6 +35,7 @@ export interface UseChatReturn {
   clearMessages: () => Promise<void>;
   loadHistory: () => Promise<void>;
   chatId?: string;
+  setChatId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 export function useChat(options: UseChatOptions = {}): UseChatReturn & {
@@ -103,12 +104,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn & {
       // Delete all messages in the chat
       const q = query(collection(db, 'chats', chatId, 'messages'));
       const snapshot = await getDocs(q);
-      const batch = db.batch ? db.batch() : null;
       for (const docSnap of snapshot.docs) {
-        if (batch) batch.delete(docSnap.ref);
-        else await deleteDoc(docSnap.ref);
+        await deleteDoc(docSnap.ref);
       }
-      if (batch) await batch.commit();
       setMessages([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to clear messages');
@@ -167,6 +165,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn & {
     clearMessages,
     loadHistory,
     chatId,
+    setChatId,
     memory,
     tasks,
     healthEvents,
